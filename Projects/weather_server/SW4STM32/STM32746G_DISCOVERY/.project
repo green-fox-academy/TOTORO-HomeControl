@@ -211,6 +211,21 @@
 			<locationURI>PARENT-4-PROJECT_LOC/Middlewares/Third_Party/FreeRTOS/Source/timers.c</locationURI>
 		</link>
 		<link>
+			<name>Middlewares/STemWin/GUIConf.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/Src/GUIConf.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/STemWin/GUI_X_OS.c</name>
+			<type>1</type>
+			<locationURI>PARENT-4-PROJECT_LOC/Middlewares/ST/STemWin/OS/GUI_X_OS.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/STemWin/LCDConf.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/Src/LCDConf.c</locationURI>
+		</link>
+		<link>
 			<name>Drivers/BSP/Components/ft5336</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>

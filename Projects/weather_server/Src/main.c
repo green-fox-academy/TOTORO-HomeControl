@@ -102,6 +102,32 @@ int main(void)
   /* Configure the system clock to 200 MHz */
   SystemClock_Config(); 
   
+
+
+
+	  /* Initialize LCD */
+	  BSP_Config();
+
+    GUI_Init();
+
+    WM_MULTIBUF_Enable(1);
+    GUI_SetLayerVisEx (1, 0);
+    GUI_SelectLayer(0);
+
+    GUI_SetBkColor(GUI_LIGHTMAGENTA);
+    GUI_Clear();
+
+
+
+
+
+
+
+
+
+
+
+
   /* Init thread */
   osThreadDef(Start, StartThread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 5);
   osThreadCreate (osThread(Start), NULL);
@@ -116,36 +142,52 @@ int main(void)
 }
 
 /**
+  * @brief  Start task
+  * @param  argument: pointer that is passed to the thread function as start argument.
+  * @retval None
+  */
+static void GUIThread(void const * argument)
+{
+  /* Gui background Task */
+  while(1) {
+    GUI_Exec(); /* Do the background work ... Update windows etc.) */
+    osDelay(20); /* Nothing left to do for the moment ... Idle processing */
+  }
+}
+
+/**
   * @brief  Start Thread 
   * @param  argument not used
   * @retval None
   */
 static void StartThread(void const * argument)
 { 
-  /* Initialize LCD */
-  BSP_Config();
   
   /* Create tcp_ip stack thread */
-  tcpip_init(NULL, NULL);
+  //tcpip_init(NULL, NULL);
   
   /* Initialize the LwIP stack */
-  Netif_Config();
+  //Netif_Config();
 
   /* Notify user about the network interface config */
-  User_notification(&gnetif);
+  //User_notification(&gnetif);
   
   /* Start DHCPClient */
-  osThreadDef(DHCP, DHCP_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
-  osThreadCreate (osThread(DHCP), &gnetif);
-  osDelay(2000);
+  //osThreadDef(DHCP, DHCP_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+  //osThreadCreate (osThread(DHCP), &gnetif);
+  //osDelay(2000);
 
   // TODO:
   // Define and start the server thread
-  osThreadDef(SOCKET_SERVER, socket_server_thread, osPriorityBelowNormal, 0, configMINIMAL_STACK_SIZE * 2);
-  osThreadCreate (osThread(SOCKET_SERVER), NULL);
+  //osThreadDef(SOCKET_SERVER, socket_server_thread, osPriorityBelowNormal, 0, configMINIMAL_STACK_SIZE * 2);
+  //osThreadCreate (osThread(SOCKET_SERVER), NULL);
 
   // TODO:
   // Define and start the client thread
+
+  /* Create GUI task */
+  osThreadDef(GUI_Thread, GUIThread, osPriorityNormal, 0, 2048);
+  osThreadCreate (osThread(GUI_Thread), NULL);
 
   while (1) {
     /* Delete the Init Thread */ 
@@ -192,28 +234,41 @@ static void Netif_Config(void)
   */
 static void BSP_Config(void)
 {
-  /* Initialize the LCD */
-  BSP_LCD_Init();
-  
-  /* Initialize the LCD Layers */
-  BSP_LCD_LayerDefaultInit(1, LCD_FB_START_ADDRESS);
-  
-  /* Set LCD Foreground Layer  */
-  BSP_LCD_SelectLayer(1);
-  
-  BSP_LCD_SetFont(&LCD_DEFAULT_FONT);
-  
-  /* Initialize TS */
-  BSP_TS_Init(BSP_LCD_GetXSize(), BSP_LCD_GetYSize());
 
-  /* Initialize LCD Log module */
-  LCD_LOG_Init();
-  
-  /* Show Header and Footer texts */
-  LCD_LOG_SetHeader((uint8_t *)"TOTORO socket echo server");
-  LCD_LOG_SetFooter((uint8_t *)"STM32746G-DISCO - GreenFoxAcademy");
-  
-  LCD_UsrLog ((char *)"Notification - Ethernet Initialization ...\n");
+	/* Initialize the SDRAM */
+	  BSP_SDRAM_Init();
+
+	  /* Initialize the Touch screen */
+	  BSP_TS_Init(420, 272);
+
+	  /* Enable CRC to Unlock GUI */
+	 __HAL_RCC_CRC_CLK_ENABLE();
+
+	 /* Enable Back up SRAM */
+	 __HAL_RCC_BKPSRAM_CLK_ENABLE();
+
+//  /* Initialize the LCD */
+//  BSP_LCD_Init();
+//
+//  /* Initialize the LCD Layers */
+//  BSP_LCD_LayerDefaultInit(1, LCD_FB_START_ADDRESS);
+//
+//  /* Set LCD Foreground Layer  */
+//  BSP_LCD_SelectLayer(1);
+//
+//  BSP_LCD_SetFont(&LCD_DEFAULT_FONT);
+//
+//  /* Initialize TS */
+//  BSP_TS_Init(BSP_LCD_GetXSize(), BSP_LCD_GetYSize());
+//
+//  /* Initialize LCD Log module */
+//  LCD_LOG_Init();
+//
+//  /* Show Header and Footer texts */
+//  LCD_LOG_SetHeader((uint8_t *)"TOTORO socket echo server");
+//  LCD_LOG_SetFooter((uint8_t *)"STM32746G-DISCO - GreenFoxAcademy");
+//
+//  LCD_UsrLog ((char *)"Notification - Ethernet Initialization ...\n");
 }
 
 /**

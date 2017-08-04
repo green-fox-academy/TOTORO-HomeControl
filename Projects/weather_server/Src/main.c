@@ -59,6 +59,8 @@
 #include "socket_client.h"
 #include "stm32746g_discovery_lcd.h"
 
+
+
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
@@ -73,6 +75,9 @@ static void Netif_Config(void);
 static void MPU_Config(void);
 static void Error_Handler(void);
 static void CPU_CACHE_Enable(void);
+static void GUIThread(void const * argument);
+
+
 
 /* Private functions ---------------------------------------------------------*/
 
@@ -86,7 +91,6 @@ int main(void)
 {
   /* Configure the MPU attributes as Device memory for ETH DMA descriptors */
   MPU_Config();
-  BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_GPIO);
 
   /* Enable the CPU Cache */
   CPU_CACHE_Enable();
@@ -101,43 +105,33 @@ int main(void)
   
   /* Configure the system clock to 200 MHz */
   SystemClock_Config(); 
-  
 
+  /* Initialize LCD */
+  BSP_Config();
 
+	    /* Create GUI task */
+//	    osThreadDef(GUI_Thread, GUIThread, osPriorityBelowNormal, 0, configMINIMAL_STACK_SIZE * 20);	//2048
+//	    osThreadCreate (osThread(GUI_Thread), NULL);
 
-	  /* Initialize LCD */
-	  BSP_Config();
+	    GUI_Init();
+		WM_MULTIBUF_Enable(1);
+		GUI_SetLayerVisEx (1, 0);
+		GUI_SelectLayer(0);
 
-    GUI_Init();
-
-    WM_MULTIBUF_Enable(1);
-    GUI_SetLayerVisEx (1, 0);
-    GUI_SelectLayer(0);
-
-    GUI_SetBkColor(GUI_LIGHTMAGENTA);
-    GUI_Clear();
-
-
-
-
-
-
-
-
-
+		GUI_SetBkColor(GUI_LIGHTMAGENTA);
+		GUI_Clear();
 
 
 
   /* Init thread */
-  osThreadDef(Start, StartThread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 5);
+  osThreadDef(Start, StartThread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
   osThreadCreate (osThread(Start), NULL);
-  
+
   /* Start scheduler */
   osKernelStart();
-  
+
   /* We should never get here as control is now taken by the scheduler */
   while(1) {
-
   }
 }
 
@@ -148,7 +142,10 @@ int main(void)
   */
 static void GUIThread(void const * argument)
 {
-  /* Gui background Task */
+		GUI_SetBkColor(GUI_BLUE);
+		GUI_Clear();
+
+	/* Gui background Task */
   while(1) {
     GUI_Exec(); /* Do the background work ... Update windows etc.) */
     osDelay(20); /* Nothing left to do for the moment ... Idle processing */
@@ -162,32 +159,36 @@ static void GUIThread(void const * argument)
   */
 static void StartThread(void const * argument)
 { 
-  
+  /* Initialize LCD */
+	//BSP_Config();
+
   /* Create tcp_ip stack thread */
-  //tcpip_init(NULL, NULL);
+  tcpip_init(NULL, NULL);
   
   /* Initialize the LwIP stack */
-  //Netif_Config();
+  Netif_Config();
 
   /* Notify user about the network interface config */
-  //User_notification(&gnetif);
+ User_notification(&gnetif);
   
+  /* Create GUI task */
+//  osThreadDef(GUI_Thread, GUIThread, osPriorityAboveNormal, 0, 2048);
+//  osThreadCreate (osThread(GUI_Thread), NULL);
+
+
   /* Start DHCPClient */
-  //osThreadDef(DHCP, DHCP_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
-  //osThreadCreate (osThread(DHCP), &gnetif);
-  //osDelay(2000);
+  osThreadDef(DHCP, DHCP_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+  osThreadCreate (osThread(DHCP), &gnetif);
+  osDelay(2000);
 
   // TODO:
   // Define and start the server thread
-  //osThreadDef(SOCKET_SERVER, socket_server_thread, osPriorityBelowNormal, 0, configMINIMAL_STACK_SIZE * 2);
-  //osThreadCreate (osThread(SOCKET_SERVER), NULL);
+  osThreadDef(SOCKET_SERVER, socket_server_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+  osThreadCreate (osThread(SOCKET_SERVER), NULL);
 
   // TODO:
   // Define and start the client thread
 
-  /* Create GUI task */
-  osThreadDef(GUI_Thread, GUIThread, osPriorityNormal, 0, 2048);
-  osThreadCreate (osThread(GUI_Thread), NULL);
 
   while (1) {
     /* Delete the Init Thread */ 
@@ -235,6 +236,7 @@ static void Netif_Config(void)
 static void BSP_Config(void)
 {
 
+	  BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_GPIO);
 	/* Initialize the SDRAM */
 	  BSP_SDRAM_Init();
 
@@ -247,28 +249,28 @@ static void BSP_Config(void)
 	 /* Enable Back up SRAM */
 	 __HAL_RCC_BKPSRAM_CLK_ENABLE();
 
-//  /* Initialize the LCD */
-//  BSP_LCD_Init();
-//
-//  /* Initialize the LCD Layers */
-//  BSP_LCD_LayerDefaultInit(1, LCD_FB_START_ADDRESS);
-//
-//  /* Set LCD Foreground Layer  */
-//  BSP_LCD_SelectLayer(1);
-//
-//  BSP_LCD_SetFont(&LCD_DEFAULT_FONT);
-//
-//  /* Initialize TS */
-//  BSP_TS_Init(BSP_LCD_GetXSize(), BSP_LCD_GetYSize());
-//
-//  /* Initialize LCD Log module */
-//  LCD_LOG_Init();
-//
-//  /* Show Header and Footer texts */
-//  LCD_LOG_SetHeader((uint8_t *)"TOTORO socket echo server");
-//  LCD_LOG_SetFooter((uint8_t *)"STM32746G-DISCO - GreenFoxAcademy");
-//
-//  LCD_UsrLog ((char *)"Notification - Ethernet Initialization ...\n");
+  /* Initialize the LCD */
+  BSP_LCD_Init();
+
+  /* Initialize the LCD Layers */
+  BSP_LCD_LayerDefaultInit(1, LCD_FB_START_ADDRESS);
+
+  /* Set LCD Foreground Layer  */
+  BSP_LCD_SelectLayer(1);
+
+  BSP_LCD_SetFont(&LCD_DEFAULT_FONT);
+
+  /* Initialize TS */
+  BSP_TS_Init(BSP_LCD_GetXSize(), BSP_LCD_GetYSize());
+
+  /* Initialize LCD Log module */
+  LCD_LOG_Init();
+
+  /* Show Header and Footer texts */
+  LCD_LOG_SetHeader((uint8_t *)"TOTORO socket echo server");
+  LCD_LOG_SetFooter((uint8_t *)"STM32746G-DISCO - GreenFoxAcademy");
+
+  LCD_UsrLog ((char *)"Notification - Ethernet Initialization ...\n");
 }
 
 /**
@@ -411,5 +413,7 @@ void assert_failed(uint8_t* file, uint32_t line)
   }
 }
 #endif
+
+
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

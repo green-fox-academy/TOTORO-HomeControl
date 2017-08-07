@@ -262,7 +262,7 @@ static void BSP_Config(void)
 
 	 /* Enable Back up SRAM */
 	 __HAL_RCC_BKPSRAM_CLK_ENABLE();
-//
+
 //  /* Initialize the LCD */
 //  BSP_LCD_Init();
 //

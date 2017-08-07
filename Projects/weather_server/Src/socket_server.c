@@ -35,8 +35,8 @@ void socket_server_thread(void const *argument)
 {
 		//BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_GPIO);
 
-//		LCD_UsrLog("Socket server - startup...\n");
-//		LCD_UsrLog("Socket server - waiting for IP address...\n");
+		LCD_UsrLog("Socket server - startup...\n");
+		LCD_UsrLog("Socket server - waiting for IP address...\n");
 //		GUI_SetColor(GUI_WHITE);
 //		GUI_DispString("Socket server startup\n");
 //		GUI_DispString("Socket server waiting for IP address...\n");
@@ -108,15 +108,15 @@ void socket_server_thread(void const *argument)
 					LCD_UsrLog("Temperature: %.1f C, Humidity: %.1f%%, Pressure: %.1f Pa,\n", buffer[0], buffer[1], buffer[2]);
 
 					GUI_DispStringAt("Temperature: ", 150, 80);
-					GUI_DispFloat(buffer[0], 3);
+					GUI_DispFloat(buffer[0], 6);
 					GUI_DispString(" °C");
 
 					GUI_DispStringAt("Humidity: ", 150, 120);
-					GUI_DispFloat(buffer[1], 3);
+					GUI_DispFloat(buffer[1], 6);
 					GUI_DispString(" %");
 
 					GUI_DispStringAt("Air pressure: ", 150, 160);
-					GUI_DispFloat(buffer[2], 3);
+					GUI_DispFloat(buffer[2], 6);
 					GUI_DispString(" Pa");
 
 				} while (received_bytes > 0);

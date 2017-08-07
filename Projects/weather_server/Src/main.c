@@ -76,6 +76,7 @@ static void MPU_Config(void);
 static void Error_Handler(void);
 static void CPU_CACHE_Enable(void);
 static void GUIThread(void const * argument);
+static void GUI_Startup();
 
 
 
@@ -113,13 +114,7 @@ int main(void)
 //	    osThreadDef(GUI_Thread, GUIThread, osPriorityBelowNormal, 0, configMINIMAL_STACK_SIZE * 20);	//2048
 //	    osThreadCreate (osThread(GUI_Thread), NULL);
 
-	    GUI_Init();
-		WM_MULTIBUF_Enable(1);
-		GUI_SetLayerVisEx (1, 0);
-		GUI_SelectLayer(0);
-
-		GUI_SetBkColor(GUI_LIGHTMAGENTA);
-		GUI_Clear();
+	    GUI_Startup();
 
 
 
@@ -140,10 +135,24 @@ int main(void)
   * @param  argument: pointer that is passed to the thread function as start argument.
   * @retval None
   */
+static void GUI_Startup()
+{
+    GUI_Init();
+	WM_MULTIBUF_Enable(1);
+	GUI_SetLayerVisEx (1, 0);
+	GUI_SelectLayer(0);
+
+	GUI_SetBkColor(GUI_LIGHTBLUE);
+	GUI_Clear();
+
+}
+
+
+
+
 static void GUIThread(void const * argument)
 {
-		GUI_SetBkColor(GUI_BLUE);
-		GUI_Clear();
+
 
 	/* Gui background Task */
   while(1) {

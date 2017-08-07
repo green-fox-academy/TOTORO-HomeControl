@@ -75,8 +75,8 @@ static void Netif_Config(void);
 static void MPU_Config(void);
 static void Error_Handler(void);
 static void CPU_CACHE_Enable(void);
-static void GUIThread(void const * argument);
-static void GUI_Startup();
+//static void GUIThread(void const * argument);
+//static void GUI_Startup();
 
 
 
@@ -114,7 +114,7 @@ int main(void)
 //	    osThreadDef(GUI_Thread, GUIThread, osPriorityBelowNormal, 0, configMINIMAL_STACK_SIZE * 20);	//2048
 //	    osThreadCreate (osThread(GUI_Thread), NULL);
 
-	    GUI_Startup();
+	//    GUI_Startup();
 
 
 
@@ -135,7 +135,7 @@ int main(void)
   * @param  argument: pointer that is passed to the thread function as start argument.
   * @retval None
   */
-static void GUI_Startup()
+/*static void GUI_Startup()
 {
     GUI_Init();
 	WM_MULTIBUF_Enable(1);
@@ -143,30 +143,30 @@ static void GUI_Startup()
 	GUI_SelectLayer(0);
 
 	GUI_SetBkColor(GUI_LIGHTBLUE);
-	GUI_Clear();
+	GUI_Clear(); */
 	//add frame
-	GUI_SetColor(GUI_WHITE);
-	GUI_DrawRoundedRect(20, 20, 460, 252, 10);
+	/*GUI_SetColor(GUI_WHITE);
+	GUI_DrawRoundedRect(20, 20, 460, 252, 10);*/
 	//set font
-	GUI_SetFont(GUI_FONT_24_1);
+	/*GUI_SetFont(GUI_FONT_24_1);*/
 
 	//display image?
 
-}
+//}
 
 
 
 
-static void GUIThread(void const * argument)
+/*static void GUIThread(void const * argument)
 {
-
+*/
 
 	/* Gui background Task */
-  while(1) {
-    GUI_Exec(); /* Do the background work ... Update windows etc.) */
-    osDelay(20); /* Nothing left to do for the moment ... Idle processing */
-  }
-}
+ // while(1) {
+   // GUI_Exec(); /* Do the background work ... Update windows etc.) */
+    //osDelay(20); /* Nothing left to do for the moment ... Idle processing */
+  //}
+//}
 
 /**
   * @brief  Start Thread 
@@ -195,7 +195,7 @@ static void StartThread(void const * argument)
   /* Start DHCPClient */
   osThreadDef(DHCP, DHCP_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
   osThreadCreate (osThread(DHCP), &gnetif);
-  osDelay(2000);
+ // osDelay(2000);
 
   // TODO:
   // Define and start the server thread

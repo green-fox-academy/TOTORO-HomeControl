@@ -145,7 +145,7 @@ void DHCP_thread(void const * argument)
           DHCP_state = DHCP_ADDRESS_ASSIGNED;	
          
           sprintf((char *)iptxt, "%s", ip4addr_ntoa((const ip4_addr_t *)&netif->ip_addr));   
-//          LCD_UsrLog ("DHCP client - IP address assigned by a DHCP server: %s\n", iptxt);
+          LCD_UsrLog ("DHCP client - IP address assigned by a DHCP server: %s\n", iptxt);
         }
         else
         {

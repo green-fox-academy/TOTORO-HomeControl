@@ -45,17 +45,17 @@ void socket_server_thread(void const *argument)
 		// Wait for an IP address
 		while (!is_ip_ok())
 			osDelay(10);
-//		LCD_UsrLog("Socket server - IP address is ok\n");
+		LCD_UsrLog("Socket server - IP address is ok\n");
 //		GUI_DispString("Socket server - IP address is OK\n");
 
 		// Create server socket
 		int server_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_IP);
 		if (server_socket < 0) {
-//			LCD_ErrLog("Socket server - can't create socket\n");
+			LCD_ErrLog("Socket server - can't create socket\n");
 //			GUI_DispString("Socket server - cannot create socket\n");
 			terminate_thread();
 		}
-//		LCD_UsrLog("Socket server - socket created\n");
+		LCD_UsrLog("Socket server - socket created\n");
 //		GUI_DispString("Socket server - socket created\n");
 
 		// Create address structure and bind the socket to it
@@ -64,20 +64,20 @@ void socket_server_thread(void const *argument)
 		server_addr.sin_port = htons(PORT);
 		server_addr.sin_addr.s_addr = INADDR_ANY;
 		if (bind(server_socket, (struct sockaddr*)&(server_addr), sizeof(server_addr)) < 0) {
-//			LCD_ErrLog("Socket server - can't bind socket\n");
+			LCD_ErrLog("Socket server - can't bind socket\n");
 //			GUI_DispString("Socket server - cannot bind socket\n");
 			terminate_thread();
 		}
-//		LCD_UsrLog("Socket server - socket bind ok\n");
+		LCD_UsrLog("Socket server - socket bind ok\n");
 //		GUI_DispString("Socket server - socket bind OK\n");
 
 		// Start listening
 		if (listen(server_socket, SERVER_QUEUE_SIZE) < 0) {
-//			LCD_ErrLog("Socket server - can't listen\n");
+			LCD_ErrLog("Socket server - can't listen\n");
 //			GUI_DispString("Socket server - cannot listen\n");
 			terminate_thread();
 		}
-//		LCD_UsrLog("Socket server - listening...\n");
+		LCD_UsrLog("Socket server - listening...\n");
 //		GUI_DispString("Socket server - listening...\n");
 
 
@@ -89,12 +89,12 @@ void socket_server_thread(void const *argument)
 		while (1) {
 			// Accept incoming connections
 			client_socket = accept(server_socket, (struct sockaddr*)&client_addr, &client_addr_len);
-//			LCD_UsrLog("Socket server - connection accepted\n");
+			LCD_UsrLog("Socket server - connection accepted\n");
 //			GUI_DispString("Socket server connection accepted\n");
-//			BSP_LCD_Clear(LCD_COLOR_GREEN);
+			BSP_LCD_Clear(LCD_COLOR_GREEN);
 			// Check the client socket
 			if (client_socket < 0) {
-//				LCD_ErrLog("Socket server - invalid client socket\n");
+				LCD_ErrLog("Socket server - invalid client socket\n");
 //				GUI_DispString("Socket server - invalid client socket\n");
 			} else {
 				// Define buffer for incoming message
@@ -105,7 +105,7 @@ void socket_server_thread(void const *argument)
 				do {
 					
 					received_bytes = recv(client_socket, buffer, sizeof(buffer), 0);
-//					LCD_UsrLog("Temperature: %.1f C, Humidity: %.1f%%, Pressure: %.1f Pa,\n", buffer[0], buffer[1], buffer[2]);
+					LCD_UsrLog("Temperature: %.1f C, Humidity: %.1f%%, Pressure: %.1f Pa,\n", buffer[0], buffer[1], buffer[2]);
 
 					GUI_DispStringAt("Temperature: ", 150, 80);
 					GUI_DispFloat(buffer[0], 3);
@@ -123,8 +123,8 @@ void socket_server_thread(void const *argument)
 
 				// Close the socket
 				closesocket(client_socket);
-//				LCD_UsrLog("Socket server - connection closed\n");
-				GUI_DispString("Socket server - connection closed\n");
+				LCD_UsrLog("Socket server - connection closed\n");
+//				GUI_DispString("Socket server - connection closed\n");
 			}
 		}
 

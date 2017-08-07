@@ -60,6 +60,7 @@
 #include "stm32746g_discovery_lcd.h"
 
 
+#include "stm32f7xx_hal_conf.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -77,6 +78,7 @@ static void Error_Handler(void);
 static void CPU_CACHE_Enable(void);
 static void GUIThread(void const * argument);
 static void GUI_Startup();
+
 
 
 
@@ -149,9 +151,7 @@ static void GUI_Startup()
 	GUI_DrawRoundedRect(20, 20, 460, 252, 10);
 	//set font
 	GUI_SetFont(GUI_FONT_24_1);
-
-	//display image?
-
+	//display image
 }
 
 
@@ -159,8 +159,6 @@ static void GUI_Startup()
 
 static void GUIThread(void const * argument)
 {
-
-
 	/* Gui background Task */
   while(1) {
     GUI_Exec(); /* Do the background work ... Update windows etc.) */
@@ -264,29 +262,29 @@ static void BSP_Config(void)
 
 	 /* Enable Back up SRAM */
 	 __HAL_RCC_BKPSRAM_CLK_ENABLE();
-
-  /* Initialize the LCD */
-  BSP_LCD_Init();
-
-  /* Initialize the LCD Layers */
-  BSP_LCD_LayerDefaultInit(1, LCD_FB_START_ADDRESS);
-
-  /* Set LCD Foreground Layer  */
-  BSP_LCD_SelectLayer(1);
-
-  BSP_LCD_SetFont(&LCD_DEFAULT_FONT);
-
-  /* Initialize TS */
-  BSP_TS_Init(BSP_LCD_GetXSize(), BSP_LCD_GetYSize());
-
-  /* Initialize LCD Log module */
-  LCD_LOG_Init();
-
-  /* Show Header and Footer texts */
-  LCD_LOG_SetHeader((uint8_t *)"TOTORO socket echo server");
-  LCD_LOG_SetFooter((uint8_t *)"STM32746G-DISCO - GreenFoxAcademy");
-
-  LCD_UsrLog ((char *)"Notification - Ethernet Initialization ...\n");
+//
+//  /* Initialize the LCD */
+//  BSP_LCD_Init();
+//
+//  /* Initialize the LCD Layers */
+//  BSP_LCD_LayerDefaultInit(1, LCD_FB_START_ADDRESS);
+//
+//  /* Set LCD Foreground Layer  */
+//  BSP_LCD_SelectLayer(1);
+//
+//  BSP_LCD_SetFont(&LCD_DEFAULT_FONT);
+//
+//  /* Initialize TS */
+//  BSP_TS_Init(BSP_LCD_GetXSize(), BSP_LCD_GetYSize());
+//
+//  /* Initialize LCD Log module */
+//  LCD_LOG_Init();
+//
+//  /* Show Header and Footer texts */
+//  LCD_LOG_SetHeader((uint8_t *)"TOTORO socket echo server");
+//  LCD_LOG_SetFooter((uint8_t *)"STM32746G-DISCO - GreenFoxAcademy");
+//
+//  LCD_UsrLog ((char *)"Notification - Ethernet Initialization ...\n");
 }
 
 /**

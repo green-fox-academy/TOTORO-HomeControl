@@ -54,6 +54,7 @@
 #include "lwip/netif.h"
 #include "lwip/tcpip.h"
 #include "app_ethernet.h"
+#include "httpserver-netconn.h"
 #include "lcd_log.h"
 #include "socket_server.h"
 #include "socket_client.h"
@@ -183,6 +184,9 @@ static void StartThread(void const * argument)
   
   /* Initialize the LwIP stack */
   Netif_Config();
+
+  /* Initialize webserver demo */
+  http_server_netconn_init();
 
   /* Notify user about the network interface config */
  User_notification(&gnetif);

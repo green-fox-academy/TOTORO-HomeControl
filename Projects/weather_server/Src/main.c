@@ -185,7 +185,7 @@ static void StartThread(void const * argument)
   /* Initialize the LwIP stack */
   Netif_Config();
 
-  /* Initialize webserver demo */
+  /* Initialize webserver */
   http_server_netconn_init();
 
   /* Notify user about the network interface config */

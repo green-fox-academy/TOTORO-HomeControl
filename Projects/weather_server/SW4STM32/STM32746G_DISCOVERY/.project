@@ -33,7 +33,7 @@
 		<link>
 			<name>Application/SW4STM32/startup_stm32f746xx.s</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/startup_stm32f746xx.s</locationURI>
+			<location>/home/chibbol/TOTORO-HomeControl/Projects/weather_server/Src/fsdata_custom.c</location>
 		</link>
 		<link>
 			<name>Application/SW4STM32/syscalls.c</name>
@@ -58,7 +58,7 @@
 		<link>
 			<name>Application/User/socket_client.c</name>
 			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/Src/socket_client.c</locationURI>
+			<location>/home/chibbol/TOTORO-HomeControl/Projects/weather_server/Src/httpserver-netconn.c</location>
 		</link>
 		<link>
 			<name>Application/User/socket_server.c</name>
@@ -219,11 +219,6 @@
 			<name>Middlewares/STemWin/GUI_X_OS.c</name>
 			<type>1</type>
 			<locationURI>PARENT-4-PROJECT_LOC/Middlewares/ST/STemWin/OS/GUI_X_OS.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/STemWin/LCDConf.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/Src/LCDConf.c</locationURI>
 		</link>
 		<link>
 			<name>Drivers/BSP/Components/ft5336</name>

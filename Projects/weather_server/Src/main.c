@@ -144,6 +144,13 @@ static void GUI_Startup()
 
 	GUI_SetBkColor(GUI_LIGHTBLUE);
 	GUI_Clear();
+	//add frame
+	GUI_SetColor(GUI_WHITE);
+	GUI_DrawRoundedRect(20, 20, 460, 252, 10);
+	//set font
+	GUI_SetFont(GUI_FONT_24_1);
+
+	//display image?
 
 }
 

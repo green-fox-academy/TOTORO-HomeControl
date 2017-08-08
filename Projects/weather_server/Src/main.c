@@ -157,7 +157,7 @@ static void GUI_Startup()
 	//set font
 	GUI_SetColor(GUI_LIGHTGRAY);
 	GUI_SetFont(GUI_FONT_20_1);
-	GUI_DispStringAt("Weather Station", 180, 30);
+	GUI_DispStringAt("Weather Station", 177, 30);
 	GUI_SetFont(GUI_FONT_13_1);
 	GUI_SetBkColor(GUI_DARKBLUE);
 	GUI_DispStringAt("Temperature (°C)", 35, 80);

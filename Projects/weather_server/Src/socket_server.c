@@ -107,17 +107,20 @@ void socket_server_thread(void const *argument)
 					received_bytes = recv(client_socket, buffer, sizeof(buffer), 0);
 					LCD_UsrLog("Temperature: %.1f C, Humidity: %.1f%%, Pressure: %.1f Pa,\n", buffer[0], buffer[1], buffer[2]);
 
-					GUI_DispStringAt("Temperature: ", 150, 80);
-					GUI_DispFloat(buffer[0], 6);
-					GUI_DispString(" °C");
+//					GUI_DispStringAt("Temperature: ", 150, 80);
+					GUI_GotoXY(50, 150);
+					GUI_DispFloat(buffer[0], 4);
+//					GUI_DispString(" °C");
 
-					GUI_DispStringAt("Humidity: ", 150, 120);
-					GUI_DispFloat(buffer[1], 6);
-					GUI_DispString(" %");
+//					GUI_DispStringAt("Humidity: ", 150, 120);
+					GUI_GotoXY(200, 150);
+					GUI_DispFloat(buffer[1], 4);
+//					GUI_DispString(" %");
 
-					GUI_DispStringAt("Air pressure: ", 150, 160);
-					GUI_DispFloat(buffer[2], 6);
-					GUI_DispString(" Pa");
+//					GUI_DispStringAt("Air pressure: ", 150, 160);
+					GUI_GotoXY(370, 150);
+					GUI_DispFloat(buffer[2], 4);
+//					GUI_DispString(" Pa");
 
 				} while (received_bytes > 0);
 

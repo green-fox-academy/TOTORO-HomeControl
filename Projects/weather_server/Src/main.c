@@ -60,7 +60,7 @@
 #include "stm32746g_discovery_lcd.h"
 
 
-#include "stm32f7xx_hal_conf.h"
+
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -79,7 +79,8 @@ static void CPU_CACHE_Enable(void);
 static void GUIThread(void const * argument);
 static void GUI_Startup();
 
-
+static void http_server_netconn_thread(void *arg);
+void http_server_netconn_init();
 
 
 /* Private functions ---------------------------------------------------------*/
@@ -144,14 +145,25 @@ static void GUI_Startup()
 	GUI_SetLayerVisEx (1, 0);
 	GUI_SelectLayer(0);
 
-	GUI_SetBkColor(GUI_LIGHTBLUE);
+	GUI_SetBkColor(GUI_BLUE);
 	GUI_Clear();
 	//add frame
-	GUI_SetColor(GUI_WHITE);
-	GUI_DrawRoundedRect(20, 20, 460, 252, 10);
+	GUI_SetColor(GUI_DARKBLUE);
+	//GUI_DrawRoundedRect(20, 20, 460, 252, 10);
+	//draw home button
+	GUI_FillRect(0, 55, 154, 209);
+	GUI_FillRect(163, 55, 317, 209);
+	GUI_FillRect(326, 55, 479, 209);
 	//set font
-	GUI_SetFont(GUI_FONT_24_1);
-	//display image
+	GUI_SetColor(GUI_LIGHTGRAY);
+	GUI_SetFont(GUI_FONT_20_1);
+	GUI_DispStringAt("Weather Station", 180, 30);
+	GUI_SetFont(GUI_FONT_13_1);
+	GUI_SetBkColor(GUI_DARKBLUE);
+	GUI_DispStringAt("Temperature (°C)", 35, 80);
+	GUI_DispStringAt("Humidity (%)",210, 80);
+	GUI_DispStringAt("Air pressure (Pa)", 364, 80);
+	GUI_SetFont(GUI_FONT_32_1);
 }
 
 
@@ -181,6 +193,8 @@ static void StartThread(void const * argument)
   
   /* Initialize the LwIP stack */
   Netif_Config();
+
+
 
   /* Notify user about the network interface config */
  User_notification(&gnetif);
@@ -263,7 +277,7 @@ static void BSP_Config(void)
 	 /* Enable Back up SRAM */
 	 __HAL_RCC_BKPSRAM_CLK_ENABLE();
 
-//  /* Initialize the LCD */
+  /* Initialize the LCD */
 //  BSP_LCD_Init();
 //
 //  /* Initialize the LCD Layers */

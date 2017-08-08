@@ -451,4 +451,10 @@
 			<locationURI>PARENT-4-PROJECT_LOC/Middlewares/Third_Party/LwIP/src/core/ipv4/ip4_frag.c</locationURI>
 		</link>
 	</linkedResources>
+	<variableList>
+		<variable>
+			<name>copy_PARENT</name>
+			<value>$%7BPARENT-6-PROJECT_LOC%7D/Documents/GFA/Week_14/en.stm32cubef7/STM32Cube_FW_F7_V1.7.0/Projects/STM32746G-Discovery/Applications/LwIP/LwIP_HTTP_Server_Netconn_RTOS</value>
+		</variable>
+	</variableList>
 </projectDescription>

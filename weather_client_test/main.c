@@ -5,9 +5,11 @@
 #include <conio.h>
 #include <windows.h>
 
-#define SERVER_IP           "10.27.6.36"
+#define SERVER_IP           "10.27.6.99"
 #define SERVER_PORT         8002
 //#define DATA_BUFFER_SIZE    1024
+
+float buffer[3] = {23, 50.0, 1010};
 
 void handle_error(const char *error_string)
 {
@@ -50,7 +52,8 @@ void connect_to_server(SOCKET *client_sock, unsigned int server_port, char *serv
 float send_message(SOCKET *socket)
 {
 	// Get the message from the user
-	float buffer[3] = {1.1, 2.2, 3.3};
+	//float buffer[3] = {1.1, 2.2, 3.3};
+
 	//printf("\nEnter the message to send: ");
 	//gets(msg);
 	// Send the message to the servers
@@ -59,6 +62,10 @@ float send_message(SOCKET *socket)
 	int sent_bytes = send(*socket, buffer, sizeof(buffer), 0);
 	if (sent_bytes < 0)
 		handle_error("send() ");
+
+	for (int i = 0; i < 3; i++) {
+        buffer[i]++;
+	}
 
 	return sent_bytes;
 }

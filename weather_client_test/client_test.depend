@@ -1,0 +1,9 @@
+# depslib dependency file v1.0
+1502188216 source:c:\users\orsi\documents\gfa\week_14\client_test\main.c
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<winsock2.h>
+	<conio.h>
+	<windows.h>
+

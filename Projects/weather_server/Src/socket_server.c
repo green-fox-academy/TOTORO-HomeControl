@@ -108,17 +108,17 @@ void socket_server_thread(void const *argument)
 					LCD_UsrLog("Temperature: %.1f C, Humidity: %.1f%%, Pressure: %.1f Pa,\n", buffer[0], buffer[1], buffer[2]);
 
 //					GUI_DispStringAt("Temperature: ", 150, 80);
-					GUI_GotoXY(50, 150);
+					GUI_GotoXY(50, 130);
 					GUI_DispFloat(buffer[0], 4);
 //					GUI_DispString(" °C");
 
 //					GUI_DispStringAt("Humidity: ", 150, 120);
-					GUI_GotoXY(213, 150);
+					GUI_GotoXY(213, 130);
 					GUI_DispFloat(buffer[1], 4);
 //					GUI_DispString(" %");
 
 //					GUI_DispStringAt("Air pressure: ", 150, 160);
-					GUI_GotoXY(376, 150);
+					GUI_GotoXY(376, 130);
 					GUI_DispFloat(buffer[2]/ 100, 4);
 //					GUI_DispString(" Pa");
 

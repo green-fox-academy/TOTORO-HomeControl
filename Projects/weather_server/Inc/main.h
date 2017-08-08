@@ -60,8 +60,8 @@
 #include "stm32746g_discovery_ts.h"
 
  /* GUI includes components */
- #include "gui.h"
- #include "dialog.h"
+ #include "GUI.h"
+ #include "DIALOG.h"
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/

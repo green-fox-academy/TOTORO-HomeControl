@@ -58,6 +58,7 @@
 #include "socket_server.h"
 #include "socket_client.h"
 #include "stm32746g_discovery_lcd.h"
+#include "canvas_control.h"
 
 
 
@@ -118,6 +119,8 @@ int main(void)
 //	osThreadCreate (osThread(GUI_Thread), NULL);
 
 	GUI_Startup();
+	  /* Activate the use of memory device feature */
+	  WM_SetCreateFlags(WM_CF_MEMDEV);
 
 
 
@@ -164,6 +167,8 @@ static void GUI_Startup()
 	GUI_DispStringAt("Humidity (%)",210, 80);
 	GUI_DispStringAt("Air pressure (hPa)", 364, 80);
 	GUI_SetFont(GUI_FONT_32_1);
+
+
 }
 
 

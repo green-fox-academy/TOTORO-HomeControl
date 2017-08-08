@@ -79,8 +79,8 @@ static void CPU_CACHE_Enable(void);
 static void GUIThread(void const * argument);
 static void GUI_Startup();
 
-static void http_server_netconn_thread(void *arg);
-void http_server_netconn_init();
+//static void http_server_netconn_thread(void *arg);
+//void http_server_netconn_init();
 
 
 /* Private functions ---------------------------------------------------------*/

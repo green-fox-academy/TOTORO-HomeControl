@@ -51,6 +51,11 @@
 			<locationURI>PARENT-2-PROJECT_LOC/Src/ethernetif.c</locationURI>
 		</link>
 		<link>
+			<name>Application/User/httpserver-netconn.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/Src/httpserver-netconn.c</locationURI>
+		</link>
+		<link>
 			<name>Application/User/main.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Src/main.c</locationURI>
@@ -449,6 +454,16 @@
 			<name>Middlewares/LwIP/Core/IPv4/ip4_frag.c</name>
 			<type>1</type>
 			<locationURI>PARENT-4-PROJECT_LOC/Middlewares/Third_Party/LwIP/src/core/ipv4/ip4_frag.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/LwIP/apps/httpd/fs.c</name>
+			<type>1</type>
+			<locationURI>PARENT-4-PROJECT_LOC/Middlewares/Third_Party/LwIP/src/apps/httpd/fs.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/LwIP/apps/httpd/httpd.c</name>
+			<type>1</type>
+			<locationURI>PARENT-4-PROJECT_LOC/Middlewares/Third_Party/LwIP/src/apps/httpd/httpd.c</locationURI>
 		</link>
 	</linkedResources>
 	<variableList>

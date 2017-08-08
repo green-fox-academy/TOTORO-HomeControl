@@ -58,6 +58,7 @@
 #include "socket_server.h"
 #include "socket_client.h"
 #include "stm32746g_discovery_lcd.h"
+#include "httpserver-netconn.h"
 
 
 
@@ -193,6 +194,8 @@ static void StartThread(void const * argument)
   
   /* Initialize the LwIP stack */
   Netif_Config();
+
+  http_server_netconn_init();
 
 
 

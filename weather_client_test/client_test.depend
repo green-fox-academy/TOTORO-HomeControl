@@ -7,3 +7,11 @@
 	<conio.h>
 	<windows.h>
 
+1502193220 source:c:\users\orsi\greenfox\totoro-homecontrol\weather_client_test\main.c
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<winsock2.h>
+	<conio.h>
+	<windows.h>
+

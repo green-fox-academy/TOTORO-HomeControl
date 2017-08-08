@@ -113,11 +113,11 @@ int main(void)
   /* Initialize LCD */
   BSP_Config();
 
-	    /* Create GUI task */
-//	    osThreadDef(GUI_Thread, GUIThread, osPriorityBelowNormal, 0, configMINIMAL_STACK_SIZE * 20);	//2048
-//	    osThreadCreate (osThread(GUI_Thread), NULL);
+	/* Create GUI task */
+//	osThreadDef(GUI_Thread, GUIThread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 10);	//2048
+//	osThreadCreate (osThread(GUI_Thread), NULL);
 
-	    GUI_Startup();
+	GUI_Startup();
 
 
 
@@ -162,7 +162,7 @@ static void GUI_Startup()
 	GUI_SetBkColor(GUI_DARKBLUE);
 	GUI_DispStringAt("Temperature (°C)", 35, 80);
 	GUI_DispStringAt("Humidity (%)",210, 80);
-	GUI_DispStringAt("Air pressure (Pa)", 364, 80);
+	GUI_DispStringAt("Air pressure (hPa)", 364, 80);
 	GUI_SetFont(GUI_FONT_32_1);
 }
 

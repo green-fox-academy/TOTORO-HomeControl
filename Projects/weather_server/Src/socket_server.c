@@ -109,7 +109,7 @@ void socket_server_thread(void const *argument)
 
 //					GUI_DispStringAt("Temperature: ", 150, 80);
 					GUI_GotoXY(50, 150);
-					GUI_DispFloat(buffer[0], 3);
+					GUI_DispFloat(buffer[0], 4);
 //					GUI_DispString(" °C");
 
 //					GUI_DispStringAt("Humidity: ", 150, 120);
@@ -119,7 +119,7 @@ void socket_server_thread(void const *argument)
 
 //					GUI_DispStringAt("Air pressure: ", 150, 160);
 					GUI_GotoXY(376, 150);
-					GUI_DispFloat(buffer[2], 4);
+					GUI_DispFloat(buffer[2]/ 100, 4);
 //					GUI_DispString(" Pa");
 
 				} while (received_bytes > 0);

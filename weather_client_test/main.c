@@ -9,7 +9,7 @@
 #define SERVER_PORT         8002
 //#define DATA_BUFFER_SIZE    1024
 
-float buffer[3] = {23, 50.0, 1010};
+float buffer[3] = {23.0, 50.0, 101300};
 
 void handle_error(const char *error_string)
 {
@@ -63,9 +63,9 @@ float send_message(SOCKET *socket)
 	if (sent_bytes < 0)
 		handle_error("send() ");
 
-	for (int i = 0; i < 3; i++) {
-        buffer[i]++;
-	}
+	buffer[0]++;
+	buffer[1]++;
+	buffer[2] += 100;
 
 	return sent_bytes;
 }

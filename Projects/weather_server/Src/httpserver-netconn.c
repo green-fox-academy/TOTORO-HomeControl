@@ -236,6 +236,7 @@ void DynWebPage(struct netconn *conn)
     
   /* The list of tasks and their status */
   //osThreadList((unsigned char *)(PAGE_BODY + strlen(PAGE_BODY)));
+
   strcat((char *)PAGE_BODY, "<br><br>--------------------------------------------------");
   //strcat((char *)PAGE_BODY, "<br>B : Blocked, R : Ready, D : Deleted, S : Suspended<br>");
 

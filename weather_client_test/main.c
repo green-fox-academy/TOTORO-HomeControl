@@ -5,7 +5,7 @@
 #include <conio.h>
 #include <windows.h>
 
-#define SERVER_IP           "10.27.6.99"
+#define SERVER_IP           "10.27.99.195"
 #define SERVER_PORT         8002
 //#define DATA_BUFFER_SIZE    1024
 

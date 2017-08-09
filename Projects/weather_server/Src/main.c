@@ -60,6 +60,10 @@
 #include "stm32746g_discovery_lcd.h"
 #include "canvas_control.h"
 
+#include "GUI.h"
+#include "DIALOG.h"
+
+
 
 
 
@@ -68,6 +72,18 @@
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 struct netif gnetif; /* network interface structure */
+
+const GUI_POINT tri_up[] = {
+{ 417, 60},
+{ 433, 60},
+{ 425, 44}
+};
+
+const GUI_POINT tri_down[] = {
+{ 417, 164},
+{ 433, 164},
+{ 425, 180}
+};
 
 /* Private function prototypes -----------------------------------------------*/
 static void SystemClock_Config(void);
@@ -111,6 +127,7 @@ int main(void)
   /* Configure the system clock to 200 MHz */
   SystemClock_Config(); 
 
+
   /* Initialize LCD */
   BSP_Config();
 
@@ -119,14 +136,13 @@ int main(void)
 //	osThreadCreate (osThread(GUI_Thread), NULL);
 
 	GUI_Startup();
-	  /* Activate the use of memory device feature */
-	  WM_SetCreateFlags(WM_CF_MEMDEV);
-
-
 
   /* Init thread */
   osThreadDef(Start, StartThread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
   osThreadCreate (osThread(Start), NULL);
+
+  //select from menu
+
 
   /* Start scheduler */
   osKernelStart();
@@ -148,28 +164,46 @@ static void GUI_Startup()
 	GUI_SetLayerVisEx (1, 0);
 	GUI_SelectLayer(0);
 
+	//split screen for weather station and projector canvas control
 	GUI_SetBkColor(GUI_BLUE);
 	GUI_Clear();
-	//add frame
 	GUI_SetColor(GUI_DARKBLUE);
-	//GUI_DrawRoundedRect(20, 20, 460, 252, 10);
-	//draw home button
-	GUI_FillRect(0, 55, 154, 209);
-	GUI_FillRect(163, 55, 317, 209);
-	GUI_FillRect(326, 55, 479, 209);
-	//set font
+	GUI_FillRect(0, 0, 100, 272);	//controls
+	GUI_FillRect(105, 0, 275, 170);	//temperature
+	GUI_FillRect(280, 0, 365, 85);	//humidity
+	GUI_FillRect(280, 90, 365, 170);	//air pressure
+	GUI_FillRect(105, 175, 365, 272);	//AC control
+	GUI_FillRect(370, 0, 480, 217);	//projector canvas control
+	GUI_FillRect(370, 222, 480, 272);	//empty
 	GUI_SetColor(GUI_LIGHTGRAY);
-	GUI_SetFont(GUI_FONT_20_1);
-	GUI_DispStringAt("Weather Station", 177, 30);
-	GUI_SetFont(GUI_FONT_13_1);
+	GUI_SetFont(GUI_FONT_16_1);
 	GUI_SetBkColor(GUI_DARKBLUE);
-	GUI_DispStringAt("Temperature (°C)", 35, 80);
-	GUI_DispStringAt("Humidity (%)",210, 80);
-	GUI_DispStringAt("Air pressure (hPa)", 364, 80);
-	GUI_SetFont(GUI_FONT_32_1);
+	GUI_DispStringAt("HomeControl", 5, 5);
+	GUI_SetFont(GUI_FONT_13_1);
+	GUI_DispStringAt("Temperature (°C)", 110, 5);
+	GUI_DispStringAt("Humidity (%)", 285, 5);
+	GUI_DispStringAt("Pressure (hPa)", 285, 95);
+	GUI_DispStringAt("Projector", 375, 5);
+	GUI_SetColor(GUI_BLUE);
+	GUI_FillRect(400, 27, 450, 77);	//up
+	GUI_FillRect(400, 87, 450, 137);	//stop
+	GUI_FillRect(400, 147, 450, 197);	//down
+	GUI_SetColor(GUI_DARKBLUE);
+	GUI_FillRect(402, 29, 448, 75);	//up
+	GUI_FillRect(402, 89, 448, 135);	//stop
+	GUI_FillRect(402, 149, 448, 195);	//down
+
+	GUI_SetColor(GUI_BLUE);
+	GUI_FillPolygon(tri_up, 3, 0, 0);	//up
+	GUI_FillRect(417, 104, 433, 120);	//stop
+	GUI_FillPolygon(tri_down, 3, 0, 0);	//down
 
 
 }
+
+
+
+
 
 
 
@@ -274,7 +308,7 @@ static void BSP_Config(void)
 	  BSP_SDRAM_Init();
 
 	  /* Initialize the Touch screen */
-	  BSP_TS_Init(420, 272);
+	  BSP_TS_Init(480, 272);
 
 	  /* Enable CRC to Unlock GUI */
 	 __HAL_RCC_CRC_CLK_ENABLE();

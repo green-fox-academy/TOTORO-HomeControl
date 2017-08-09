@@ -118,9 +118,6 @@ void socket_server_thread(void const *argument)
 					GUI_GotoXY(312, 142);
 					GUI_DispFloat(buffer[2]/ 100, 4);	//display pressure
 
-//					GUI_FillRect(280, 90, 365, 170);	//air pressure
-//					GUI_FillRect(280, 0, 365, 85);	//humidity
-
 				} while (received_bytes > 0);
 
 				// Close the socket

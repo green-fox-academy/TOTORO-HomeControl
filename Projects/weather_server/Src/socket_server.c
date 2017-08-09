@@ -9,7 +9,7 @@
 #include "stm32746g_discovery_lcd.h"
 #include "GUI.h"
 #include "DIALOG.h"
-
+float received_weather_data[3] = {12.12, 23.23, 34.34};
 
 
 #define SERVER_QUEUE_SIZE 100

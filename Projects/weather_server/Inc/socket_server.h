@@ -8,7 +8,7 @@
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
 void socket_server_thread(void const *argument);
-
+extern float received_weather_data[3];
 #endif /* __SOCKET_SERVER_H */
 
 

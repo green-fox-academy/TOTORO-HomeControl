@@ -56,6 +56,7 @@
 #include "httpserver-netconn.h"
 #include "cmsis_os.h"
 #include "stm32746g_discovery.h"
+#include "socket_server.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -238,7 +239,7 @@ void DynWebPage(struct netconn *conn)
   strcat(PAGE_BODY, pagehits);*/
   strcat((char *)PAGE_BODY, "<pre><br>Temperature:		Humidity:		Pressure(Pa):" );
   strcat((char *)PAGE_BODY, "<br>------------------------------------------------------------------<br>");
-  sprintf(buf, "%.2f oC	 	%.2f %%			 %.2f", weather_data[0], weather_data[1], weather_data[2]);
+  sprintf(buf, "%.2f oC	 	%.2f %%			 %.2f", received_weather_data[0], received_weather_data[1], received_weather_data[2]);
   strcat(PAGE_BODY, buf);
   strcat((char *)PAGE_BODY, "<br><br>-------------------------------------------------------------------");
 

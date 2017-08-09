@@ -213,10 +213,13 @@ static void StartThread(void const * argument)
   // Define and start the server thread
   osThreadDef(SOCKET_SERVER, socket_server_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
   osThreadCreate (osThread(SOCKET_SERVER), NULL);
+  osDelay(1000);
 
   // TODO:
-  // Define and start the client thread
-
+  // Define and start the projector thread
+  //osThreadDef(PROJECTOR_SERVER, projector_server_thread, osPriorityBelowNormal, 0, configMINIMAL_STACK_SIZE * 2);
+  //osThreadCreate (osThread(PROJECTOR_SERVER), NULL);
+  //osDelay(1000);
 
   while (1) {
     /* Delete the Init Thread */ 

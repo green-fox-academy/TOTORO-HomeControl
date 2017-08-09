@@ -9,12 +9,12 @@
 #include "stm32746g_discovery_lcd.h"
 #include "GUI.h"
 #include "DIALOG.h"
-float received_weather_data[3] = {12.12, 23.23, 34.34};
+float received_weather_data[3];
 
 
 #define SERVER_QUEUE_SIZE 100
 #define SERVER_BUFF_LEN 100
-#define PORT 9002
+#define PORT 9500
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -100,25 +100,25 @@ void socket_server_thread(void const *argument)
 				// Define buffer for incoming message
 				//char buff[SERVER_BUFF_LEN];
 				float received_bytes;
-				float buffer[3];
+				//float buffer[3];
 				// Receive data
 				do {
 					
-					received_bytes = recv(client_socket, buffer, sizeof(buffer), 0);
-					LCD_UsrLog("Temperature: %.1f C, Humidity: %.1f%%, Pressure: %.1f Pa,\n", buffer[0], buffer[1], buffer[2]);
+					received_bytes = recv(client_socket, received_weather_data, sizeof(received_weather_data), 0);
+					LCD_UsrLog("Temperature: %.1f C, Humidity: %.1f%%, Pressure: %.1f Pa,\n", received_weather_data[0], received_weather_data[1], received_weather_data[2]);
 //					GUI_DispStringAt("Temperature: ", 150, 80);
 					GUI_GotoXY(50, 150);
-					GUI_DispFloat(buffer[0], 3);
+					GUI_DispFloat(received_weather_data[0], 3);
 //					GUI_DispString(" �C");
 
 //					GUI_DispStringAt("Humidity: ", 150, 120);
 					GUI_GotoXY(213, 150);
-					GUI_DispFloat(buffer[1], 4);
+					GUI_DispFloat(received_weather_data[1], 4);
 //					GUI_DispString(" %");
 
 //					GUI_DispStringAt("Air pressure: ", 150, 160);
 					GUI_GotoXY(376, 150);
-					GUI_DispFloat(buffer[2], 4);
+					GUI_DispFloat(received_weather_data[2], 4);
 //					GUI_DispString(" Pa");
 
 				} while (received_bytes > 0);

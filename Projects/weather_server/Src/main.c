@@ -60,9 +60,6 @@
 #include "stm32746g_discovery_lcd.h"
 #include "httpserver-netconn.h"
 
-
-
-
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
@@ -115,8 +112,8 @@ int main(void)
   BSP_Config();
 
 	    /* Create GUI task */
-  osThreadDef(GUI_Thread, GUIThread, osPriorityBelowNormal, 0, configMINIMAL_STACK_SIZE * 20);	//2048
-  osThreadCreate (osThread(GUI_Thread), NULL);
+  //osThreadDef(GUI_Thread, GUIThread, osPriorityBelowNormal, 0, configMINIMAL_STACK_SIZE * 20);	//2048
+  //osThreadCreate (osThread(GUI_Thread), NULL);
 
 	    GUI_Startup();
 

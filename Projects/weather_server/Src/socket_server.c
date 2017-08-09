@@ -107,6 +107,7 @@ void socket_server_thread(void const *argument)
 					received_bytes = recv(client_socket, buffer, sizeof(buffer), 0);
 					LCD_UsrLog("Temperature: %.1f C, Humidity: %.1f%%, Pressure: %.f Pa,\n", buffer[0], buffer[1], buffer[2]);
 
+					GUI_SetColor(GUI_LIGHTGRAY);
 					GUI_GotoXY(167, 90);
 					GUI_SetFont(GUI_FONT_D64);	//display temperature
 					GUI_DispFloat(buffer[0], 2);

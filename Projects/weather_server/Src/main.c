@@ -185,13 +185,13 @@ static void GUI_Startup()
 	GUI_DispStringAt("Pressure (hPa)", 285, 95);
 	GUI_DispStringAt("Projector", 375, 5);
 	GUI_SetColor(GUI_BLUE);
-	GUI_FillRect(400, 27, 450, 77);	//up
-	GUI_FillRect(400, 87, 450, 137);	//stop
-	GUI_FillRect(400, 147, 450, 197);	//down
+	GUI_FillRect(400, 29, 450, 79);	//up
+	GUI_FillRect(400, 89, 450, 139);	//stop
+	GUI_FillRect(400, 149, 450, 199);	//down
 	GUI_SetColor(GUI_DARKBLUE);
-	GUI_FillRect(402, 29, 448, 75);	//up
-	GUI_FillRect(402, 89, 448, 135);	//stop
-	GUI_FillRect(402, 149, 448, 195);	//down
+	GUI_FillRect(402, 31, 448, 77);	//up
+	GUI_FillRect(402, 91, 448, 137);	//stop
+	GUI_FillRect(402, 151, 448, 197);	//down
 
 	GUI_SetColor(GUI_BLUE);
 	GUI_FillPolygon(tri_up, 3, 0, 0);	//up

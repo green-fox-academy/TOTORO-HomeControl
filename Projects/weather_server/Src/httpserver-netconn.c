@@ -226,7 +226,7 @@ void DynWebPage(struct netconn *conn)
 
   /* Update the hit count */
   /*Config userbutton*/
-  BSP_PB_Init(2, 0);
+ /* BSP_PB_Init(2, 0);
 
   if (BSP_PB_GetState(2) > 0) {
       nPageHits = 0;
@@ -235,27 +235,17 @@ void DynWebPage(struct netconn *conn)
   }
 
   sprintf(pagehits, "%d", (int)nPageHits);
-  strcat(PAGE_BODY, pagehits);
-  strcat((char *)PAGE_BODY, "<pre><br>Temperature:	Humidity:	Pressure(Pa):" );
-  strcat((char *)PAGE_BODY, "<br>-------------------------------------------------<br>");
-
-  sprintf(buf, "%.2f oC	 	%.2f%%		 %.2f", weather_data[0], weather_data[1], weather_data[2]);
-
-
-
+  strcat(PAGE_BODY, pagehits);*/
+  strcat((char *)PAGE_BODY, "<pre><br>Temperature:		Humidity:		Pressure(Pa):" );
+  strcat((char *)PAGE_BODY, "<br>------------------------------------------------------------------<br>");
+  sprintf(buf, "%.2f oC	 	%.2f %%			 %.2f", weather_data[0], weather_data[1], weather_data[2]);
   strcat(PAGE_BODY, buf);
-
-
-  /* The list of tasks and their status */
-  //osThreadList((unsigned char *)(PAGE_BODY + strlen(PAGE_BODY)));
-
-  strcat((char *)PAGE_BODY, "<br><br>--------------------------------------------------");
-  //strcat((char *)PAGE_BODY, "<br>B : Blocked, R : Ready, D : Deleted, S : Suspended<br>");
+  strcat((char *)PAGE_BODY, "<br><br>-------------------------------------------------------------------");
 
 
 
   /* Send the dynamically generated page */
   netconn_write(conn, PAGE_START, strlen((char*)PAGE_START), NETCONN_COPY);
   netconn_write(conn, PAGE_BODY, strlen(PAGE_BODY), NETCONN_COPY);
-  //netconn_write(conn, weather_data, strlen((char *)weather_data), NETCONN_COPY);
+
 }

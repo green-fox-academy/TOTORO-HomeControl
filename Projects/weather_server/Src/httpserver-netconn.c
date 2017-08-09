@@ -65,6 +65,7 @@
 /* Private variables ---------------------------------------------------------*/
 u32_t nPageHits = 0;
 
+
 /* Format of dynamic web page: the page header */
 static const unsigned char PAGE_START[] = {
     0x3c,0x21,0x44,0x4f,0x43,0x54,0x59,0x50,0x45,0x20,0x68,0x74,0x6d,0x6c,0x20,0x50,0x55,0x42,0x4c,0x49,0x43,0x20,
@@ -143,6 +144,7 @@ static void http_server_serve(struct netconn *conn)
 
            /* Load dynamic page */
            DynWebPage(conn);
+           //netconn_write(conn, &weather_data, sizeof(char), NETCONN_NOCOPY);
       }
       }
     }
@@ -214,10 +216,13 @@ void http_server_netconn_init()
   */
 void DynWebPage(struct netconn *conn)
 {
-  portCHAR PAGE_BODY[512];
+  portCHAR PAGE_BODY[1024];
+  portFLOAT weather_data [3]= {42.15, 15.5, 89.6};
+  portCHAR buf[128];
   portCHAR pagehits[10] = {0};
 
   memset(PAGE_BODY, 0,512);
+  memcpy(buf, &weather_data, sizeof(float));
 
   /* Update the hit count */
   /*Config userbutton*/
@@ -233,7 +238,14 @@ void DynWebPage(struct netconn *conn)
   strcat(PAGE_BODY, pagehits);
   strcat((char *)PAGE_BODY, "<pre><br>Temperature:	Humidity:	Pressure(Pa):" );
   strcat((char *)PAGE_BODY, "<br>-------------------------------------------------<br>");
-    
+
+  sprintf(buf, "%.2f oC	 	%.2f%%		 %.2f", weather_data[0], weather_data[1], weather_data[2]);
+
+
+
+  strcat(PAGE_BODY, buf);
+
+
   /* The list of tasks and their status */
   //osThreadList((unsigned char *)(PAGE_BODY + strlen(PAGE_BODY)));
 
@@ -245,4 +257,5 @@ void DynWebPage(struct netconn *conn)
   /* Send the dynamically generated page */
   netconn_write(conn, PAGE_START, strlen((char*)PAGE_START), NETCONN_COPY);
   netconn_write(conn, PAGE_BODY, strlen(PAGE_BODY), NETCONN_COPY);
+  //netconn_write(conn, weather_data, strlen((char *)weather_data), NETCONN_COPY);
 }

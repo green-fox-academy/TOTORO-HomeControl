@@ -269,23 +269,20 @@ void http_server_netconn_init()
   */
 void DynWebPage(struct netconn *conn)
 {
-  portCHAR PAGE_BODY[1024];
+  portCHAR PAGE_BODY[2040];
   portFLOAT weather_data [3]= {42.15, 15.5, 89.6};
   portCHAR buf[128];
-  portCHAR pagehits[10] = {0};
+
 
   memset(PAGE_BODY, 0,512);
   memcpy(buf, &weather_data, sizeof(float));
 
-
-  strcat((char *)PAGE_BODY, "<pre><br>Temperature (�C):		Humidity (%):		Pressure (Pa):" );
-  strcat((char *)PAGE_BODY, "<br>------------------------------------------------------------------<br>");
+  strcat((char *)PAGE_BODY, "<w_data><pre><br>Temperature (oC):		Humidity (%):		Pressure (Pa):" );
+  strcat((char *)PAGE_BODY, "<br>--------------------------------------------------------------------<br>");
   sprintf(buf, "%.2f 	 			%.1f 			%.2f", received_weather_data[0], received_weather_data[1], received_weather_data[2]);
   strcat(PAGE_BODY, buf);
-  strcat((char *)PAGE_BODY, "<br><br>-------------------------------------------------------------------");
-
-
-
+  strcat((char *)PAGE_BODY, "<br>---------------------------------------------------------------------<br></w_data>");
+  strcat((char *)PAGE_BODY, "<style>w_data {text-align: center; color: #D3D3D3; font-family: Arial;} </style>");
   /* Send the dynamically generated page */
   netconn_write(conn, PAGE_START, strlen((char*)PAGE_START), NETCONN_COPY);
   netconn_write(conn, PAGE_BODY, strlen(PAGE_BODY), NETCONN_COPY);

@@ -10,7 +10,7 @@
 
 #define SERVER_QUEUE_SIZE 100
 #define SERVER_BUFF_LEN 100
-#define PORT 9400
+#define PORT 8002
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/

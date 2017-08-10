@@ -61,9 +61,6 @@
 #include "httpserver-netconn.h"
 #include "projector_server.h"
 
-
-
-
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
@@ -93,10 +90,6 @@ static void CPU_CACHE_Enable(void);
 static void GUIThread(void const * argument);
 static void GUI_Startup();
 
-//static void http_server_netconn_thread(void *arg);
-//void http_server_netconn_init();
-
-
 /* Private functions ---------------------------------------------------------*/
 
 /**
@@ -107,44 +100,42 @@ static void GUI_Startup();
 
 int main(void)
 {
-  /* Configure the MPU attributes as Device memory for ETH DMA descriptors */
-  MPU_Config();
+	/* Configure the MPU attributes as Device memory for ETH DMA descriptors */
+	MPU_Config();
 
-  /* Enable the CPU Cache */
-  CPU_CACHE_Enable();
+	/* Enable the CPU Cache */
+	CPU_CACHE_Enable();
 
-  /* STM32F7xx HAL library initialization:
-       - Configure the Flash ART accelerator on ITCM interface
-       - Configure the Systick to generate an interrupt each 1 msec
-       - Set NVIC Group Priority to 4
-       - Global MSP (MCU Support Package) initialization
-     */
-  HAL_Init();  
+	/* STM32F7xx HAL library initialization:
+	   - Configure the Flash ART accelerator on ITCM interface
+	   - Configure the Systick to generate an interrupt each 1 msec
+	   - Set NVIC Group Priority to 4
+	   - Global MSP (MCU Support Package) initialization
+	*/
+	HAL_Init();
   
-  /* Configure the system clock to 200 MHz */
-  SystemClock_Config(); 
+	/* Configure the system clock to 200 MHz */
+	SystemClock_Config();
 
-  /* Initialize LCD */
-  BSP_Config();
+	/* Initialize LCD */
+	BSP_Config();
 
-	    /* Create GUI task */
-  //osThreadDef(GUI_Thread, GUIThread, osPriorityBelowNormal, 0, configMINIMAL_STACK_SIZE * 20);	//2048
-  //osThreadCreate (osThread(GUI_Thread), NULL);
+	/* Create GUI task */
+	//osThreadDef(GUI_Thread, GUIThread, osPriorityBelowNormal, 0, configMINIMAL_STACK_SIZE * 20);	//2048
+	//osThreadCreate (osThread(GUI_Thread), NULL);
 
-  GUI_Startup();
+	GUI_Startup();
 
+	/*Init thread */
+	osThreadDef(Start, StartThread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+	osThreadCreate (osThread(Start), NULL);
 
+	/* Start scheduler */
+	osKernelStart();
 
-  /* Init thread */
-  osThreadDef(Start, StartThread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
-  osThreadCreate (osThread(Start), NULL);
-
-  /* Start scheduler */
-  osKernelStart();
-
-  /* We should never get here as control is now taken by the scheduler */
-  while(1) {
-  }
+	/* We should never get here as control is now taken by the scheduler */
+	while(1) {
+	}
 }
 
 /**
@@ -163,12 +154,12 @@ static void GUI_Startup()
 	GUI_SetBkColor(GUI_BLUE);
 	GUI_Clear();
 	GUI_SetColor(GUI_DARKBLUE);
-	GUI_FillRect(0, 0, 100, 272);	//controls
-	GUI_FillRect(105, 0, 275, 170);	//temperature
-	GUI_FillRect(280, 0, 365, 85);	//humidity
+	GUI_FillRect(0, 0, 100, 272);		//controls
+	GUI_FillRect(105, 0, 275, 170);		//temperature
+	GUI_FillRect(280, 0, 365, 85);		//humidity
 	GUI_FillRect(280, 90, 365, 170);	//air pressure
 	GUI_FillRect(105, 175, 365, 272);	//AC control
-	GUI_FillRect(370, 0, 480, 217);	//projector canvas control
+	GUI_FillRect(370, 0, 480, 217);		//projector canvas control
 	GUI_FillRect(370, 222, 480, 272);	//empty
 	GUI_SetColor(GUI_LIGHTGRAY);
 	GUI_SetFont(GUI_FONT_16_1);
@@ -180,11 +171,11 @@ static void GUI_Startup()
 	GUI_DispStringAt("Pressure (hPa)", 285, 95);
 	GUI_DispStringAt("Projector", 375, 5);
 	GUI_SetColor(GUI_BLUE);
-	GUI_FillRect(400, 27, 450, 77);	//up
+	GUI_FillRect(400, 27, 450, 77);		//up
 	GUI_FillRect(400, 87, 450, 137);	//stop
 	GUI_FillRect(400, 147, 450, 197);	//down
 	GUI_SetColor(GUI_DARKBLUE);
-	GUI_FillRect(402, 29, 448, 75);	//up
+	GUI_FillRect(402, 29, 448, 75);		//up
 	GUI_FillRect(402, 89, 448, 135);	//stop
 	GUI_FillRect(402, 149, 448, 195);	//down
 
@@ -194,15 +185,13 @@ static void GUI_Startup()
 	GUI_FillPolygon(tri_down, 3, 0, 0);	//down
 }
 
-
-
 static void GUIThread(void const * argument)
 {
 	/* Gui background Task */
-  while(1) {
-    GUI_Exec(); /* Do the background work ... Update windows etc.) */
-    osDelay(20); /* Nothing left to do for the moment ... Idle processing */
-  }
+	while(1) {
+		GUI_Exec(); /* Do the background work ... Update windows etc.) */
+		osDelay(20); /* Nothing left to do for the moment ... Idle processing */
+	}
 }
 
 /**
@@ -212,46 +201,42 @@ static void GUIThread(void const * argument)
   */
 static void StartThread(void const * argument)
 { 
-  /* Initialize LCD */
+	/* Initialize LCD */
 	//BSP_Config();
 
-  /* Create tcp_ip stack thread */
-  tcpip_init(NULL, NULL);
-  
-  /* Initialize the LwIP stack */
-  Netif_Config();
+	/* Create tcp_ip stack thread */
+	tcpip_init(NULL, NULL);
 
-  http_server_netconn_init();
+	/* Initialize the LwIP stack */
+	Netif_Config();
 
-  /* Notify user about the network interface config */
- User_notification(&gnetif);
-  
-  /* Create GUI task */
-//  osThreadDef(GUI_Thread, GUIThread, osPriorityAboveNormal, 0, 2048);
-//  osThreadCreate (osThread(GUI_Thread), NULL);
+	/* start httpserver thread */
+	http_server_netconn_init();
 
+	/* Notify user about the network interface config */
+	User_notification(&gnetif);
 
-  /* Start DHCPClient */
-  osThreadDef(DHCP, DHCP_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
-  osThreadCreate (osThread(DHCP), &gnetif);
-  osDelay(2000);
+	/* Create GUI task */
+	//  osThreadDef(GUI_Thread, GUIThread, osPriorityAboveNormal, 0, 2048);
+	//  osThreadCreate (osThread(GUI_Thread), NULL);
 
-  // TODO:
-  // Define and start the server thread
-  osThreadDef(SOCKET_SERVER, socket_server_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
-  osThreadCreate (osThread(SOCKET_SERVER), NULL);
-//  osDelay(1000);
+	/* Start DHCPClient */
+	osThreadDef(DHCP, DHCP_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+	osThreadCreate (osThread(DHCP), &gnetif);
+	osDelay(2000);
 
-  // TODO:
-   //Define and start the projector thread
-  osThreadDef(PROJECTOR_SERVER, projector_server_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
-  osThreadCreate (osThread(PROJECTOR_SERVER), NULL);
-//  osDelay(1000);
+	//Define and start the server thread
+	osThreadDef(SOCKET_SERVER, socket_server_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+	osThreadCreate (osThread(SOCKET_SERVER), NULL);
 
-  while (1) {
-    /* Delete the Init Thread */ 
-    osThreadTerminate(NULL);
-  }
+	//Define and start the projector thread
+	osThreadDef(PROJECTOR_SERVER, projector_server_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+	osThreadCreate (osThread(PROJECTOR_SERVER), NULL);
+
+	while (1) {
+		/* Delete the Init Thread */
+		osThreadTerminate(NULL);
+	}
 }
 
 /**
@@ -261,29 +246,29 @@ static void StartThread(void const * argument)
   */
 static void Netif_Config(void)
 { 
-  ip_addr_t ipaddr;
-  ip_addr_t netmask;
-  ip_addr_t gw;
- 
-  ip_addr_set_zero_ip4(&ipaddr);
-  ip_addr_set_zero_ip4(&netmask);
-  ip_addr_set_zero_ip4(&gw);
+	ip_addr_t ipaddr;
+	ip_addr_t netmask;
+	ip_addr_t gw;
+
+	ip_addr_set_zero_ip4(&ipaddr);
+	ip_addr_set_zero_ip4(&netmask);
+	ip_addr_set_zero_ip4(&gw);
+
+	netif_add(&gnetif, &ipaddr, &netmask, &gw, NULL, &ethernetif_init, &tcpip_input);
+
+	/*  Registers the default network interface. */
+	netif_set_default(&gnetif);
   
-  netif_add(&gnetif, &ipaddr, &netmask, &gw, NULL, &ethernetif_init, &tcpip_input);
-  
-  /*  Registers the default network interface. */
-  netif_set_default(&gnetif);
-  
-  if (netif_is_link_up(&gnetif))
-  {
-    /* When the netif is fully configured this function must be called.*/
-    netif_set_up(&gnetif);
-  }
-  else
-  {
-    /* When the netif link is down this function must be called */
-    netif_set_down(&gnetif);
-  }
+	if (netif_is_link_up(&gnetif))
+	{
+		/* When the netif is fully configured this function must be called.*/
+		netif_set_up(&gnetif);
+	}
+	else
+	{
+		/* When the netif link is down this function must be called */
+		netif_set_down(&gnetif);
+	}
 }
 
 /**
@@ -294,21 +279,21 @@ static void Netif_Config(void)
 static void BSP_Config(void)
 {
 
-	  BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_GPIO);
+	BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_GPIO);
 	/* Initialize the SDRAM */
-	  BSP_SDRAM_Init();
+	BSP_SDRAM_Init();
 
-	  /* Initialize the Touch screen */
-	  //BSP_TS_Init(420, 272);
-	  BSP_TS_Init(480, 272);
+	/* Initialize the Touch screen */
+	//BSP_TS_Init(420, 272);
+	BSP_TS_Init(480, 272);
 
-	  /* Enable CRC to Unlock GUI */
-	 __HAL_RCC_CRC_CLK_ENABLE();
+	/* Enable CRC to Unlock GUI */
+	__HAL_RCC_CRC_CLK_ENABLE();
 
-	 /* Enable Back up SRAM */
-	 __HAL_RCC_BKPSRAM_CLK_ENABLE();
+	/* Enable Back up SRAM */
+	__HAL_RCC_BKPSRAM_CLK_ENABLE();
 
-  /* Initialize the LCD */
+//	/* Initialize the LCD */
 //  BSP_LCD_Init();
 //
 //  /* Initialize the LCD Layers */
@@ -354,41 +339,41 @@ static void BSP_Config(void)
   */
 static void SystemClock_Config(void)
 {
-  RCC_ClkInitTypeDef RCC_ClkInitStruct;
-  RCC_OscInitTypeDef RCC_OscInitStruct;
+	RCC_ClkInitTypeDef RCC_ClkInitStruct;
+	RCC_OscInitTypeDef RCC_OscInitStruct;
 
-  /* Enable HSE Oscillator and activate PLL with HSE as source */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
-  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
-  RCC_OscInitStruct.HSIState = RCC_HSI_OFF;
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-  RCC_OscInitStruct.PLL.PLLM = 25;
-  RCC_OscInitStruct.PLL.PLLN = 400;
-  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-  RCC_OscInitStruct.PLL.PLLQ = 9;
-  if(HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
-  {
-    Error_Handler();
-  }
+	/* Enable HSE Oscillator and activate PLL with HSE as source */
+	RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+	RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+	RCC_OscInitStruct.HSIState = RCC_HSI_OFF;
+	RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+	RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+	RCC_OscInitStruct.PLL.PLLM = 25;
+	RCC_OscInitStruct.PLL.PLLN = 400;
+	RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
+	RCC_OscInitStruct.PLL.PLLQ = 9;
+	if(HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+	{
+		Error_Handler();
+	}
 
   /* activate the OverDrive */
-  if(HAL_PWREx_EnableOverDrive() != HAL_OK)
-  {
-    Error_Handler();
-  }
+	if(HAL_PWREx_EnableOverDrive() != HAL_OK)
+	{
+		Error_Handler();
+	}
   
   /* Select PLL as system clock source and configure the HCLK, PCLK1 and PCLK2 
      clocks dividers */
-  RCC_ClkInitStruct.ClockType = (RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2);
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;  
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;  
-  if(HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_7) != HAL_OK)
-  {
-    Error_Handler();
-  }
+	RCC_ClkInitStruct.ClockType = (RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2);
+	RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+	RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+	RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
+	RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
+	if(HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_7) != HAL_OK)
+	{
+	Error_Handler();
+	}
 }
 
 /**
@@ -414,28 +399,28 @@ static void Error_Handler(void)
   */
 static void MPU_Config(void)
 {
-  MPU_Region_InitTypeDef MPU_InitStruct;
-  
-  /* Disable the MPU */
-  HAL_MPU_Disable();
-  
-  /* Configure the MPU attributes as Device for Ethernet Descriptors in the SRAM */
-  MPU_InitStruct.Enable = MPU_REGION_ENABLE;
-  MPU_InitStruct.BaseAddress = 0x20010000;
-  MPU_InitStruct.Size = MPU_REGION_SIZE_256B;
-  MPU_InitStruct.AccessPermission = MPU_REGION_FULL_ACCESS;
-  MPU_InitStruct.IsBufferable = MPU_ACCESS_BUFFERABLE;
-  MPU_InitStruct.IsCacheable = MPU_ACCESS_NOT_CACHEABLE;
-  MPU_InitStruct.IsShareable = MPU_ACCESS_SHAREABLE;
-  MPU_InitStruct.Number = MPU_REGION_NUMBER0;
-  MPU_InitStruct.TypeExtField = MPU_TEX_LEVEL0;
-  MPU_InitStruct.SubRegionDisable = 0x00;
-  MPU_InitStruct.DisableExec = MPU_INSTRUCTION_ACCESS_ENABLE;
+	MPU_Region_InitTypeDef MPU_InitStruct;
 
-  HAL_MPU_ConfigRegion(&MPU_InitStruct);
+	/* Disable the MPU */
+	HAL_MPU_Disable();
 
-  /* Enable the MPU */
-  HAL_MPU_Enable(MPU_PRIVILEGED_DEFAULT);
+	/* Configure the MPU attributes as Device for Ethernet Descriptors in the SRAM */
+	MPU_InitStruct.Enable = MPU_REGION_ENABLE;
+	MPU_InitStruct.BaseAddress = 0x20010000;
+	MPU_InitStruct.Size = MPU_REGION_SIZE_256B;
+	MPU_InitStruct.AccessPermission = MPU_REGION_FULL_ACCESS;
+	MPU_InitStruct.IsBufferable = MPU_ACCESS_BUFFERABLE;
+	MPU_InitStruct.IsCacheable = MPU_ACCESS_NOT_CACHEABLE;
+	MPU_InitStruct.IsShareable = MPU_ACCESS_SHAREABLE;
+	MPU_InitStruct.Number = MPU_REGION_NUMBER0;
+	MPU_InitStruct.TypeExtField = MPU_TEX_LEVEL0;
+	MPU_InitStruct.SubRegionDisable = 0x00;
+	MPU_InitStruct.DisableExec = MPU_INSTRUCTION_ACCESS_ENABLE;
+
+	HAL_MPU_ConfigRegion(&MPU_InitStruct);
+
+	/* Enable the MPU */
+	HAL_MPU_Enable(MPU_PRIVILEGED_DEFAULT);
 }
 
 /**
@@ -445,11 +430,11 @@ static void MPU_Config(void)
   */
 static void CPU_CACHE_Enable(void)
 {
-  /* Enable I-Cache */
-  SCB_EnableICache();
+	/* Enable I-Cache */
+	SCB_EnableICache();
 
-  /* Enable D-Cache */
-  SCB_EnableDCache();
+	/* Enable D-Cache */
+	SCB_EnableDCache();
 }
 
 #ifdef  USE_FULL_ASSERT

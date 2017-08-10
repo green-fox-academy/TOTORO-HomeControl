@@ -6,8 +6,8 @@
 #include <windows.h>
 #include <stdint.h>
 
-#define SERVER_IP           "10.27.99.26"
-#define SERVER_PORT         9400
+#define SERVER_IP           "10.27.99.42"
+#define SERVER_PORT         8002
 //#define DATA_BUFFER_SIZE    1024
 
 void handle_error(const char *error_string)
@@ -72,8 +72,19 @@ int main()
 
     while (1) {
         recv(client_socket, &buffer, sizeof(buffer), 0);
-		printf("recv int: %d\n", buffer);
+
+        if (buffer == 3) {
+		printf("Projector screen: DOWN\n");
 		Sleep(100);
+        }
+        if (buffer == 2) {
+		printf("Projector screen: STOP\n");
+		Sleep(100);
+        }
+        if (buffer == 1) {
+		printf("Projector screen: UP\n");
+		Sleep(100);
+        }
     }
 
 		// Receive the answer if message was sent

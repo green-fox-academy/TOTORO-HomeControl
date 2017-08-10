@@ -8,3 +8,12 @@
 	<windows.h>
 	<stdint.h>
 
+1502357738 source:c:\users\gyuri\desktop\project\totoro-homecontrol\projector_test_pc_client\main.c
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<winsock2.h>
+	<conio.h>
+	<windows.h>
+	<stdint.h>
+

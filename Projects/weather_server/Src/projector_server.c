@@ -78,27 +78,28 @@ void projector_server_thread(void const *argument)
 				uint8_t buffer1 = 1;
 				uint8_t buffer2 = 2;
 				uint8_t buffer3 = 3;
-			while (1) {
+				int send_bytes = 0;
+			do {
 				//detect touch
 				//if down is touched
 				for (int i = 0; i < 5; i++) {
-					send(client_socket, &buffer3, sizeof(uint8_t), 0); // down
+					send_bytes = send(client_socket, &buffer3, sizeof(uint8_t), 0); // down
 					osDelay(500);
 				}
 				osDelay(5000);
 				//if stop is touched
 				for (int i = 0; i < 5; i++) {
-					send(client_socket, &buffer2, sizeof(uint8_t), 0); //stop
+					send_bytes = send(client_socket, &buffer2, sizeof(uint8_t), 0); //stop
 					osDelay(500);
 				}
 				osDelay(5000);
 				//if up is touched
 				for (int i = 0; i < 5; i++) {
-					send(client_socket, &buffer1, sizeof(uint8_t), 0); //up
+					send_bytes = send(client_socket, &buffer1, sizeof(uint8_t), 0); //up
 					osDelay(500);
 				}
 				osDelay(5000);
-			}
+			} while (send_bytes > 0);
 
 				// Close the socket
 				closesocket(client_socket);

@@ -48,6 +48,12 @@
 #define __LWIPOPTS_H__
 
 /**
+ * We had to rise this define from 4 to 10 to be able to run 3 parallel socket servers
+ */
+#define MEMP_NUM_NETCONN 10
+
+
+/**
  * NO_SYS==1: Provides VERY minimal functionality. Otherwise,
  * use lwIP facilities.
  */

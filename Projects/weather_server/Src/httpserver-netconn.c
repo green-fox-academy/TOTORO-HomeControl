@@ -60,7 +60,7 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
-#define WEBSERVER_THREAD_PRIO    osPriorityAboveNormal
+#define WEBSERVER_THREAD_PRIO    osPriorityNormal
 
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
@@ -199,6 +199,10 @@ static void http_server_netconn_thread(void *arg)
         }
       }
     }
+  }
+
+  while (1) {
+	osThreadTerminate(NULL);
   }
 }
 

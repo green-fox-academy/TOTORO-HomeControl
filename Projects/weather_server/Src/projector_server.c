@@ -16,133 +16,97 @@
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-//TS_StateTypeDef TS_State;
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
-//void terminate_thread()
-//{
-//	while (1)
-//		osThreadTerminate(NULL);
-//}
-
 
 void projector_server_thread(void const *argument)
 {
-		BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_GPIO);
-		LCD_UsrLog("PROJ Socket server - startup...\n");
-		LCD_UsrLog("PROJ Socket server - waiting for IP address...\n");
+	BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_GPIO);
+	LCD_UsrLog("PROJECTOR Socket server - startup...\n");
+	LCD_UsrLog("PROJECTOR Socket server - waiting for IP address...\n");
 
-		// Wait for an IP address
-		while (!is_ip_ok())
-			osDelay(10);
-		LCD_UsrLog("PROJ Socket server - IP address is ok\n");
+	// Wait for an IP address
+	while (!is_ip_ok())
+		osDelay(10);
+	LCD_UsrLog("PROJECTOR Socket server - IP address is ok\n");
 
-		// Create server socket
-		int server_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_IP);
-		if (server_socket < 0) {
-			LCD_ErrLog("PROJ Socket server - can't create socket\n");
-//			terminate_thread();
-		}
-		LCD_UsrLog("Socket server - socket created\n");
+	// Create server socket
+	int server_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_IP);
+	if (server_socket < 0) {
+		LCD_ErrLog("PROJECTOR Socket server - can't create socket\n");
+		terminate_thread();
+	}
+	LCD_UsrLog("Socket server - socket created\n");
 
-		// Create address structure and bind the socket to it
-		struct sockaddr_in server_addr;
-		server_addr.sin_family = AF_INET;
-		server_addr.sin_port = htons(PORT);
-		server_addr.sin_addr.s_addr = INADDR_ANY;
-		if (bind(server_socket, (struct sockaddr*)&(server_addr), sizeof(server_addr)) < 0) {
-			LCD_ErrLog("PROJ Socket server - can't bind socket\n");
-//			terminate_thread();
-		}
-		LCD_UsrLog("PROJ Socket server - socket bind ok\n");
+	// Create address structure and bind the socket to it
+	struct sockaddr_in server_addr;
+	server_addr.sin_family = AF_INET;
+	server_addr.sin_port = htons(PORT);
+	server_addr.sin_addr.s_addr = INADDR_ANY;
+	if (bind(server_socket, (struct sockaddr*)&(server_addr), sizeof(server_addr)) < 0) {
+		LCD_ErrLog("PROJECTOR Socket server - can't bind socket\n");
+		terminate_thread();
+	}
+	LCD_UsrLog("PROJECTOR Socket server - socket bind ok\n");
 
-		// Start listening
-		if (listen(server_socket, SERVER_QUEUE_SIZE) < 0) {
-			LCD_ErrLog("PROJ Socket server - can't listen\n");
-//			terminate_thread();
-		}
-		LCD_UsrLog("PROJ Socket server - listening...\n");
+	// Start listening
+	if (listen(server_socket, SERVER_QUEUE_SIZE) < 0) {
+		LCD_ErrLog("PROJECTOR Socket server - can't listen\n");
+		terminate_thread();
+	}
+	LCD_UsrLog("PROJECTOR Socket server - listening...\n");
 
-		struct sockaddr_in client_addr;
-		socklen_t client_addr_len = sizeof(client_addr);
-		int client_socket;
-		int send_bytes;
-		while (1) {
-			// Accept incoming connections
-			client_socket = accept(server_socket, (struct sockaddr*)&client_addr, &client_addr_len);
-			LCD_UsrLog("PROJ Socket server - connection accepted\n");
-			BSP_LCD_Clear(LCD_COLOR_GREEN);
-			// Check the client socket
-			if (client_socket < 0) {
-				LCD_ErrLog("PROJ Socket server - invalid client socket\n");
-			} else {
-				uint8_t buffer1 = 1;
-//				uint8_t buffer2 = 2;
-//				uint8_t buffer3 = 3;
-				TS_StateTypeDef TS_State;
+	struct sockaddr_in client_addr;
+	socklen_t client_addr_len = sizeof(client_addr);
+	int client_socket;
+	int send_bytes;
+	while (1) {
+		// Accept incoming connections
+		client_socket = accept(server_socket, (struct sockaddr*)&client_addr, &client_addr_len);
+		LCD_UsrLog("PROPROJECTORJ Socket server - connection accepted\n");
+		BSP_LCD_Clear(LCD_COLOR_GREEN);
+		// Check the client socket
+		if (client_socket < 0) {
+			LCD_ErrLog("PROJECTOR Socket server - invalid client socket\n");
+		} else {
+			uint8_t buffer1 = 1;
+			TS_StateTypeDef TS_State;
 
-				while (1) {
-					BSP_TS_GetState(&TS_State);
-					if (TS_State.touchDetected > 0) {
-						if (TS_State.touchX[0] >= 400 && TS_State.touchX[0] <= 450
+			while (1) {
+				BSP_TS_GetState(&TS_State);
+				if (TS_State.touchDetected > 0) {
+					if (TS_State.touchX[0] >= 400 && TS_State.touchX[0] <= 450
 								&& TS_State.touchY[0] >= 147 && TS_State.touchY[0] <= 197) {
-							buffer1 = 3;			 //down
-						} else if (TS_State.touchX[0] >= 400 && TS_State.touchX[0] <= 450
-									&& TS_State.touchY[0] >= 87 && TS_State.touchY[0] <= 137) {
-							buffer1 = 2; 		//stop
-						} else if (TS_State.touchX[0] >= 400 && TS_State.touchX[0] <= 450
-							&& TS_State.touchY[0] >= 27 && TS_State.touchY[0] <= 77) {
-								buffer1 = 1;		//up
-							}
-						//determine int to send based on touch data
-						send_bytes = send(client_socket, &buffer1, sizeof(uint8_t), 0);
-						if (send_bytes < 0) {
-							break;
-						}
-						osDelay(1000);
+						buffer1 = 3;													//down
+					} else if (TS_State.touchX[0] >= 400 && TS_State.touchX[0] <= 450
+								&& TS_State.touchY[0] >= 87 && TS_State.touchY[0] <= 137) {
+							buffer1 = 2; 													//stop
+					} else if (TS_State.touchX[0] >= 400 && TS_State.touchX[0] <= 450
+								&& TS_State.touchY[0] >= 27 && TS_State.touchY[0] <= 77) {
+							buffer1 = 1;													//up
 					}
-				}
+					//determine int to send based on touch data
+					send_bytes = send(client_socket, &buffer1, sizeof(uint8_t), 0);
+					if (send_bytes < 0) {
+						break;
+					}
+					osDelay(1000);
+				}//if
+			}//while(1)
 
-//				do {
-//
-//						send_bytes = send(client_socket, &buffer1, sizeof(uint8_t), 0); // down
-//
-//						//detect touch
-//						//if down is touched
-//						for (int i = 0; i < 5; i++) {
-//							send_bytes = send(client_socket, &buffer3, sizeof(uint8_t), 0); // down
-////							osDelay(500);
-//						}
-//						//osDelay(5000);
-//						//if stop is touched
-//						for (int i = 0; i < 5; i++) {
-//							send_bytes = send(client_socket, &buffer2, sizeof(uint8_t), 0); //stop
-////							osDelay(500);
-//						}
-//						//osDelay(5000);
-//						//if up is touched
-//						for (int i = 0; i < 5; i++) {
-//							send_bytes = send(client_socket, &buffer1, sizeof(uint8_t), 0); //up
-////							osDelay(500);
-//						}
-//						//osDelay(5000);
-//				} while (send_bytes > 0);
+			// Close the socket
+			closesocket(client_socket);
+			LCD_UsrLog("PROJ Socket server - connection closed\n");
+		}//else
+	}//while(1)
 
-				// Close the socket
-				closesocket(client_socket);
-				LCD_UsrLog("PROJ Socket server - connection closed\n");
-//				osDelay(500);
-			}
-		}
+	// Close socket
+	closesocket(server_socket);
 
-		// Close socket
-		closesocket(server_socket);
-
-
-		while (1) {
-			LCD_UsrLog("PROJ Socket server - server socket closed\n");
-			osDelay(1000);
-		}
+	while (1) {
+		LCD_UsrLog("PROJ Socket server - server socket closed\n");
+		osDelay(1000);
+	}
 }
 
 

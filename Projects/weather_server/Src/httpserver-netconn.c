@@ -65,7 +65,7 @@
 #define THREAD_STACKSIZE	2048
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-u32_t nPageHits = 0;
+
 
 
 /* Format of dynamic web page: the page header */
@@ -179,7 +179,7 @@ static void http_server_serve(struct netconn *conn)
   err_t recv_err;
   char* buf;
   u16_t buflen;
-  //struct fs_file file;
+
   
   /* Read the data from the port, blocking if nothing yet there. 
    We assume the request (the part we care about) is in one netbuf */
@@ -198,7 +198,7 @@ static void http_server_serve(struct netconn *conn)
 
            /* Load dynamic page */
            DynWebPage(conn);
-           //netconn_write(conn, &weather_data, sizeof(char), NETCONN_NOCOPY);
+
       }
       }
     }
@@ -271,19 +271,19 @@ void http_server_netconn_init()
 void DynWebPage(struct netconn *conn)
 {
   portCHAR PAGE_BODY[2040];
-  portFLOAT weather_data [3]= {42.15, 15.5, 89.6};
+  portFLOAT weather_data [3];
   portCHAR buf[128];
 
 
   memset(PAGE_BODY, 0,512);
   memcpy(buf, &weather_data, sizeof(float));
 
-  strcat((char *)PAGE_BODY, "<w_data><pre><br>Temperature (oC):		Humidity (%):		Pressure (Pa):" );
-  strcat((char *)PAGE_BODY, "<br>--------------------------------------------------------------------<br>");
+  strcat((char *)PAGE_BODY, "<w_data><pre><br>Temperature (°C):		Humidity (%):		Pressure (Pa):" );
+  strcat((char *)PAGE_BODY, "<br>---------------------------------------------------------------------<br>");
   sprintf(buf, "%.2f 	 			%.1f 			%.2f", received_weather_data[0], received_weather_data[1], received_weather_data[2]);
   strcat(PAGE_BODY, buf);
   strcat((char *)PAGE_BODY, "<br>---------------------------------------------------------------------<br></w_data>");
-  strcat((char *)PAGE_BODY, "<style>w_data {text-align: center; color: #D3D3D3; font-family: Arial;} </style>");
+  strcat((char *)PAGE_BODY, "<style>w_data {text-align: center; color: #D3D3D3; font-family: Arial; font-size: 1.5em;} </style>");
   /* Send the dynamically generated page */
   netconn_write(conn, PAGE_START, strlen((char*)PAGE_START), NETCONN_COPY);
   netconn_write(conn, PAGE_BODY, strlen(PAGE_BODY), NETCONN_COPY);

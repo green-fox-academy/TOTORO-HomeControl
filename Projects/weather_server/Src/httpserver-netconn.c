@@ -109,6 +109,9 @@ static const unsigned char PAGE_START[] = {
     0x66,0x61,0x6d,0x69,0x6c,0x79,0x3a,0x20,0x56,0x65,0x72,0x64,0x61,0x6e,0x61,0x3b,0x22,0x3e,0x4e,0x75,0x6d,0x62,
     0x65,0x72,0x20,0x6f,0x66,0x20,0x70,0x61,0x67,0x65,0x20,0x68,0x69,0x74,0x73,0x3a,0x0a
 };
+
+
+
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 void BSP_PB_Init(Button_TypeDef Button, ButtonMode_TypeDef ButtonMode);
@@ -237,9 +240,9 @@ void DynWebPage(struct netconn *conn)
 
   sprintf(pagehits, "%d", (int)nPageHits);
   strcat(PAGE_BODY, pagehits);*/
-  strcat((char *)PAGE_BODY, "<pre><br>Temperature:		Humidity:		Pressure(Pa):" );
+  strcat((char *)PAGE_BODY, "<pre><br>Temperature (°C):		Humidity (%):		Pressure (Pa):" );
   strcat((char *)PAGE_BODY, "<br>------------------------------------------------------------------<br>");
-  sprintf(buf, "%.2f oC	 	%.2f %%			 %.2f", received_weather_data[0], received_weather_data[1], received_weather_data[2]);
+  sprintf(buf, "%.2f 	 			%.1f 			%.2f", received_weather_data[0], received_weather_data[1], received_weather_data[2]);
   strcat(PAGE_BODY, buf);
   strcat((char *)PAGE_BODY, "<br><br>-------------------------------------------------------------------");
 

@@ -1,22 +1,17 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
 #include <string.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <netdb.h>
-//#include <winsock2.h>
-//#include <conio.h>
-//#include <windows.h>
+#include <stdlib.h>
+#include <winsock2.h>
+#include <conio.h>
+#include <windows.h>
 
-#define SERVER_IP           "10.27.6.99"
-#define SERVER_PORT         8002
+#define SERVER_IP           "10.27.99.26"
+#define SERVER_PORT         9500
 //#define DATA_BUFFER_SIZE    1024
 
-float buffer[3] = {23, 50.0, 1010};
+float buffer[3] = {23.0, 50.0, 101300};
 
-/*void handle_error(const char *error_string)
+void handle_error(const char *error_string)
 {
 	printf("Error: %s\nError code: %d\n", error_string, WSAGetLastError());
 	WSACleanup();
@@ -32,7 +27,7 @@ void wsa_init()
 	if (iResult != NO_ERROR)
 		handle_error("WSAStartup() ");
 }
-*/
+
 void connect_to_server(SOCKET *client_sock, unsigned int server_port, char *server_ip)
 {
 	// Creating client socket
@@ -68,9 +63,9 @@ float send_message(SOCKET *socket)
 	if (sent_bytes < 0)
 		handle_error("send() ");
 
-	for (int i = 0; i < 3; i++) {
-        buffer[i]++;
-	}
+	buffer[0]++;
+	buffer[1]++;
+	buffer[2] += 100;
 
 	return sent_bytes;
 }
@@ -78,7 +73,7 @@ float send_message(SOCKET *socket)
 int main()
 {
 	// Initialize the WSA
-	//wsa_init();
+	wsa_init();
 
 	// Connect to server
 	SOCKET client_socket;
@@ -111,7 +106,7 @@ int main()
 	printf("Closing the socket...\n");
 	closesocket(client_socket);
 	printf("Cleaning up memory...\n");
-	//WSACleanup();
+	WSACleanup();
 	return 0;
 
 }

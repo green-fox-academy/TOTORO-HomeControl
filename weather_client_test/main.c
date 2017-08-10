@@ -64,8 +64,14 @@ float send_message(SOCKET *socket)
 		handle_error("send() ");
 
 	buffer[0]++;
+	if (buffer[0] == 100)
+        buffer[0] = 23;
 	buffer[1]++;
+	if (buffer[1] == 101)
+        buffer[1] = 50;
 	buffer[2] += 100;
+	if (buffer[2] == 101900)
+        buffer[2] = 101300;
 
 	return sent_bytes;
 }

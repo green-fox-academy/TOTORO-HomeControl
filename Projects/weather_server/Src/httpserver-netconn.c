@@ -278,7 +278,7 @@ void DynWebPage(struct netconn *conn)
   memset(PAGE_BODY, 0,512);
   memcpy(buf, &weather_data, sizeof(float));
 
-  strcat((char *)PAGE_BODY, "<w_data><pre><br>Temperature (oC):		Humidity (%):		Pressure (Pa):" );
+  strcat((char *)PAGE_BODY, "<w_data><pre><br>Temperature (°C):		Humidity (%):		Pressure (Pa):" );
   strcat((char *)PAGE_BODY, "<br>--------------------------------------------------------------------<br>");
   sprintf(buf, "%.2f 	 			%.1f 			%.2f", received_weather_data[0], received_weather_data[1], received_weather_data[2]);
   strcat(PAGE_BODY, buf);

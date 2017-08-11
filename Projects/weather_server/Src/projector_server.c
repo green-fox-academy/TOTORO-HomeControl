@@ -12,7 +12,7 @@
 /* Private define ------------------------------------------------------------*/
 #define SERVER_QUEUE_SIZE 100
 #define SERVER_BUFF_LEN 100
-#define PORT 8002
+#define PORT 8003
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
@@ -95,7 +95,7 @@ void projector_server_thread(void const *argument)
 
 			// Close the socket
 			closesocket(client_socket);
-			LCD_UsrLog("PROJ Socket server - connection closed\n");
+			LCD_UsrLog("PROJECTOR Socket server - connection closed\n");
 		}//else
 	}//while(1)
 

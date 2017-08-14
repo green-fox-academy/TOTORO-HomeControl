@@ -41,6 +41,11 @@
 			<locationURI>PARENT-1-PROJECT_LOC/syscalls.c</locationURI>
 		</link>
 		<link>
+			<name>Application/User/ac_client.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/Src/ac_client.c</locationURI>
+		</link>
+		<link>
 			<name>Application/User/app_ethernet.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Src/app_ethernet.c</locationURI>

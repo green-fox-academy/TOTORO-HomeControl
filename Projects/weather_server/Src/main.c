@@ -60,6 +60,7 @@
 #include "stm32746g_discovery_lcd.h"
 #include "httpserver-netconn.h"
 #include "projector_server.h"
+#include "ac_client.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -230,8 +231,12 @@ static void StartThread(void const * argument)
 	osThreadCreate (osThread(SOCKET_SERVER), NULL);
 
 	//Define and start the projector thread
-	osThreadDef(PROJECTOR_SERVER, projector_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
-	osThreadCreate (osThread(PROJECTOR_SERVER), NULL);
+	osThreadDef(PROJECTOR_CLIENT, projector_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+	osThreadCreate (osThread(PROJECTOR_CLIENT), NULL);
+
+	//Define and start the projector thread
+	osThreadDef(AC_CLIENT, ac_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+	osThreadCreate (osThread(AC_CLIENT), NULL);
 
 	while (1) {
 		/* Delete the Init Thread */

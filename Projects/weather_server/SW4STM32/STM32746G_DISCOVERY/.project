@@ -51,6 +51,11 @@
 			<locationURI>PARENT-2-PROJECT_LOC/Src/ethernetif.c</locationURI>
 		</link>
 		<link>
+			<name>Application/User/gui_setup.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/Src/gui_setup.c</locationURI>
+		</link>
+		<link>
 			<name>Application/User/httpserver-netconn.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Src/httpserver-netconn.c</locationURI>

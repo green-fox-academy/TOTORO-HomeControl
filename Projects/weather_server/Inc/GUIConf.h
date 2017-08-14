@@ -50,6 +50,8 @@ Purpose     : Configures emWins abilities, fonts etc.
  #define GUI_OS                    (0)
 #endif
 
+
+#define GUI_MAXTASK 10
 /*********************************************************************
 *
 *       Configuration of touch support

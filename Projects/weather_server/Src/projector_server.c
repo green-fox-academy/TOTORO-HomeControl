@@ -35,7 +35,7 @@ void projector_server_thread(void const *argument)
 		LCD_ErrLog("PROJECTOR Socket server - can't create socket\n");
 		terminate_thread();
 	}
-	LCD_UsrLog("Socket server - socket created\n");
+	LCD_UsrLog("PROJECTOR Socket server - socket created\n");
 
 	// Create address structure and bind the socket to it
 	struct sockaddr_in server_addr;
@@ -62,7 +62,7 @@ void projector_server_thread(void const *argument)
 	while (1) {
 		// Accept incoming connections
 		client_socket = accept(server_socket, (struct sockaddr*)&client_addr, &client_addr_len);
-		LCD_UsrLog("PROPROJECTORJ Socket server - connection accepted\n");
+		LCD_UsrLog("PROJECTOR Socket server - connection accepted\n");
 		BSP_LCD_Clear(LCD_COLOR_GREEN);
 		// Check the client socket
 		if (client_socket < 0) {
@@ -76,13 +76,13 @@ void projector_server_thread(void const *argument)
 				if (TS_State.touchDetected > 0) {
 					if (TS_State.touchX[0] >= 400 && TS_State.touchX[0] <= 450
 								&& TS_State.touchY[0] >= 147 && TS_State.touchY[0] <= 197) {
-						buffer1 = 3;													//down
+						buffer1 = 3;															//down
 					} else if (TS_State.touchX[0] >= 400 && TS_State.touchX[0] <= 450
 								&& TS_State.touchY[0] >= 87 && TS_State.touchY[0] <= 137) {
-							buffer1 = 2; 													//stop
+							buffer1 = 2; 														//stop
 					} else if (TS_State.touchX[0] >= 400 && TS_State.touchX[0] <= 450
 								&& TS_State.touchY[0] >= 27 && TS_State.touchY[0] <= 77) {
-							buffer1 = 1;													//up
+							buffer1 = 1;														//up
 					}
 					//determine int to send based on touch data
 					send_bytes = send(client_socket, &buffer1, sizeof(uint8_t), 0);
@@ -103,7 +103,7 @@ void projector_server_thread(void const *argument)
 	closesocket(server_socket);
 
 	while (1) {
-		LCD_UsrLog("PROJ Socket server - server socket closed\n");
+		LCD_UsrLog("PROJECTOR Socket server - server socket closed\n");
 		osDelay(1000);
 	}
 }

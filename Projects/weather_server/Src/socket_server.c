@@ -25,8 +25,7 @@ void terminate_thread()
 	while (1)
 		osThreadTerminate(NULL);
 }
-// TODO:
-// Implement this function!
+
 void socket_server_thread(void const *argument)
 {
 	LCD_UsrLog("Socket server - startup...\n");
@@ -99,8 +98,8 @@ void socket_server_thread(void const *argument)
 				GUI_SetFont(GUI_FONT_24_1);	//display humidity
 				GUI_DispFloat(received_weather_data[1], 4);
 
-				GUI_GotoXY(312, 142);
-				GUI_DispFloat(received_weather_data[2]/ 100, 4);	//display pressure
+				GUI_GotoXY(322, 142);
+				GUI_DispFloat(received_weather_data[2], 3);	//display pressure
 			} while (received_bytes > 0);
 
 			// Close the socket

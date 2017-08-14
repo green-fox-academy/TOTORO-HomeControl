@@ -1,0 +1,8 @@
+# depslib dependency file v1.0
+1502720243 source:c:\users\gyuri\desktop\greenfox\project_smarthome_hq\projector server\main.c
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<winsock2.h>
+	<windows.h>
+

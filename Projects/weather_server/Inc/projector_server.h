@@ -8,7 +8,7 @@
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
 
-void projector_server_thread(void const *argument);
+void projector_client_thread(void const *argument);
 //extern float received_weather_data[3];
 #endif /* __PROJECTOR_SERVER_H */
 

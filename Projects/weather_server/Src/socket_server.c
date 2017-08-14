@@ -14,7 +14,7 @@
 /* Private define ------------------------------------------------------------*/
 #define SERVER_QUEUE_SIZE 100
 #define SERVER_BUFF_LEN 100
-#define PORT 9500
+#define PORT 8002
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 float received_weather_data[3];

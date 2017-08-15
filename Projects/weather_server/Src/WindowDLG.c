@@ -22,6 +22,8 @@
 // USER END
 
 #include "DIALOG.h"
+#include <stdint.h>
+
 
 /*********************************************************************
 *
@@ -31,7 +33,12 @@
 */
 #define ID_WINDOW_0 (GUI_ID_USER + 0x02)
 #define ID_BUTTON_0 (GUI_ID_USER + 0x03)
+#define ID_BUTTON_1 (GUI_ID_USER + 0x05)
+#define ID_BUTTON_2 (GUI_ID_USER + 0x06)
 
+
+
+uint8_t ctrl = 4;
 
 // USER START (Optionally insert additional defines)
 // USER END
@@ -51,8 +58,10 @@
 *       _aDialogCreate
 */
 static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
-  { WINDOW_CreateIndirect, "Window", ID_WINDOW_0, 0, 1, 96, 82, 1, 0x0, 0 },
-  { BUTTON_CreateIndirect, "UP", ID_BUTTON_0, 26, 21, 48, 45, 0, 0x0, 0 },
+  { WINDOW_CreateIndirect, "Window", ID_WINDOW_0, 0, 0, 480, 272, 1, 0x0, 0 },
+  { BUTTON_CreateIndirect, "UP", ID_BUTTON_0, 400, 27, 50, 50, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "STOP", ID_BUTTON_1, 400, 87, 50, 50, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "DOWN", ID_BUTTON_2, 400, 147, 50, 50, 0, 0x0, 0 },
   // USER START (Optionally insert additional widgets)
   // USER END
 };
@@ -72,12 +81,22 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
 *       _cbDialog
 */
 static void _cbDialog(WM_MESSAGE * pMsg) {
-  int NCode;
-  int Id;
+  WM_HWIN hItem;
+  int     NCode;
+  int     Id;
   // USER START (Optionally insert additional variables)
   // USER END
 
   switch (pMsg->MsgId) {
+  case WM_INIT_DIALOG:
+    //
+    // Initialization of 'Window'
+    //
+    hItem = pMsg->hWin;
+    WINDOW_SetBkColor(hItem, GUI_MAKE_COLOR(0x00F0000F));
+    // USER START (Optionally insert additional code for further widget initialization)
+    // USER END
+    break;
   case WM_NOTIFY_PARENT:
     Id    = WM_GetId(pMsg->hWinSrc);
     NCode = pMsg->Data.v;
@@ -86,6 +105,37 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
         // USER START (Optionally insert code for reacting on notification message)
+    	  ctrl = 1;
+        // USER END
+        break;
+      case WM_NOTIFICATION_RELEASED:
+        // USER START (Optionally insert code for reacting on notification message)
+        // USER END
+        break;
+      // USER START (Optionally insert additional code for further notification handling)
+      // USER END
+      }
+      break;
+    case ID_BUTTON_1: // Notifications sent by 'STOP'
+      switch(NCode) {
+      case WM_NOTIFICATION_CLICKED:
+        // USER START (Optionally insert code for reacting on notification message)
+    	  ctrl = 2;
+        // USER END
+        break;
+      case WM_NOTIFICATION_RELEASED:
+        // USER START (Optionally insert code for reacting on notification message)
+        // USER END
+        break;
+      // USER START (Optionally insert additional code for further notification handling)
+      // USER END
+      }
+      break;
+    case ID_BUTTON_2: // Notifications sent by 'DOWN'
+      switch(NCode) {
+      case WM_NOTIFICATION_CLICKED:
+        // USER START (Optionally insert code for reacting on notification message)
+    	  ctrl = 3;
         // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
@@ -108,6 +158,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
   }
 }
 
+
 /*********************************************************************
 *
 *       Public code
@@ -128,12 +179,12 @@ WM_HWIN CreateWindow(void) {
 
 // USER START (Optionally insert additional public code)
 void MainTask(void) {
-//   GUI_Init();
    CreateWindow() ;
-//   while(1) {
-//       GUI_Delay(500) ;
-//   }
 }
+
+/* Function to determine int to send as projector canvas control */
+
+
 
 
 // USER END

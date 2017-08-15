@@ -67,9 +67,9 @@ void GUI_Startup()
 	GUI_FillRect(402, 149, 448, 195);	//down
 
 	GUI_SetColor(GUI_BLUE);
-	GUI_FillPolygon(tri_up, 3, 0, 0);	//up
-	GUI_FillRect(417, 104, 433, 120);	//stop
-	GUI_FillPolygon(tri_down, 3, 0, 0);	//down
+	GUI_FillPolygon(tri_up, 3, 0, 0);	//up sign
+	GUI_FillRect(417, 104, 433, 120);	//stop sign
+	GUI_FillPolygon(tri_down, 3, 0, 0);	//down sign
 }
 
 

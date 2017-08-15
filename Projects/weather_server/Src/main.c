@@ -133,7 +133,7 @@ int main(void)
 	osTimerStart(lcd_timer, 100);
 
 #ifndef LCD_USERLOG
-	GUI_Startup();
+//	GUI_Startup();
 #endif
 
 	/*Init thread */

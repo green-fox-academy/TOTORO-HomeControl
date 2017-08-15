@@ -15,6 +15,7 @@
 #define PORT 8003
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
+extern uint8_t ctrl;
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
@@ -68,29 +69,33 @@ void projector_server_thread(void const *argument)
 		if (client_socket < 0) {
 			LCD_ErrLog("PROJECTOR Socket server - invalid client socket\n");
 		} else {
-			uint8_t buffer1 = 1;
-			TS_StateTypeDef TS_State;
+			uint8_t buffer1;
+//			TS_StateTypeDef TS_State;
 
 			while (1) {
-				BSP_TS_GetState(&TS_State);
-				if (TS_State.touchDetected > 0) {
-					if (TS_State.touchX[0] >= 400 && TS_State.touchX[0] <= 450
-								&& TS_State.touchY[0] >= 147 && TS_State.touchY[0] <= 197) {
-						buffer1 = 3;														//down
-					} else if (TS_State.touchX[0] >= 400 && TS_State.touchX[0] <= 450
-								&& TS_State.touchY[0] >= 87 && TS_State.touchY[0] <= 137) {
-							buffer1 = 2; 														//stop
-					} else if (TS_State.touchX[0] >= 400 && TS_State.touchX[0] <= 450
-								&& TS_State.touchY[0] >= 27 && TS_State.touchY[0] <= 77) {
-							buffer1 = 1;														//up
-					}
+//				BSP_TS_GetState(&TS_State);
+//				if (TS_State.touchDetected > 0) {
+////					if (TS_State.touchX[0] >= 400 && TS_State.touchX[0] <= 450
+////								&& TS_State.touchY[0] >= 147 && TS_State.touchY[0] <= 197) {
+////						buffer1 = 3;														//down
+////					} else if (TS_State.touchX[0] >= 400 && TS_State.touchX[0] <= 450
+////								&& TS_State.touchY[0] >= 87 && TS_State.touchY[0] <= 137) {
+////							buffer1 = 2; 														//stop
+////					}
+////				else
+//					if (TS_State.touchX[0] >= 400 && TS_State.touchX[0] <= 450
+//								&& TS_State.touchY[0] >= 27 && TS_State.touchY[0] <= 77) {
+//							buffer1 = 1;														//up
+//					}
 					//determine int to send based on touch data
+					buffer1 = ctrl;
 					send_bytes = send(client_socket, &buffer1, sizeof(uint8_t), 0);
+
 					if (send_bytes < 0) {
 						break;
 					}
 					osDelay(1000);
-				}//if
+//				}//if
 			}//while(1)
 
 			// Close the socket

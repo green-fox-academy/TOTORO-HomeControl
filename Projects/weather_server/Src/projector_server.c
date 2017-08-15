@@ -18,67 +18,59 @@
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
+#define CONN_RETRY_COUNT	10
+
+int8_t send_command_to_projector_screen(uint8_t comm)
+{
+	int client_sock;
+	client_sock = socket(AF_INET, SOCK_STREAM, 0);
+	if (client_sock < 0) {
+		return -1;
+	}
+
+	struct sockaddr_in addr_in;
+	addr_in.sin_family = AF_INET;
+	addr_in.sin_port = htons(SERVER_PORT);
+	addr_in.sin_addr.s_addr = inet_addr(SERVER_IP);
+
+	uint8_t i;
+	for (i = 0; i < CONN_RETRY_COUNT; i++) {
+		if (connect(client_sock, (struct sockaddr *)&addr_in, sizeof(addr_in)) == 0) {
+			if (send(client_sock, &comm, sizeof(comm), 0) > 0) {
+				closesocket(client_sock);
+				//break;
+			} else {
+				closesocket(client_sock);
+			}
+		}
+		osDelay(100);
+	}
+
+	if (i == CONN_RETRY_COUNT)
+		return -1;
+
+	return 0;
+}
+
+
 void projector_client_thread(void const *argument)
 {
-	// Connect to server
-		int client_sock;
-		//struct sockaddr_in server;
-		client_sock = socket(AF_INET, SOCK_STREAM, 0);
-		if (client_sock < 0) {
-			terminate_thread();
-		}
-		// Creating server address
-		struct sockaddr_in addr_in;
-		addr_in.sin_family = AF_INET;
-		addr_in.sin_port = htons(SERVER_PORT);
-		addr_in.sin_addr.s_addr = inet_addr(SERVER_IP);
-
-		// Connecting the client socket to the server
-//		int connect_retval = connect(client_sock, (struct sockaddr *)&addr_in, sizeof(addr_in));
-//		if (connect_retval < 0) {
-//			terminate_thread();
-//		}
-
-		uint8_t buffer1 = 1;
+	while (1) {
 		TS_StateTypeDef TS_State;
-		int send_bytes;
-		int flag = -1;
-		while (1) {
-			if (flag != -1) {
-//				do {
-					if ((connect(client_sock, (struct sockaddr *)&addr_in, sizeof(addr_in))) < 0) {
-						closesocket(client_sock);
-						flag = -1;
-					}
-					BSP_TS_GetState(&TS_State);
-					if (TS_State.touchDetected > 0) {
-						if (TS_State.touchX[0] >= 400 && TS_State.touchX[0] <= 450
-									&& TS_State.touchY[0] >= 147 && TS_State.touchY[0] <= 197) {
-							buffer1 = 3;														//down
-						} else if (TS_State.touchX[0] >= 400 && TS_State.touchX[0] <= 450
-									&& TS_State.touchY[0] >= 87 && TS_State.touchY[0] <= 137) {
-								buffer1 = 2; 													//stop
-						} else if (TS_State.touchX[0] >= 400 && TS_State.touchX[0] <= 450
-									&& TS_State.touchY[0] >= 27 && TS_State.touchY[0] <= 77) {
-								buffer1 = 1;													//up
-						}
-						//determine int to send based on touch data
-						send_bytes = send(client_sock, &buffer1, sizeof(uint8_t), 0);
-						if (send_bytes < 0) {
-							break;
-						}
-						osDelay(1000);
-					}//if
-//				}while (send_bytes > 0);
-			} else {
-				if ((connect(client_sock, (struct sockaddr *)&addr_in, sizeof(addr_in))) == 0) {
-					flag = 0;
+		BSP_TS_GetState(&TS_State);
+			if (TS_State.touchDetected > 0) {
+				if (TS_State.touchX[0] >= 400 && TS_State.touchX[0] <= 450
+							&& TS_State.touchY[0] >= 147 && TS_State.touchY[0] <= 197) {
+					send_command_to_projector_screen(3);												//down
+				} else if (TS_State.touchX[0] >= 400 && TS_State.touchX[0] <= 450
+							&& TS_State.touchY[0] >= 87 && TS_State.touchY[0] <= 137) {
+					send_command_to_projector_screen(2);												//stop
+				} else if (TS_State.touchX[0] >= 400 && TS_State.touchX[0] <= 450
+							&& TS_State.touchY[0] >= 27 && TS_State.touchY[0] <= 77) {
+					send_command_to_projector_screen(1);												//up
 				}
-				HAL_Delay(3000);
 			}
-		}//while(1)
-
-		closesocket(client_sock);
+	}
 }
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

@@ -67,6 +67,10 @@
 /* Private variables ---------------------------------------------------------*/
 struct netif gnetif; /* network interface structure */
 
+FATFS SDFatFs;  /* File system object for SD card logical drive */
+FIL MyFile;     /* File object */
+char SDPath[4]; /* SD card logical drive path */
+
 const GUI_POINT tri_up[] = {
 { 417, 60},
 { 433, 60},
@@ -130,6 +134,10 @@ int main(void)
 	osThreadDef(Start, StartThread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
 	osThreadCreate (osThread(Start), NULL);
 
+	/*##-1- Start task #########################################################*/
+	/*osThreadDef(uSDThread, StartThread, osPriorityNormal, 0, 8 * configMINIMAL_STACK_SIZE);
+	osThreadCreate(osThread(uSDThread), NULL);*/
+
 	/* Start scheduler */
 	osKernelStart();
 
@@ -166,7 +174,7 @@ static void GUI_Startup()
 	GUI_SetBkColor(GUI_DARKBLUE);
 	GUI_DispStringAt("HomeControl", 5, 5);
 	GUI_SetFont(GUI_FONT_13_1);
-	GUI_DispStringAt("Temperature (�C)", 110, 5);
+	GUI_DispStringAt("Temperature (�C)", 110, 5);
 	GUI_DispStringAt("Humidity (%)", 285, 5);
 	GUI_DispStringAt("Pressure (hPa)", 285, 95);
 	GUI_DispStringAt("Projector", 375, 5);
@@ -219,6 +227,95 @@ static void StartThread(void const * argument)
 	/* Create GUI task */
 	//  osThreadDef(GUI_Thread, GUIThread, osPriorityAboveNormal, 0, 2048);
 	//  osThreadCreate (osThread(GUI_Thread), NULL);
+
+	FRESULT res;                                          /* FatFs function common result code */
+	  uint32_t byteswritten, bytesread;                     /* File write/read counts */
+	  uint8_t wtext[] = "hová mész te kisnyulacska"; /* File write buffer */
+	  uint8_t rtext[100];                                   /* File read buffer */
+
+	  /*##-1- Link the micro SD disk I/O driver ##################################*/
+	  if(FATFS_LinkDriver(&SD_Driver, SDPath) == 0)
+	  {
+	    /*##-2- Register the file system object to the FatFs module ##############*/
+	    if(f_mount(&SDFatFs, (TCHAR const*)SDPath, 0) != FR_OK)
+	    {
+	      /* FatFs Initialization Error */
+	      Error_Handler();
+	    }
+	    else
+	    {
+	      /*##-3- Create a FAT file system (format) on the logical drive #########*/
+	      /* WARNING: Formatting the uSD card will delete all content on the device */
+	      if(f_mkfs((TCHAR const*)SDPath, 0, 0) != FR_OK)
+	      {
+	        /* FatFs Format Error */
+	        Error_Handler();
+	      }
+	      else
+	      {
+	        /*##-4- Create and Open a new text file object with write access #####*/
+	        if(f_open(&MyFile, "STM32.TXT", FA_CREATE_ALWAYS | FA_WRITE) != FR_OK)
+	        {
+	          /* 'STM32.TXT' file Open for write Error */
+	          Error_Handler();
+	        }
+	        else
+	        {
+	          /*##-5- Write data to the text file ################################*/
+	          res = f_write(&MyFile, wtext, sizeof(wtext), (void *)&byteswritten);
+
+	          if((byteswritten == 0) || (res != FR_OK))
+	          {
+	            /* 'STM32.TXT' file Write or EOF Error */
+	            Error_Handler();
+	          }
+	          else
+	          {
+	            /*##-6- Close the open text file #################################*/
+	            f_close(&MyFile);
+
+	            /*##-7- Open the text file object with read access ###############*/
+	            if(f_open(&MyFile, "STM32.TXT", FA_READ) != FR_OK)
+	            {
+	              /* 'STM32.TXT' file Open for read Error */
+	              Error_Handler();
+	            }
+	            else
+	            {
+	              /*##-8- Read data from the text file ###########################*/
+	              res = f_read(&MyFile, rtext, sizeof(rtext), (UINT*)&bytesread);
+
+	              if((bytesread == 0) || (res != FR_OK))
+	              {
+	                /* 'STM32.TXT' file Read or EOF Error */
+	                Error_Handler();
+	              }
+	              else
+	              {
+	                /*##-9- Close the open text file #############################*/
+	                f_close(&MyFile);
+
+	                /*##-10- Compare read data with the expected data ############*/
+	                if ((bytesread != byteswritten))
+	                {
+	                  /* Read data is different from the expected data */
+	                  Error_Handler();
+	                }
+	                else
+	                {
+	                  /* Success of the demo: no error occurrence */
+	                  BSP_LED_On(LED1);
+	                }
+	              }
+	            }
+	          }
+	        }
+	      }
+	    }
+	  }
+
+	  /*##-11- Unlink the micro SD disk I/O driver ###############################*/
+	  FATFS_UnLinkDriver(SDPath);
 
 	/* Start DHCPClient */
 	osThreadDef(DHCP, DHCP_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);

@@ -41,6 +41,11 @@
 			<locationURI>PARENT-1-PROJECT_LOC/syscalls.c</locationURI>
 		</link>
 		<link>
+			<name>Application/User/WindowDLG.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/Src/WindowDLG.c</locationURI>
+		</link>
+		<link>
 			<name>Application/User/app_ethernet.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Src/app_ethernet.c</locationURI>
@@ -59,6 +64,11 @@
 			<name>Application/User/httpserver-netconn.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Src/httpserver-netconn.c</locationURI>
+		</link>
+		<link>
+			<name>Application/User/k_bsp.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/Src/k_bsp.c</locationURI>
 		</link>
 		<link>
 			<name>Application/User/main.c</name>

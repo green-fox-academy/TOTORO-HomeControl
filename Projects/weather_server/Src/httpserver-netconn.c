@@ -62,7 +62,7 @@
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 #define WEBSERVER_THREAD_PRIO    osPriorityAboveNormal
-#define THREAD_STACKSIZE	2048
+#define THREAD_STACKSIZE	( configMINIMAL_STACK_SIZE * 24 )
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 u32_t nPageHits = 0;
@@ -259,7 +259,8 @@ static void http_server_netconn_thread(void *arg)
   */
 void http_server_netconn_init()
 {
-  sys_thread_new("HTTP", http_server_netconn_thread, NULL, THREAD_STACKSIZE, WEBSERVER_THREAD_PRIO);
+	volatile osThreadId id = sys_thread_new("HTTP", http_server_netconn_thread, NULL, THREAD_STACKSIZE, WEBSERVER_THREAD_PRIO);
+	id += 1;
 }
 
 /**

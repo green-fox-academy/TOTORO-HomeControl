@@ -92,14 +92,14 @@ void socket_server_thread(void const *argument)
 
 				GUI_GotoXY(167, 90);
 				GUI_SetFont(GUI_FONT_D64);	//display temperature
-				GUI_DispFloat(received_weather_data[0], 2);
+//				GUI_DispFloat(received_weather_data[0], 2);
 
 				GUI_GotoXY(318, 57);
 				GUI_SetFont(GUI_FONT_24_1);	//display humidity
-				GUI_DispFloat(received_weather_data[1], 4);
+//				GUI_DispFloat(received_weather_data[1], 4);
 
 				GUI_GotoXY(322, 142);
-				GUI_DispFloat(received_weather_data[2], 3);	//display pressure
+//				GUI_DispFloat(received_weather_data[2], 3);	//display pressure
 			} while (received_bytes > 0);
 
 			// Close the socket

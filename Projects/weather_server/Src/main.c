@@ -61,10 +61,8 @@
 #include "httpserver-netconn.h"
 #include "projector_server.h"
 #include "gui_setup.h"
-
-
-
-
+#include "WindowDLG.h"
+#include "k_bsp.h"
 
 
 /* Private typedef -----------------------------------------------------------*/
@@ -73,6 +71,8 @@
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 struct netif gnetif; /* network interface structure */
+osTimerId lcd_timer;
+
 
 /* Private function prototypes -----------------------------------------------*/
 static void SystemClock_Config(void);
@@ -83,6 +83,7 @@ static void MPU_Config(void);
 static void Error_Handler(void);
 static void CPU_CACHE_Enable(void);
 static void GUIThread(void const * argument);
+static void TimerCallback(void const *n);
 
 
 /* Private functions ---------------------------------------------------------*/
@@ -115,16 +116,28 @@ int main(void)
 	/* Initialize LCD */
 	BSP_Config();
 
-	/* Create GUI task */
-//	osThreadDef(GUI_Thread, GUIThread,   osPriorityLow, 0, configMINIMAL_STACK_SIZE * 20);	//2048
-//	osThreadCreate (osThread(GUI_Thread), NULL);
+	 /* Initialize GUI */
+	GUI_Init();
+
+	/* Activate the use of memory device feature */
+	WM_SetCreateFlags(WM_CF_MEMDEV);								//delete if unnecessary
+	WM_MULTIBUF_Enable(1);
+	GUI_SetLayerVisEx (1, 0);
+	GUI_SelectLayer(0);
+
+	/* Create Touch screen Timer */
+	osTimerDef(TS_Timer, TimerCallback);
+	lcd_timer =  osTimerCreate(osTimer(TS_Timer), osTimerPeriodic, (void *)0);
+
+	/* Start the TS Timer */
+	osTimerStart(lcd_timer, 100);
 
 #ifndef LCD_USERLOG
 	GUI_Startup();
 #endif
 
 	/*Init thread */
-	osThreadDef(Start, StartThread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+	osThreadDef(Start, StartThread, osPriorityHigh, 0, configMINIMAL_STACK_SIZE * 1);
 	osThreadCreate (osThread(Start), NULL);
 
 	/* Start scheduler */
@@ -135,21 +148,27 @@ int main(void)
 	}
 }
 
-/**
-  * @brief  Start task
-  * @param  argument: pointer that is passed to the thread function as start argument.
-  * @retval None
-  */
 
 static void GUIThread(void const * argument)
 {
-	/* Gui background Task */
-	while(1) {
-		GUI_Exec(); /* Do the background work ... Update windows etc.) */
-		osDelay(20); /* Nothing left to do for the moment ... Idle processing */
-	}
+
+  MainTask();
+
+  /* Gui background Task */
+  while(1) {
+    GUI_Exec(); /* Do the background work ... Update windows etc.) */
+    osDelay(100); /* Nothing left to do for the moment ... Idle processing */
+  }
 }
 
+
+static void TimerCallback(void const *n)
+{
+  k_TouchUpdate();
+}
+
+
+osThreadId id;
 /**
   * @brief  Start Thread 
   * @param  argument not used
@@ -157,37 +176,37 @@ static void GUIThread(void const * argument)
   */
 static void StartThread(void const * argument)
 { 
-	/* Initialize LCD */
-	//BSP_Config();
-
 	/* Create tcp_ip stack thread */
 	tcpip_init(NULL, NULL);
 
 	/* Initialize the LwIP stack */
 	Netif_Config();
 
-	/* start httpserver thread */
-	http_server_netconn_init();
-
 	/* Notify user about the network interface config */
 	User_notification(&gnetif);
-
-	/* Create GUI task */
-	//  osThreadDef(GUI_Thread, GUIThread, osPriorityBelowNormal, 0, 2048);
-	//  osThreadCreate (osThread(GUI_Thread), NULL);
 
 	/* Start DHCPClient */
 	osThreadDef(DHCP, DHCP_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
 	osThreadCreate (osThread(DHCP), &gnetif);
-	osDelay(2000);
+	//osDelay(2000);
+
+	/* start httpserver thread */
+	http_server_netconn_init();
+
+	/* Create GUI task */
+	osThreadDef(GUI_Thread, GUIThread,   osPriorityBelowNormal, 0, configMINIMAL_STACK_SIZE * 2);	//2048 //configMINIMAL_STACK_SIZE * 20
+	volatile osThreadId id = osThreadCreate (osThread(GUI_Thread), NULL);
+	id += 2;
 
 	//Define and start the server thread
-	osThreadDef(SOCKET_SERVER, socket_server_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+	osThreadDef(SOCKET_SERVER, socket_server_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 10);
 	osThreadCreate (osThread(SOCKET_SERVER), NULL);
 
 	//Define and start the projector thread
-	osThreadDef(PROJECTOR_SERVER, projector_server_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+	osThreadDef(PROJECTOR_SERVER, projector_server_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 4);
 	osThreadCreate (osThread(PROJECTOR_SERVER), NULL);
+
+
 
 	while (1) {
 		/* Delete the Init Thread */
@@ -236,6 +255,7 @@ static void BSP_Config(void)
 {
 
 	BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_GPIO);
+	BSP_LED_Init(LED1);
 	/* Initialize the SDRAM */
 	BSP_SDRAM_Init();
 
@@ -299,6 +319,7 @@ static void SystemClock_Config(void)
 {
 	RCC_ClkInitTypeDef RCC_ClkInitStruct;
 	RCC_OscInitTypeDef RCC_OscInitStruct;
+	 HAL_StatusTypeDef ret = HAL_OK;
 
 	/* Enable HSE Oscillator and activate PLL with HSE as source */
 	RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
@@ -381,6 +402,7 @@ static void MPU_Config(void)
 	HAL_MPU_Enable(MPU_PRIVILEGED_DEFAULT);
 }
 
+
 /**
   * @brief  CPU L1-Cache enable.
   * @param  None
@@ -416,6 +438,11 @@ void assert_failed(uint8_t* file, uint32_t line)
 }
 #endif
 
+void vApplicationStackOverflowHook( TaskHandle_t xTask, char *pcTaskName )
+{
+	while(1) {
 
+	}
+}
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

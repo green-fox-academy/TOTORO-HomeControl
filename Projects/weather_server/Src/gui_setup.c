@@ -32,10 +32,10 @@ const GUI_POINT tri_down[] = {
 /* Private functions ---------------------------------------------------------*/
 void GUI_Startup()
 {
-    GUI_Init();
-	WM_MULTIBUF_Enable(1);
-	GUI_SetLayerVisEx (1, 0);
-	GUI_SelectLayer(0);
+//    GUI_Init();
+//	WM_MULTIBUF_Enable(1);
+//	GUI_SetLayerVisEx (1, 0);
+//	GUI_SelectLayer(0);
 
 	//split screen for weather station and projector canvas control
 	GUI_SetBkColor(GUI_BLUE);

@@ -76,7 +76,7 @@ void projector_server_thread(void const *argument)
 				if (TS_State.touchDetected > 0) {
 					if (TS_State.touchX[0] >= 400 && TS_State.touchX[0] <= 450
 								&& TS_State.touchY[0] >= 147 && TS_State.touchY[0] <= 197) {
-						buffer1 = 3;															//down
+						buffer1 = 3;														//down
 					} else if (TS_State.touchX[0] >= 400 && TS_State.touchX[0] <= 450
 								&& TS_State.touchY[0] >= 87 && TS_State.touchY[0] <= 137) {
 							buffer1 = 2; 														//stop

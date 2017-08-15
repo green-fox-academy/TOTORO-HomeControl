@@ -9,7 +9,7 @@ WEATHER STATION TEST CLIENT
 #include <conio.h>
 #include <windows.h>
 
-#define SERVER_IP           "10.27.99.183"
+#define SERVER_IP           "10.27.99.65"
 #define SERVER_PORT         8002
 
 

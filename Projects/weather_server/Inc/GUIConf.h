@@ -75,4 +75,11 @@ Purpose     : Configures emWins abilities, fonts etc.
 #define GUI_SUPPORT_MEMDEV            (1)    /* Memory device package available */
 #define GUI_SUPPORT_DEVICES           (1)    /* Enable use of device pointers */
 
+
+//void GUI_X_Config(void)
+//{
+//  GUI_ALLOC_AssignMemory(aMemory, GUI_NUMBYTES);
+//}
+//
+
 #endif  /* Avoid multiple inclusion */

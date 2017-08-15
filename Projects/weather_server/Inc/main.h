@@ -63,6 +63,10 @@
  #include "GUI.h"
  #include "DIALOG.h"
 
+/* FatFs includes component */
+#include "ff_gen_drv.h"
+#include "sd_diskio.h"
+
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 

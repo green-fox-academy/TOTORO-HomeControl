@@ -181,7 +181,8 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
         // USER START (Optionally insert code for reacting on notification message)
-		ctrl = 1;
+//		ctrl = 1;
+		send_command_to_projector_screen(1);
         // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
@@ -196,7 +197,8 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
         // USER START (Optionally insert code for reacting on notification message)
-		ctrl = 2;
+//		ctrl = 2;
+		send_command_to_projector_screen(2);
         // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
@@ -211,7 +213,8 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
         // USER START (Optionally insert code for reacting on notification message)
-		ctrl = 3;
+//		ctrl = 3;
+		send_command_to_projector_screen(3);
         // USER END
         break;
       case WM_NOTIFICATION_RELEASED:

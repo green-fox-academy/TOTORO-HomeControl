@@ -204,9 +204,9 @@ static void StartThread(void const * argument)
 	osThreadDef(SOCKET_SERVER, socket_server_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 10);
 	osThreadCreate (osThread(SOCKET_SERVER), NULL);
 
-	//Define and start the projector thread
-	osThreadDef(PROJECTOR_SERVER, projector_server_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 4);
-	osThreadCreate (osThread(PROJECTOR_SERVER), NULL);
+//	//Define and start the projector thread
+//	osThreadDef(PROJECTOR_SERVER, projector_server_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 4);
+//	osThreadCreate (osThread(PROJECTOR_SERVER), NULL);
 
 
 

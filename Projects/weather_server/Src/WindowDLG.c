@@ -114,21 +114,23 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_0);
     TEXT_SetTextAlign(hItem, GUI_TA_RIGHT | GUI_TA_BOTTOM);
-    TEXT_SetText(hItem, "-");
+    TEXT_SetFont(hItem, GUI_FONT_24_1);
+    TEXT_SetText(hItem, "");
     //
     // Initialization of 'pressure'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_1);
     TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00000000));
     TEXT_SetTextAlign(hItem, GUI_TA_RIGHT | GUI_TA_BOTTOM);
-    TEXT_SetText(hItem, "-");
+    TEXT_SetFont(hItem, GUI_FONT_24_1);
+    TEXT_SetText(hItem, "");
     //
     // Initialization of 'temperature'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_7);
     TEXT_SetTextAlign(hItem, GUI_TA_RIGHT | GUI_TA_BOTTOM);
-    TEXT_SetFont(hItem, GUI_FONT_24_1);
-    TEXT_SetText(hItem, "-");
+    TEXT_SetFont(hItem, GUI_FONT_D64);
+    TEXT_SetText(hItem, "");
 
 
     // USER START (Optionally insert additional code for further widget initialization)

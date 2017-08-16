@@ -121,10 +121,13 @@ int main(void)
 	GUI_Init();
 
 	/* Activate the use of memory device feature */
-	WM_SetCreateFlags(WM_CF_MEMDEV);								//delete if unnecessary
+	WM_SetCreateFlags(WM_CF_MEMDEV);
 	WM_MULTIBUF_Enable(1);
 	GUI_SetLayerVisEx (1, 0);
 	GUI_SelectLayer(0);
+
+//	GUI_Startup();
+
 #endif
 	/* Create Touch screen Timer */
 	osTimerDef(TS_Timer, TimerCallback);

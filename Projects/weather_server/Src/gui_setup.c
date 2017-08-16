@@ -48,28 +48,28 @@ void GUI_Startup()
 	GUI_FillRect(105, 175, 365, 272);	//AC control
 	GUI_FillRect(370, 0, 480, 217);		//projector canvas control
 	GUI_FillRect(370, 222, 480, 272);	//empty
-	GUI_SetColor(GUI_LIGHTGRAY);
-	GUI_SetFont(GUI_FONT_16_1);
-	GUI_SetBkColor(GUI_DARKBLUE);
-	GUI_DispStringAt("HomeControl", 5, 5);
-	GUI_SetFont(GUI_FONT_13_1);
-	GUI_DispStringAt("Temperature (°C)", 110, 5);
-	GUI_DispStringAt("Humidity (%)", 285, 5);
-	GUI_DispStringAt("Pressure (Pa)", 285, 95);
-	GUI_DispStringAt("Projector", 375, 5);
-	GUI_SetColor(GUI_BLUE);
-	GUI_FillRect(400, 27, 450, 77);		//up
-	GUI_FillRect(400, 87, 450, 137);	//stop
-	GUI_FillRect(400, 147, 450, 197);	//down
-	GUI_SetColor(GUI_DARKBLUE);
-	GUI_FillRect(402, 29, 448, 75);		//up
-	GUI_FillRect(402, 89, 448, 135);	//stop
-	GUI_FillRect(402, 149, 448, 195);	//down
+//	GUI_SetColor(GUI_LIGHTGRAY);
+//	GUI_SetFont(GUI_FONT_16_1);
+//	GUI_SetBkColor(GUI_DARKBLUE);
+//	GUI_DispStringAt("HomeControl", 5, 5);
+//	GUI_SetFont(GUI_FONT_13_1);
+//	GUI_DispStringAt("Temperature (°C)", 110, 5);
+//	GUI_DispStringAt("Humidity (%)", 285, 5);
+//	GUI_DispStringAt("Pressure (Pa)", 285, 95);
+//	GUI_DispStringAt("Projector", 375, 5);
+//	GUI_SetColor(GUI_BLUE);
+//	GUI_FillRect(400, 27, 450, 77);		//up
+//	GUI_FillRect(400, 87, 450, 137);	//stop
+//	GUI_FillRect(400, 147, 450, 197);	//down
+//	GUI_SetColor(GUI_DARKBLUE);
+//	GUI_FillRect(402, 29, 448, 75);		//up
+//	GUI_FillRect(402, 89, 448, 135);	//stop
+//	GUI_FillRect(402, 149, 448, 195);	//down
 
-	GUI_SetColor(GUI_BLUE);
-	GUI_FillPolygon(tri_up, 3, 0, 0);	//up sign
-	GUI_FillRect(417, 104, 433, 120);	//stop sign
-	GUI_FillPolygon(tri_down, 3, 0, 0);	//down sign
+//	GUI_SetColor(GUI_BLUE);
+//	GUI_FillPolygon(tri_up, 3, 0, 0);	//up sign
+//	GUI_FillRect(417, 104, 433, 120);	//stop sign
+//	GUI_FillPolygon(tri_down, 3, 0, 0);	//down sign
 }
 
 

@@ -19,8 +19,7 @@
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 float received_weather_data[3];
-//char temp[3];
-//extern float temp_to_send = 9;
+
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 void terminate_thread()
@@ -93,21 +92,8 @@ void socket_server_thread(void const *argument)
 				received_bytes = recv(client_socket, received_weather_data, sizeof(received_weather_data), 0);
 				LCD_UsrLog("Temperature: %.1f C, Humidity: %.1f%%, Pressure: %.1f Pa,\n", received_weather_data[0], received_weather_data[1], received_weather_data[2]);
 
-//				GUI_GotoXY(167, 90);
-//				GUI_SetFont(GUI_FONT_D64);	//display temperature
-//				GUI_DispFloat(received_weather_data[0], 2);
-//				temp_to_send = 7;
 				gui_update_temp(received_weather_data[0]);
-
-
-//				GUI_GotoXY(318, 57);
-//				GUI_SetFont(GUI_FONT_24_1);	//display humidity
-//				GUI_DispFloat(received_weather_data[1], 4);
 				gui_update_hum(received_weather_data[1]);
-
-
-//				GUI_GotoXY(322, 142);
-//				GUI_DispFloat(received_weather_data[2], 3);	//display pressure
 				gui_update_press(received_weather_data[2]);
 			} while (received_bytes > 0);
 

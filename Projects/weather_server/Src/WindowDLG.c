@@ -18,12 +18,16 @@
 **********************************************************************
 */
 
+
+
+
+
 // USER START (Optionally insert additional includes)
 // USER END
 
 #include "DIALOG.h"
 #include <stdint.h>
-
+#include <string.h>
 
 /*********************************************************************
 *
@@ -31,14 +35,19 @@
 *
 **********************************************************************
 */
-#define ID_WINDOW_0 (GUI_ID_USER + 0x02)
-#define ID_BUTTON_0 (GUI_ID_USER + 0x03)
-#define ID_BUTTON_1 (GUI_ID_USER + 0x05)
-#define ID_BUTTON_2 (GUI_ID_USER + 0x06)
+#define ID_WINDOW_0 (GUI_ID_USER + 0x00)
+#define ID_BUTTON_0 (GUI_ID_USER + 0x01)
+#define ID_BUTTON_1 (GUI_ID_USER + 0x02)
+#define ID_BUTTON_2 (GUI_ID_USER + 0x03)
+#define ID_TEXT_0 (GUI_ID_USER + 0x04)
+#define ID_TEXT_1 (GUI_ID_USER + 0x05)
+#define ID_TEXT_2 (GUI_ID_USER + 0x06)
+#define ID_TEXT_3 (GUI_ID_USER + 0x07)
+#define ID_TEXT_4 (GUI_ID_USER + 0x08)
+#define ID_TEXT_5 (GUI_ID_USER + 0x09)
+#define ID_TEXT_6 (GUI_ID_USER + 0x0A)
+#define ID_TEXT_7 (GUI_ID_USER + 0x0B)
 
-
-
-uint8_t ctrl = 4;
 
 // USER START (Optionally insert additional defines)
 // USER END
@@ -51,6 +60,9 @@ uint8_t ctrl = 4;
 */
 
 // USER START (Optionally insert additional static data)
+uint8_t ctrl = 4;
+WM_HWIN main_window;
+
 // USER END
 
 /*********************************************************************
@@ -58,10 +70,18 @@ uint8_t ctrl = 4;
 *       _aDialogCreate
 */
 static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
-  { WINDOW_CreateIndirect, "Window", ID_WINDOW_0, 0, 0, 480, 272, 1, 0x0, 0 },
+  { WINDOW_CreateIndirect, "Window", ID_WINDOW_0, -2, 0, 480, 272, 1, 0x0, 0 },
   { BUTTON_CreateIndirect, "UP", ID_BUTTON_0, 400, 27, 50, 50, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "STOP", ID_BUTTON_1, 400, 87, 50, 50, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "DOWN", ID_BUTTON_2, 400, 147, 50, 50, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "humidity", ID_TEXT_0, 286, 22, 77, 65, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "pressure", ID_TEXT_1, 280, 123, 85, 85, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "Temperature (C)", ID_TEXT_2, 96, 3, 100, 20, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "Humidity (%)", ID_TEXT_3, 285, 5, 80, 20, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "Pressure (Pa)", ID_TEXT_4, 287, 97, 80, 20, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "HomeControl", ID_TEXT_5, 5, 5, 90, 20, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "Projector", ID_TEXT_6, 375, 5, 80, 20, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "temperature", ID_TEXT_7, 97, 24, 113, 92, 0, 0x0, 0 },
   // USER START (Optionally insert additional widgets)
   // USER END
 };
@@ -90,10 +110,27 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
   switch (pMsg->MsgId) {
   case WM_INIT_DIALOG:
     //
-    // Initialization of 'Window'
+    // Initialization of 'humidity'
     //
-    hItem = pMsg->hWin;
-    WINDOW_SetBkColor(hItem, GUI_MAKE_COLOR(0x00F0000F));
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_0);
+    TEXT_SetTextAlign(hItem, GUI_TA_RIGHT | GUI_TA_BOTTOM);
+    TEXT_SetText(hItem, "-");
+    //
+    // Initialization of 'pressure'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_1);
+    TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00000000));
+    TEXT_SetTextAlign(hItem, GUI_TA_RIGHT | GUI_TA_BOTTOM);
+    TEXT_SetText(hItem, "-");
+    //
+    // Initialization of 'temperature'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_7);
+    TEXT_SetTextAlign(hItem, GUI_TA_RIGHT | GUI_TA_BOTTOM);
+    TEXT_SetFont(hItem, GUI_FONT_24_1);
+    TEXT_SetText(hItem, "-");
+
+
     // USER START (Optionally insert additional code for further widget initialization)
     // USER END
     break;
@@ -105,7 +142,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
         // USER START (Optionally insert code for reacting on notification message)
-    	  ctrl = 1;
+		ctrl = 1;
         // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
@@ -120,7 +157,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
         // USER START (Optionally insert code for reacting on notification message)
-    	  ctrl = 2;
+		ctrl = 2;
         // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
@@ -135,7 +172,8 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
         // USER START (Optionally insert code for reacting on notification message)
-    	  ctrl = 3;
+		ctrl = 3;
+		//TODO: start client thread/function to send command
         // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
@@ -158,23 +196,51 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
   }
 }
 
-
 /*********************************************************************
 *
 *       Public code
 *
 **********************************************************************
 */
+
+/* Update displayed temperature in GUI */
+void gui_update_temp(float temp)
+{
+    WM_HWIN hItem;
+    char str[10];
+	hItem = WM_GetDialogItem(main_window, ID_TEXT_7);
+	sprintf(str, "%.0f", temp);
+	TEXT_SetText(hItem, str);
+}
+
+/* Update displayed humidity in GUI */
+void gui_update_hum(float hum)
+{
+    WM_HWIN hItem;
+    char str[10];
+	hItem = WM_GetDialogItem(main_window, ID_TEXT_0);
+	sprintf(str, "%.0f", hum);
+	TEXT_SetText(hItem, str);
+}
+
+/* Update displayed pressure in GUI */
+void gui_update_press(float press)
+{
+    WM_HWIN hItem;
+    char str[10];
+	hItem = WM_GetDialogItem(main_window, ID_TEXT_1);
+	sprintf(str, "%.0f", press);
+	TEXT_SetText(hItem, str);
+}
+
 /*********************************************************************
 *
 *       CreateWindow
 */
 //WM_HWIN CreateWindow(void);
 WM_HWIN CreateWindow(void) {
-  WM_HWIN hWin;
-
-  hWin = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, WM_HBKWIN, 0, 0);
-  return hWin;
+  main_window = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, WM_HBKWIN, 0, 0);
+  return main_window;
 }
 
 // USER START (Optionally insert additional public code)
@@ -182,7 +248,6 @@ void MainTask(void) {
    CreateWindow() ;
 }
 
-/* Function to determine int to send as projector canvas control */
 
 
 

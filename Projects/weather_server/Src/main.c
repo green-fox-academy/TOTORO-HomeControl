@@ -73,6 +73,7 @@
 struct netif gnetif; /* network interface structure */
 osTimerId lcd_timer;
 
+static uint8_t counter = 0;
 
 /* Private function prototypes -----------------------------------------------*/
 static void SystemClock_Config(void);
@@ -115,7 +116,7 @@ int main(void)
 
 	/* Initialize LCD */
 	BSP_Config();
-
+#ifndef LCD_USERLOG
 	 /* Initialize GUI */
 	GUI_Init();
 
@@ -124,7 +125,7 @@ int main(void)
 	WM_MULTIBUF_Enable(1);
 	GUI_SetLayerVisEx (1, 0);
 	GUI_SelectLayer(0);
-
+#endif
 	/* Create Touch screen Timer */
 	osTimerDef(TS_Timer, TimerCallback);
 	lcd_timer =  osTimerCreate(osTimer(TS_Timer), osTimerPeriodic, (void *)0);
@@ -132,9 +133,6 @@ int main(void)
 	/* Start the TS Timer */
 	osTimerStart(lcd_timer, 100);
 
-#ifndef LCD_USERLOG
-//	GUI_Startup();
-#endif
 
 	/*Init thread */
 	osThreadDef(Start, StartThread, osPriorityHigh, 0, configMINIMAL_STACK_SIZE * 1);
@@ -190,13 +188,14 @@ static void StartThread(void const * argument)
 	osThreadCreate (osThread(DHCP), &gnetif);
 	//osDelay(2000);
 
-	/* start httpserver thread */
+	/* Start httpserver thread */
 	http_server_netconn_init();
 
+#ifndef LCD_USERLOG
 	/* Create GUI task */
 	osThreadDef(GUI_Thread, GUIThread,   osPriorityBelowNormal, 0, configMINIMAL_STACK_SIZE * 2);	//2048 //configMINIMAL_STACK_SIZE * 20
 	volatile osThreadId id = osThreadCreate (osThread(GUI_Thread), NULL);
-	id += 2;
+#endif
 
 	//Define and start the server thread
 	osThreadDef(SOCKET_SERVER, socket_server_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 10);

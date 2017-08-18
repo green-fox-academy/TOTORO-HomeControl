@@ -63,6 +63,7 @@
 #include "gui_setup.h"
 #include "WindowDLG.h"
 #include "k_bsp.h"
+#include "ac_client.h"
 
 
 
@@ -119,6 +120,7 @@ int main(void)
 
 	/* Initialize LCD */
 	BSP_Config();
+
 #ifndef LCD_USERLOG
 	 /* Initialize GUI */
 	GUI_Init();
@@ -130,7 +132,6 @@ int main(void)
 	GUI_SelectLayer(0);
 
 //	GUI_Startup();
-
 #endif
 	/* Create Touch screen Timer */
 	osTimerDef(TS_Timer, TimerCallback);
@@ -138,7 +139,6 @@ int main(void)
 
 	/* Start the TS Timer */
 	osTimerStart(lcd_timer, 100);
-
 
 	/*Init thread */
 	osThreadDef(Start, StartThread, osPriorityHigh, 0, configMINIMAL_STACK_SIZE * 1);
@@ -199,7 +199,7 @@ static void StartThread(void const * argument)
 
 #ifndef LCD_USERLOG
 	/* Create GUI task */
-	osThreadDef(GUI_Thread, GUIThread,   osPriorityBelowNormal, 0, configMINIMAL_STACK_SIZE * 2);	//2048 //configMINIMAL_STACK_SIZE * 20
+	osThreadDef(GUI_Thread, GUIThread,   osPriorityBelowNormal, 0, configMINIMAL_STACK_SIZE * 2);
 	volatile osThreadId id = osThreadCreate (osThread(GUI_Thread), NULL);
 #endif
 
@@ -211,7 +211,7 @@ static void StartThread(void const * argument)
 //	osThreadDef(PROJECTOR_SERVER, projector_server_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 4);
 //	osThreadCreate (osThread(PROJECTOR_SERVER), NULL);
 
-	//Define and start the projector thread
+//	Define and start the projector thread
 //	osThreadDef(PROJECTOR_CLIENT, projector_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 4);
 //	osThreadCreate (osThread(PROJECTOR_CLIENT), NULL);
 

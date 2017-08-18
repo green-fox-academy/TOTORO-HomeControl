@@ -10,12 +10,14 @@
 #include "GUI.h"
 #include "DIALOG.h"
 #include "WindowDLG.h"
+#include "projector_client.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 #define SERVER_QUEUE_SIZE 100
 #define SERVER_BUFF_LEN 100
 #define PORT 8002
+
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 float received_weather_data[3];

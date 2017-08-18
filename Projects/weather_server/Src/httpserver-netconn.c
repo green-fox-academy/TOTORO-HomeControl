@@ -237,7 +237,7 @@ static void http_server_netconn_thread(void *arg)
   
       while(1) 
       {
-        /* accept any icoming connection */
+        /* accept any incoming connection */
         accept_err = netconn_accept(conn, &newconn);
         if(accept_err == ERR_OK)
         {

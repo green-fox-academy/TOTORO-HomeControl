@@ -18,11 +18,6 @@
 **********************************************************************
 */
 
-
-
-
-
-
 // USER START (Optionally insert additional includes)
 // USER END
 
@@ -36,18 +31,22 @@
 *
 **********************************************************************
 */
-#define ID_WINDOW_0 (GUI_ID_USER + 0x00)
-#define ID_BUTTON_0 (GUI_ID_USER + 0x01)
-#define ID_BUTTON_1 (GUI_ID_USER + 0x02)
-#define ID_BUTTON_2 (GUI_ID_USER + 0x03)
-#define ID_TEXT_0 (GUI_ID_USER + 0x04)
-#define ID_TEXT_1 (GUI_ID_USER + 0x05)
-#define ID_TEXT_2 (GUI_ID_USER + 0x06)
-#define ID_TEXT_3 (GUI_ID_USER + 0x07)
-#define ID_TEXT_4 (GUI_ID_USER + 0x08)
-#define ID_TEXT_5 (GUI_ID_USER + 0x09)
-#define ID_TEXT_6 (GUI_ID_USER + 0x0A)
-#define ID_TEXT_7 (GUI_ID_USER + 0x0C)
+#define ID_WINDOW_0 (GUI_ID_USER + 0x0C)
+#define ID_TEXT_0 (GUI_ID_USER + 0x0D)
+#define ID_TEXT_1 (GUI_ID_USER + 0x0E)
+#define ID_TEXT_2 (GUI_ID_USER + 0x0F)
+#define ID_TEXT_3 (GUI_ID_USER + 0x10)
+#define ID_TEXT_4 (GUI_ID_USER + 0x11)
+#define ID_BUTTON_0 (GUI_ID_USER + 0x12)
+#define ID_BUTTON_1 (GUI_ID_USER + 0x13)
+#define ID_BUTTON_2 (GUI_ID_USER + 0x14)
+#define ID_TEXT_5 (GUI_ID_USER + 0x15)
+#define ID_TEXT_6 (GUI_ID_USER + 0x16)
+#define ID_TEXT_7 (GUI_ID_USER + 0x17)
+#define ID_SPINBOX_0 (GUI_ID_USER + 0x18)
+
+#define ID_BUTTON_3 (GUI_ID_USER + 0x01)
+#define ID_BUTTON_4 (GUI_ID_USER + 0x02)
 
 
 // USER START (Optionally insert additional defines)
@@ -61,7 +60,6 @@
 */
 
 // USER START (Optionally insert additional static data)
-uint8_t ctrl = 4;
 WM_HWIN main_window;
 // USER END
 
@@ -70,18 +68,21 @@ WM_HWIN main_window;
 *       _aDialogCreate
 */
 static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
-  { WINDOW_CreateIndirect, "Window", ID_WINDOW_0, 2, 1, 480, 272, 1, 0x0, 0 },
-  { BUTTON_CreateIndirect, "UP_button", ID_BUTTON_0, 402, 26, 50, 50, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "STOP", ID_BUTTON_1, 400, 87, 50, 50, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "DOWN", ID_BUTTON_2, 400, 147, 50, 50, 0, 0x0, 0 },
-  { TEXT_CreateIndirect, "", ID_TEXT_0, 280, 0, 85, 85, 0, 0x0, 0 },
-  { TEXT_CreateIndirect, "", ID_TEXT_1, 280, 90, 85, 85, 0, 0x0, 0 },
-  { TEXT_CreateIndirect, "Temperature (C)", ID_TEXT_2, 110, 5, 100, 20, 0, 0x0, 0 },
-  { TEXT_CreateIndirect, "Humidity (%)", ID_TEXT_3, 285, 5, 80, 20, 0, 0x0, 0 },
-  { TEXT_CreateIndirect, "Pressure (Pa)", ID_TEXT_4, 285, 95, 80, 20, 0, 0x0, 0 },
-  { TEXT_CreateIndirect, "HomeControl", ID_TEXT_5, 2, 0, 92, 45, 0, 0x0, 0 },
-  { TEXT_CreateIndirect, "Projector", ID_TEXT_6, 375, 5, 80, 20, 0, 0x0, 0 },
-  { TEXT_CreateIndirect, "", ID_TEXT_7, 105, 0, 170, 170, 0, 0x0, 0 },
+  { WINDOW_CreateIndirect, "Window", ID_WINDOW_0, 0, 0, 480, 272, 1, 0x0, 0 },
+  { TEXT_CreateIndirect, "HomeControl", ID_TEXT_0, 5, 5, 87, 22, 0, 0x64, 0 },
+  { TEXT_CreateIndirect, "Text", ID_TEXT_1, 285, 5, 80, 20, 0, 0x64, 0 },
+  { TEXT_CreateIndirect, "Projector", ID_TEXT_2, 375, 5, 80, 20, 0, 0x64, 0 },
+  { TEXT_CreateIndirect, "Text", ID_TEXT_3, 285, 95, 80, 20, 0, 0x64, 0 },
+  { TEXT_CreateIndirect, "Text", ID_TEXT_4, 110, 5, 90, 20, 0, 0x64, 0 },
+  { BUTTON_CreateIndirect, "Up_Button", ID_BUTTON_0, 400, 27, 50, 50, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "Stop_Button", ID_BUTTON_1, 400, 87, 50, 50, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "Down_Button", ID_BUTTON_2, 400, 147, 50, 50, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "", ID_TEXT_5, 105, 0, 170, 170, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "", ID_TEXT_6, 280, 0, 85, 85, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "", ID_TEXT_7, 280, 90, 85, 85, 0, 0x0, 0 },
+  { SPINBOX_CreateIndirect, "45", ID_SPINBOX_0, 200, 200, 120, 70, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "On/Off", ID_BUTTON_3, 8, 208, 70, 45, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "Swing", ID_BUTTON_4, 97, 208, 70, 45, 0, 0x0, 0 },
   // USER START (Optionally insert additional widgets)
   // USER END
 };
@@ -114,74 +115,139 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     //
     hItem = pMsg->hWin;
     WINDOW_SetBkColor(hItem, GUI_MAKE_COLOR(0x00F0000F));
-    //
-    // Initialization of 'UP_button'
+
+
+ /****************************/
+     // Initialization of 'AC control'
+     //
+     hItem = WM_GetDialogItem(pMsg->hWin, ID_SPINBOX_0);
+     SPINBOX_SetValue(hItem, 0);
+     SPINBOX_SetStep(hItem, 1);
+
+/****************************/
+
+
+    // Initialization of 'AC_on_off_button'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_0);
-    BUTTON_SetFont(hItem, GUI_FONT_13_1);
-    BUTTON_SetText(hItem, "UP");
+    BUTTON_SetText(hItem, "AC");
     //
-    // Initialization of 'hum'
+    // Initialization of 'AC_swing_button'
     //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_0);
-    TEXT_SetTextAlign(hItem, GUI_TA_RIGHT | GUI_TA_BOTTOM);
-    TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
-    TEXT_SetFont(hItem, GUI_FONT_24_1);
-    //
-    // Initialization of 'press'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_1);
-    TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
-    TEXT_SetTextAlign(hItem, GUI_TA_RIGHT | GUI_TA_BOTTOM);
-    TEXT_SetFont(hItem, GUI_FONT_24_1);
-    //
-    // Initialization of 'Temperature (°C)'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_2);
-    TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
-    TEXT_SetFont(hItem, GUI_FONT_13_1);
-    //
-    // Initialization of 'Humidity (%)'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_3);
-    TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
-    TEXT_SetFont(hItem, GUI_FONT_13_1);
-    //
-    // Initialization of 'Pressure (Pa)'
-    //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_4);
-    TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_1);
+    BUTTON_SetText(hItem, "Swing");
+    // USER START (Optionally insert additional code for further widget initialization)
+    // USER END
+    //break;
+
     //
     // Initialization of 'HomeControl'
     //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_5);
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_0);
+    TEXT_SetText(hItem, "HomeControl");
     TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
     TEXT_SetFont(hItem, GUI_FONT_16_1);
-    TEXT_SetTextAlign(hItem, GUI_TA_LEFT | GUI_TA_VCENTER);
+    //
+    // Initialization of 'Text'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_1);
+    TEXT_SetText(hItem, "Humidity (%)");
+    TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
+    TEXT_SetFont(hItem, GUI_FONT_13_1);
     //
     // Initialization of 'Projector'
     //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_6);
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_2);
+    TEXT_SetText(hItem, "Projector");
+    TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
+    TEXT_SetFont(hItem, GUI_FONT_13_1);
+    //
+    // Initialization of 'Text'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_3);
+    TEXT_SetText(hItem, "Pressure (Pa)");
     TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
     //
-    // Initialization of 'temp'
+    // Initialization of 'Text'
     //
-    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_7);
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_4);
+    TEXT_SetText(hItem, "Temperature (C)");
+    TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
+    //
+    // Initialization of 'Up_Button'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_0);
+    BUTTON_SetText(hItem, "UP");
+    //
+    // Initialization of 'Stop_Button'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_1);
+    BUTTON_SetText(hItem, "STOP");
+    //
+    // Initialization of 'Down_Button'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_2);
+    BUTTON_SetText(hItem, "DOWN");
+    //
+    // Initialization of 'temp_data'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_5);
     TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
     TEXT_SetTextAlign(hItem, GUI_TA_RIGHT | GUI_TA_BOTTOM);
-    TEXT_SetFont(hItem, GUI_FONT_D64);
+    TEXT_SetFont(hItem, GUI_FONT_24_1);
+    //
+    // Initialization of 'hum_data'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_6);
+    TEXT_SetFont(hItem, GUI_FONT_16_1);
+    TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
+    TEXT_SetTextAlign(hItem, GUI_TA_RIGHT | GUI_TA_BOTTOM);
+    //
+    // Initialization of 'press_data'
+    //
+    hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_7);
+    TEXT_SetTextAlign(hItem, GUI_TA_RIGHT | GUI_TA_BOTTOM);
+    TEXT_SetFont(hItem, GUI_FONT_16_1);
+    TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
     // USER START (Optionally insert additional code for further widget initialization)
     // USER END
     break;
   case WM_NOTIFY_PARENT:
     Id    = WM_GetId(pMsg->hWinSrc);
     NCode = pMsg->Data.v;
-    switch(Id) {
-    case ID_BUTTON_0: // Notifications sent by 'UP_button'
+   switch(Id) {
+    case ID_BUTTON_3: // Notifications sent by 'AC_on_off_button'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
         // USER START (Optionally insert code for reacting on notification message)
-//		ctrl = 1;
+        // USER END
+        break;
+      case WM_NOTIFICATION_RELEASED:
+        // USER START (Optionally insert code for reacting on notification message)
+        // USER END
+        break;
+      // USER START (Optionally insert additional code for further notification handling)
+      // USER END
+      }
+      break;
+    case ID_BUTTON_4: // Notifications sent by 'AC_swing_button'
+      switch(NCode) {
+      case WM_NOTIFICATION_CLICKED:
+        // USER START (Optionally insert code for reacting on notification message)
+        // USER END
+        break;
+      case WM_NOTIFICATION_RELEASED:
+        // USER START (Optionally insert code for reacting on notification message)
+        // USER END
+        break;
+      // USER START (Optionally insert additional code for further notification handling)
+      // USER END
+      }
+	  break;
+    case ID_BUTTON_0: // Notifications sent by 'Up_Button'
+      switch(NCode) {
+      case WM_NOTIFICATION_CLICKED:
+        // USER START (Optionally insert code for reacting on notification message)
 		send_command_to_projector_screen(1);
         // USER END
         break;
@@ -193,11 +259,10 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       // USER END
       }
       break;
-    case ID_BUTTON_1: // Notifications sent by 'STOP'
+    case ID_BUTTON_1: // Notifications sent by 'Stop_Button'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
         // USER START (Optionally insert code for reacting on notification message)
-//		ctrl = 2;
 		send_command_to_projector_screen(2);
         // USER END
         break;
@@ -209,15 +274,36 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       // USER END
       }
       break;
-    case ID_BUTTON_2: // Notifications sent by 'DOWN'
+    case ID_BUTTON_2: // Notifications sent by 'Down_Button'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
         // USER START (Optionally insert code for reacting on notification message)
-//		ctrl = 3;
 		send_command_to_projector_screen(3);
         // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
+        // USER START (Optionally insert code for reacting on notification message)
+        // USER END
+        break;
+      // USER START (Optionally insert additional code for further notification handling)
+      // USER END
+      }
+      break;
+    case ID_SPINBOX_0: // Notifications sent by 'AC_control'
+      switch(NCode) {
+      case WM_NOTIFICATION_CLICKED:
+        // USER START (Optionally insert code for reacting on notification message)
+        // USER END
+        break;
+      case WM_NOTIFICATION_RELEASED:
+        // USER START (Optionally insert code for reacting on notification message)
+        // USER END
+        break;
+      case WM_NOTIFICATION_MOVED_OUT:
+        // USER START (Optionally insert code for reacting on notification message)
+        // USER END
+        break;
+      case WM_NOTIFICATION_VALUE_CHANGED:
         // USER START (Optionally insert code for reacting on notification message)
         // USER END
         break;
@@ -249,7 +335,7 @@ void gui_update_temp(float temp)
 {
     WM_HWIN hItem;
     char str[10];
-	hItem = WM_GetDialogItem(main_window, ID_TEXT_7);
+	hItem = WM_GetDialogItem(main_window, ID_TEXT_5);
 	sprintf(str, "%.0f", temp);
 	TEXT_SetText(hItem, str);
 }
@@ -259,7 +345,7 @@ void gui_update_hum(float hum)
 {
     WM_HWIN hItem;
     char str[10];
-	hItem = WM_GetDialogItem(main_window, ID_TEXT_0);
+	hItem = WM_GetDialogItem(main_window, ID_TEXT_6);
 	sprintf(str, "%.0f", hum);
 	TEXT_SetText(hItem, str);
 }
@@ -269,7 +355,7 @@ void gui_update_press(float press)
 {
     WM_HWIN hItem;
     char str[10];
-	hItem = WM_GetDialogItem(main_window, ID_TEXT_1);
+	hItem = WM_GetDialogItem(main_window, ID_TEXT_7);
 	sprintf(str, "%.0f", press);
 	TEXT_SetText(hItem, str);
 }
@@ -288,10 +374,6 @@ WM_HWIN CreateWindow(void) {
 void MainTask(void) {
    CreateWindow() ;
 }
-
-
-
-
 
 // USER END
 

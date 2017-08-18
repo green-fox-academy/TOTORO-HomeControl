@@ -8,7 +8,9 @@
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
 
-void projector_server_thread(void const *argument);
+//void projector_server_thread(void const *argument);
+int8_t send_command_to_projector_screen(uint8_t comm);
+void projector_client_thread(void const *argument);
 
 #endif /* __PROJECTOR_SERVER_H */
 

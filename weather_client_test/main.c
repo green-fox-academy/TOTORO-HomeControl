@@ -1,3 +1,7 @@
+/**************************
+WEATHER STATION TEST CLIENT
+***************************/
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -5,9 +9,9 @@
 #include <conio.h>
 #include <windows.h>
 
-#define SERVER_IP           "10.27.99.26"
-#define SERVER_PORT         9500
-//#define DATA_BUFFER_SIZE    1024
+#define SERVER_IP           "10.27.99.192"
+#define SERVER_PORT         8002
+
 
 float buffer[3] = {23.0, 50.0, 101300};
 
@@ -51,14 +55,6 @@ void connect_to_server(SOCKET *client_sock, unsigned int server_port, char *serv
 
 float send_message(SOCKET *socket)
 {
-	// Get the message from the user
-	//float buffer[3] = {1.1, 2.2, 3.3};
-
-	//printf("\nEnter the message to send: ");
-	//gets(msg);
-	// Send the message to the servers
-
-
 	int sent_bytes = send(*socket, buffer, sizeof(buffer), 0);
 	if (sent_bytes < 0)
 		handle_error("send() ");
@@ -87,32 +83,15 @@ int main()
 
 	// Local variables used in the do-while loop
 	float sent_bytes;
-	//int received_bytes;
-	//char recv_buff[DATA_BUFFER_SIZE];
-	//do {
 		// Send data to the server
     for(int i = 0; i < 100; i++) {
 		sent_bytes = send_message(&client_socket);
 		Sleep(10000);
     }
-		// Receive the answer if message was sent
-		/*if (sent_bytes > 0) {
-			received_bytes = recv(client_socket, recv_buff, DATA_BUFFER_SIZE, 0);
-			// Error handling
-			if (received_bytes < 0) {
-				handle_error("recv() ");
-			} else {
-				// Printing out received string
-				recv_buff[received_bytes] = '\0';
-				printf("Received string: %s\n", recv_buff);
-			}
-		}*/
-	//} while (sent_bytes > 0);
 
 	printf("Closing the socket...\n");
 	closesocket(client_socket);
 	printf("Cleaning up memory...\n");
 	WSACleanup();
 	return 0;
-
 }

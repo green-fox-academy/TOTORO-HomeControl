@@ -9,15 +9,17 @@
 #include "stm32746g_discovery_lcd.h"
 #include "GUI.h"
 #include "DIALOG.h"
+#include "WindowDLG.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 #define SERVER_QUEUE_SIZE 100
 #define SERVER_BUFF_LEN 100
-#define PORT 9500
+#define PORT 8002
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 float received_weather_data[3];
+
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 void terminate_thread()
@@ -25,8 +27,7 @@ void terminate_thread()
 	while (1)
 		osThreadTerminate(NULL);
 }
-// TODO:
-// Implement this function!
+
 void socket_server_thread(void const *argument)
 {
 	LCD_UsrLog("Socket server - startup...\n");
@@ -91,16 +92,9 @@ void socket_server_thread(void const *argument)
 				received_bytes = recv(client_socket, received_weather_data, sizeof(received_weather_data), 0);
 				LCD_UsrLog("Temperature: %.1f C, Humidity: %.1f%%, Pressure: %.1f Pa,\n", received_weather_data[0], received_weather_data[1], received_weather_data[2]);
 
-				GUI_GotoXY(167, 90);
-				GUI_SetFont(GUI_FONT_D64);	//display temperature
-				GUI_DispFloat(received_weather_data[0], 2);
-
-				GUI_GotoXY(318, 57);
-				GUI_SetFont(GUI_FONT_24_1);	//display humidity
-				GUI_DispFloat(received_weather_data[1], 4);
-
-				GUI_GotoXY(312, 142);
-				GUI_DispFloat(received_weather_data[2]/ 100, 4);	//display pressure
+				gui_update_temp(received_weather_data[0]);
+				gui_update_hum(received_weather_data[1]);
+				gui_update_press(received_weather_data[2]);
 			} while (received_bytes > 0);
 
 			// Close the socket

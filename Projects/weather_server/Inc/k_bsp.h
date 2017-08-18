@@ -1,18 +1,26 @@
+
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __SOCKET_SERVER_H
-#define __SOCKET_SERVER_H
+#ifndef __K_BSP_H
+#define __K_BSP_H
+
+#ifdef __cplusplus
+ extern "C" {
+#endif
 
 /* Includes ------------------------------------------------------------------*/
+#include "main.h"
+
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
-/* Exported macro ------------------------------------------------------------*/
-/* Exported functions ------------------------------------------------------- */
-void socket_server_thread(void const *argument);
-void projector_server_thread(void const *argument);
+/* Exported macros -----------------------------------------------------------*/
+/* Exported functions ------------------------------------------------------- */ 
+void k_BspInit(void);
+void k_TouchUpdate(void);
 
+#ifdef __cplusplus
+}
+#endif
 
-extern float received_weather_data[3];
-#endif /* __SOCKET_SERVER_H */
-
+#endif /*__K_BSP_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

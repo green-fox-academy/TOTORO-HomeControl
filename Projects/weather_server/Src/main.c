@@ -59,27 +59,24 @@
 #include "socket_client.h"
 #include "stm32746g_discovery_lcd.h"
 #include "httpserver-netconn.h"
-#include "projector_server.h"
 #include "usd_handle.h"
 #include "ff.h"
+#include "projector_client.h"
+#include "gui_setup.h"
+#include "WindowDLG.h"
+#include "k_bsp.h"
+
+
+
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
+//#define LCD_USERLOG			/*LCD userlog needed for IP address check */
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 struct netif gnetif; /* network interface structure */
+osTimerId lcd_timer;
 
-const GUI_POINT tri_up[] = {
-{ 417, 60},
-{ 433, 60},
-{ 425, 44}
-};
-
-const GUI_POINT tri_down[] = {
-{ 417, 164},
-{ 433, 164},
-{ 425, 180}
-};
 
 /* Private function prototypes -----------------------------------------------*/
 static void SystemClock_Config(void);
@@ -90,7 +87,8 @@ static void MPU_Config(void);
 static void Error_Handler(void);
 static void CPU_CACHE_Enable(void);
 static void GUIThread(void const * argument);
-static void GUI_Startup();
+static void TimerCallback(void const *n);
+
 
 /* Private functions ---------------------------------------------------------*/
 
@@ -115,21 +113,37 @@ int main(void)
 	   - Global MSP (MCU Support Package) initialization
 	*/
 	HAL_Init();
+
+
   
 	/* Configure the system clock to 200 MHz */
 	SystemClock_Config();
 
 	/* Initialize LCD */
 	BSP_Config();
+#ifndef LCD_USERLOG
+	 /* Initialize GUI */
+	GUI_Init();
 
-	/* Create GUI task */
-	//osThreadDef(GUI_Thread, GUIThread, osPriorityBelowNormal, 0, configMINIMAL_STACK_SIZE * 20);	//2048
-	//osThreadCreate (osThread(GUI_Thread), NULL);
+	/* Activate the use of memory device feature */
+	WM_SetCreateFlags(WM_CF_MEMDEV);
+	WM_MULTIBUF_Enable(1);
+	GUI_SetLayerVisEx (1, 0);
+	GUI_SelectLayer(0);
 
-	GUI_Startup();
+//	GUI_Startup();
+
+#endif
+	/* Create Touch screen Timer */
+	osTimerDef(TS_Timer, TimerCallback);
+	lcd_timer =  osTimerCreate(osTimer(TS_Timer), osTimerPeriodic, (void *)0);
+
+	/* Start the TS Timer */
+	osTimerStart(lcd_timer, 100);
+
 
 	/*Init thread */
-	osThreadDef(Start, StartThread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+	osThreadDef(Start, StartThread, osPriorityHigh, 0, configMINIMAL_STACK_SIZE * 1);
 	osThreadCreate (osThread(Start), NULL);
 
 	/*##-1- Start task #########################################################*/
@@ -144,62 +158,27 @@ int main(void)
 	}
 }
 
-/**
-  * @brief  Start task
-  * @param  argument: pointer that is passed to the thread function as start argument.
-  * @retval None
-  */
-static void GUI_Startup()
-{
-    GUI_Init();
-	WM_MULTIBUF_Enable(1);
-	GUI_SetLayerVisEx (1, 0);
-	GUI_SelectLayer(0);
-
-	//split screen for weather station and projector canvas control
-	GUI_SetBkColor(GUI_BLUE);
-	GUI_Clear();
-	GUI_SetColor(GUI_DARKBLUE);
-	GUI_FillRect(0, 0, 100, 272);		//controls
-	GUI_FillRect(105, 0, 275, 170);		//temperature
-	GUI_FillRect(280, 0, 365, 85);		//humidity
-	GUI_FillRect(280, 90, 365, 170);	//air pressure
-	GUI_FillRect(105, 175, 365, 272);	//AC control
-	GUI_FillRect(370, 0, 480, 217);		//projector canvas control
-	GUI_FillRect(370, 222, 480, 272);	//empty
-	GUI_SetColor(GUI_LIGHTGRAY);
-	GUI_SetFont(GUI_FONT_16_1);
-	GUI_SetBkColor(GUI_DARKBLUE);
-	GUI_DispStringAt("HomeControl", 5, 5);
-	GUI_SetFont(GUI_FONT_13_1);
-	GUI_DispStringAt("Temperature (�C)", 110, 5);
-	GUI_DispStringAt("Humidity (%)", 285, 5);
-	GUI_DispStringAt("Pressure (hPa)", 285, 95);
-	GUI_DispStringAt("Projector", 375, 5);
-	GUI_SetColor(GUI_BLUE);
-	GUI_FillRect(400, 27, 450, 77);		//up
-	GUI_FillRect(400, 87, 450, 137);	//stop
-	GUI_FillRect(400, 147, 450, 197);	//down
-	GUI_SetColor(GUI_DARKBLUE);
-	GUI_FillRect(402, 29, 448, 75);		//up
-	GUI_FillRect(402, 89, 448, 135);	//stop
-	GUI_FillRect(402, 149, 448, 195);	//down
-
-	GUI_SetColor(GUI_BLUE);
-	GUI_FillPolygon(tri_up, 3, 0, 0);	//up
-	GUI_FillRect(417, 104, 433, 120);	//stop
-	GUI_FillPolygon(tri_down, 3, 0, 0);	//down
-}
 
 static void GUIThread(void const * argument)
 {
-	/* Gui background Task */
-	while(1) {
-		GUI_Exec(); /* Do the background work ... Update windows etc.) */
-		osDelay(20); /* Nothing left to do for the moment ... Idle processing */
-	}
+
+  MainTask();
+
+  /* Gui background Task */
+  while(1) {
+    GUI_Exec(); /* Do the background work ... Update windows etc.) */
+    osDelay(100); /* Nothing left to do for the moment ... Idle processing */
+  }
 }
 
+
+static void TimerCallback(void const *n)
+{
+  k_TouchUpdate();
+}
+
+
+osThreadId id;
 /**
   * @brief  Start Thread 
   * @param  argument not used
@@ -207,24 +186,14 @@ static void GUIThread(void const * argument)
   */
 static void StartThread(void const * argument)
 { 
-	/* Initialize LCD */
-	//BSP_Config();
-
 	/* Create tcp_ip stack thread */
 	tcpip_init(NULL, NULL);
 
 	/* Initialize the LwIP stack */
 	Netif_Config();
 
-	/* start httpserver thread */
-	http_server_netconn_init();
-
 	/* Notify user about the network interface config */
 	User_notification(&gnetif);
-
-	/* Create GUI task */
-	//  osThreadDef(GUI_Thread, GUIThread, osPriorityAboveNormal, 0, 2048);
-	//  osThreadCreate (osThread(GUI_Thread), NULL);
 
 	//Define and start uSD card thread
 	osThreadDef(USD_CARD, usd_card_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
@@ -232,15 +201,28 @@ static void StartThread(void const * argument)
 	/* Start DHCPClient */
 	osThreadDef(DHCP, DHCP_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
 	osThreadCreate (osThread(DHCP), &gnetif);
-	osDelay(2000);
+	//osDelay(2000);
 
-	//Define and start the server thread
-	osThreadDef(SOCKET_SERVER, socket_server_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+	/* Start httpserver thread */
+	http_server_netconn_init();
+
+#ifndef LCD_USERLOG
+	/* Create GUI task */
+	osThreadDef(GUI_Thread, GUIThread,   osPriorityBelowNormal, 0, configMINIMAL_STACK_SIZE * 2);	//2048 //configMINIMAL_STACK_SIZE * 20
+	volatile osThreadId id = osThreadCreate (osThread(GUI_Thread), NULL);
+#endif
+
+	//Define and start the weather server thread
+	osThreadDef(SOCKET_SERVER, socket_server_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 10);
 	osThreadCreate (osThread(SOCKET_SERVER), NULL);
 
+//	//Define and start the projector thread
+//	osThreadDef(PROJECTOR_SERVER, projector_server_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 4);
+//	osThreadCreate (osThread(PROJECTOR_SERVER), NULL);
+
 	//Define and start the projector thread
-	osThreadDef(PROJECTOR_SERVER, projector_server_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
-	osThreadCreate (osThread(PROJECTOR_SERVER), NULL);
+//	osThreadDef(PROJECTOR_CLIENT, projector_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 4);
+//	osThreadCreate (osThread(PROJECTOR_CLIENT), NULL);
 
 
 
@@ -291,6 +273,7 @@ static void BSP_Config(void)
 {
 
 	BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_GPIO);
+	BSP_LED_Init(LED1);
 	/* Initialize the SDRAM */
 	BSP_SDRAM_Init();
 
@@ -304,28 +287,30 @@ static void BSP_Config(void)
 	/* Enable Back up SRAM */
 	__HAL_RCC_BKPSRAM_CLK_ENABLE();
 
-//	/* Initialize the LCD */
-//  BSP_LCD_Init();
-//
-//  /* Initialize the LCD Layers */
-//  BSP_LCD_LayerDefaultInit(1, LCD_FB_START_ADDRESS);
-//
-//  /* Set LCD Foreground Layer  */
-//  BSP_LCD_SelectLayer(1);
-//
-//  BSP_LCD_SetFont(&LCD_DEFAULT_FONT);
-//
-//  /* Initialize TS */
-//  BSP_TS_Init(BSP_LCD_GetXSize(), BSP_LCD_GetYSize());
-//
-//  /* Initialize LCD Log module */
-//  LCD_LOG_Init();
-//
-//  /* Show Header and Footer texts */
-//  LCD_LOG_SetHeader((uint8_t *)"TOTORO socket echo server");
-//  LCD_LOG_SetFooter((uint8_t *)"STM32746G-DISCO - GreenFoxAcademy");
-//
-//  LCD_UsrLog ((char *)"Notification - Ethernet Initialization ...\n");
+#ifdef LCD_USERLOG
+	/* Initialize the LCD */
+  BSP_LCD_Init();
+
+  /* Initialize the LCD Layers */
+  BSP_LCD_LayerDefaultInit(1, LCD_FB_START_ADDRESS);
+
+  /* Set LCD Foreground Layer  */
+  BSP_LCD_SelectLayer(1);
+
+  BSP_LCD_SetFont(&LCD_DEFAULT_FONT);
+
+  /* Initialize TS */
+  BSP_TS_Init(BSP_LCD_GetXSize(), BSP_LCD_GetYSize());
+
+  /* Initialize LCD Log module */
+  LCD_LOG_Init();
+
+  /* Show Header and Footer texts */
+  LCD_LOG_SetHeader((uint8_t *)"TOTORO socket echo server");
+  LCD_LOG_SetFooter((uint8_t *)"STM32746G-DISCO - GreenFoxAcademy");
+
+  LCD_UsrLog ((char *)"Notification - Ethernet Initialization ...\n");
+#endif
 }
 
 /**
@@ -352,6 +337,7 @@ static void SystemClock_Config(void)
 {
 	RCC_ClkInitTypeDef RCC_ClkInitStruct;
 	RCC_OscInitTypeDef RCC_OscInitStruct;
+	 HAL_StatusTypeDef ret = HAL_OK;
 
 	/* Enable HSE Oscillator and activate PLL with HSE as source */
 	RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
@@ -434,6 +420,7 @@ static void MPU_Config(void)
 	HAL_MPU_Enable(MPU_PRIVILEGED_DEFAULT);
 }
 
+
 /**
   * @brief  CPU L1-Cache enable.
   * @param  None
@@ -469,6 +456,11 @@ void assert_failed(uint8_t* file, uint32_t line)
 }
 #endif
 
+void vApplicationStackOverflowHook( TaskHandle_t xTask, char *pcTaskName )
+{
+	while(1) {
 
+	}
+}
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

@@ -62,7 +62,7 @@
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 #define WEBSERVER_THREAD_PRIO    osPriorityAboveNormal
-#define THREAD_STACKSIZE	2048
+#define THREAD_STACKSIZE	( configMINIMAL_STACK_SIZE * 24 )
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 u32_t nPageHits = 0;
@@ -237,7 +237,7 @@ static void http_server_netconn_thread(void *arg)
   
       while(1) 
       {
-        /* accept any icoming connection */
+        /* accept any incoming connection */
         accept_err = netconn_accept(conn, &newconn);
         if(accept_err == ERR_OK)
         {
@@ -259,7 +259,8 @@ static void http_server_netconn_thread(void *arg)
   */
 void http_server_netconn_init()
 {
-  sys_thread_new("HTTP", http_server_netconn_thread, NULL, THREAD_STACKSIZE, WEBSERVER_THREAD_PRIO);
+	volatile osThreadId id = sys_thread_new("HTTP", http_server_netconn_thread, NULL, THREAD_STACKSIZE, WEBSERVER_THREAD_PRIO);
+	id += 1;
 }
 
 /**
@@ -278,7 +279,7 @@ void DynWebPage(struct netconn *conn)
   memset(PAGE_BODY, 0,512);
   memcpy(buf, &weather_data, sizeof(float));
 
-  strcat((char *)PAGE_BODY, "<w_data><pre><br>Temperature (oC):		Humidity (%):		Pressure (Pa):" );
+  strcat((char *)PAGE_BODY, "<w_data><pre><br>Temperature (°C):		Humidity (%):		Pressure (Pa):" );
   strcat((char *)PAGE_BODY, "<br>--------------------------------------------------------------------<br>");
   sprintf(buf, "%.2f 	 			%.1f 			%.2f", received_weather_data[0], received_weather_data[1], received_weather_data[2]);
   strcat(PAGE_BODY, buf);

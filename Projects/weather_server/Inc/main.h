@@ -71,7 +71,9 @@
 /* Exported constants --------------------------------------------------------*/
 
 #define USE_DHCP       /* enable DHCP, if disabled static address is used*/
+
  
+
 /*Static IP ADDRESS*/
 #define IP_ADDR0   192
 #define IP_ADDR1   168
@@ -89,6 +91,8 @@
 #define GW_ADDR1   168
 #define GW_ADDR2   0
 #define GW_ADDR3   1 
+
+
 
 
 /* Exported macro ------------------------------------------------------------*/

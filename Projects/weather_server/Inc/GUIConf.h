@@ -50,6 +50,8 @@ Purpose     : Configures emWins abilities, fonts etc.
  #define GUI_OS                    (0)
 #endif
 
+
+#define GUI_MAXTASK 10
 /*********************************************************************
 *
 *       Configuration of touch support
@@ -72,5 +74,12 @@ Purpose     : Configures emWins abilities, fonts etc.
 #define GUI_WINSUPPORT                (1)    /* Use window manager */
 #define GUI_SUPPORT_MEMDEV            (1)    /* Memory device package available */
 #define GUI_SUPPORT_DEVICES           (1)    /* Enable use of device pointers */
+
+
+//void GUI_X_Config(void)
+//{
+//  GUI_ALLOC_AssignMemory(aMemory, GUI_NUMBYTES);
+//}
+//
 
 #endif  /* Avoid multiple inclusion */

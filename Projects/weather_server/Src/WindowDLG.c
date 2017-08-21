@@ -47,6 +47,7 @@
 #define ID_BUTTON_3 (GUI_ID_USER + 0x0F)
 #define ID_BUTTON_4 (GUI_ID_USER + 0x10)
 #define ID_SPINBOX_0 (GUI_ID_USER + 0x11)
+#define ID_BUTTON_5 (GUI_ID_USER + 0x12)
 
 
 /* Sent value defines */
@@ -101,6 +102,7 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
   { BUTTON_CreateIndirect, "AC OFF", ID_BUTTON_3, 5, 215, 80, 50, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "No swing", ID_BUTTON_4, 95, 215, 80, 50, 0, 0x0, 0 },
   { SPINBOX_CreateIndirect, "", ID_SPINBOX_0, 185, 195, 150, 70, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "L", ID_BUTTON_5, 5, 135, 80, 70, 0, 0x0, 0 },
   // USER START (Optionally insert additional widgets)
   // USER END
 };
@@ -291,6 +293,22 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       // USER END
       }
       break;
+
+      case ID_BUTTON_5: // Notifications sent by 'L'
+         switch(NCode) {
+         case WM_NOTIFICATION_CLICKED:
+           // USER START (Optionally insert code for reacting on notification message)
+
+           // USER END
+           break;
+         case WM_NOTIFICATION_RELEASED:
+           // USER START (Optionally insert code for reacting on notification message)
+           // USER END
+           break;
+         // USER START (Optionally insert additional code for further notification handling)
+         // USER END
+         }
+         break;
     case ID_SPINBOX_0: // Notifications sent by 'Spinbox'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:

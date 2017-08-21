@@ -25,6 +25,7 @@
 #include <stdint.h>
 #include <string.h>
 #include "projector_client.h"
+#include "ac_client.h"
 
 /*********************************************************************
 *
@@ -43,7 +44,21 @@
 #define ID_TEXT_4 (GUI_ID_USER + 0x0C)
 #define ID_TEXT_5 (GUI_ID_USER + 0x0D)
 #define ID_TEXT_6 (GUI_ID_USER + 0x0E)
+#define ID_BUTTON_3 (GUI_ID_USER + 0x0F)
+#define ID_BUTTON_4 (GUI_ID_USER + 0x10)
+#define ID_SPINBOX_0 (GUI_ID_USER + 0x11)
 
+
+/* Sent value defines */
+#define PROJECTOR_UP		1
+#define PROJECTOR_STOP		2
+#define PROJECTOR_DOWN		3
+#define AC_ON				1
+#define AC_OFF				0
+#define AC_SWING_ON			1
+#define AC_SWING_OFF		0
+#define AC_MIN_VALUE		16
+#define AC_MAX_VALUE		30
 
 // USER START (Optionally insert additional defines)
 // USER END
@@ -56,6 +71,15 @@
 */
 
 // USER START (Optionally insert additional static data)
+WM_HWIN main_window;
+WM_HWIN hItem;
+WM_HWIN swing_button;
+WM_HWIN AC_control;
+WM_HWIN AC_on_off;
+
+uint8_t ac_state = 0;
+uint8_t ac_swing_state = 0;
+int ac_temperature;
 // USER END
 
 /*********************************************************************
@@ -63,20 +87,24 @@
 *       _aDialogCreate
 */
 static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
-  { WINDOW_CreateIndirect, "Window", ID_WINDOW_0, 4, 1, 480, 272, 1, 0x0, 0 },
+  { WINDOW_CreateIndirect, "Window", ID_WINDOW_0, 0, 0, 480, 272, 1, 0x0, 0 },
   { BUTTON_CreateIndirect, "UP", ID_BUTTON_0, 400, 27, 50, 50, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "STOP", ID_BUTTON_1, 400, 87, 50, 50, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "DOWN", ID_BUTTON_2, 400, 147, 50, 50, 0, 0x0, 0 },
   { TEXT_CreateIndirect, "HomeControl", ID_TEXT_0, 8, 4, 80, 20, 0, 0x0, 0 },
-  { TEXT_CreateIndirect, "Temperature (C)", ID_TEXT_1, 116, 6, 85, 20, 0, 0x0, 0 },
-  { TEXT_CreateIndirect, "Humidity (%)", ID_TEXT_2, 282, 7, 80, 20, 0, 0x0, 0 },
-  { TEXT_CreateIndirect, "Pressure (Pa)", ID_TEXT_3, 280, 100, 80, 20, 0, 0x0, 0 },
-  { TEXT_CreateIndirect, "temp_data", ID_TEXT_4, 121, 25, 106, 94, 0, 0x0, 0 },
-  { TEXT_CreateIndirect, "hum_data", ID_TEXT_5, 270, 23, 83, 64, 0, 0x0, 0 },
-  { TEXT_CreateIndirect, "press_data", ID_TEXT_6, 277, 122, 98, 83, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "Temperature (C)", ID_TEXT_1, 110, 5, 86, 22, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "Humidity (%)", ID_TEXT_2, 285, 5, 80, 20, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "Pressure (Pa)", ID_TEXT_3, 285, 95, 80, 20, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "", ID_TEXT_4, 105, 0, 170, 170, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "", ID_TEXT_5, 280, 0, 85, 85, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "", ID_TEXT_6, 280, 90, 85, 85, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "AC OFF", ID_BUTTON_3, 5, 215, 80, 50, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "No swing", ID_BUTTON_4, 95, 215, 80, 50, 0, 0x0, 0 },
+  { SPINBOX_CreateIndirect, "", ID_SPINBOX_0, 185, 195, 150, 70, 0, 0x0, 0 },
   // USER START (Optionally insert additional widgets)
   // USER END
 };
+
 
 /*********************************************************************
 *
@@ -86,7 +114,6 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
 */
 
 // USER START (Optionally insert additional static code)
-WM_HWIN main_window;
 // USER END
 
 /*********************************************************************
@@ -97,6 +124,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
   WM_HWIN hItem;
   int     NCode;
   int     Id;
+
   // USER START (Optionally insert additional variables)
   // USER END
 
@@ -113,7 +141,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_0);
     TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
     //
-    // Initialization of 'Temperature (C9'
+    // Initialization of 'Temperature (C)'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_1);
     TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
@@ -133,18 +161,32 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_4);
     TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
     TEXT_SetTextAlign(hItem, GUI_TA_RIGHT | GUI_TA_BOTTOM);
+    TEXT_SetFont(hItem, GUI_FONT_D64);
     //
     // Initialization of 'hum_data'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_5);
     TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
     TEXT_SetTextAlign(hItem, GUI_TA_RIGHT | GUI_TA_BOTTOM);
+    TEXT_SetFont(hItem, GUI_FONT_24_1);
     //
     // Initialization of 'press_data'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_6);
     TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
     TEXT_SetTextAlign(hItem, GUI_TA_RIGHT | GUI_TA_BOTTOM);
+    TEXT_SetFont(hItem, GUI_FONT_24_1);
+
+    // Initialization of 'AC control spinbox'
+    //
+    AC_control = WM_GetDialogItem(pMsg->hWin, ID_SPINBOX_0);
+    SPINBOX_SetRange(AC_control, AC_MIN_VALUE, AC_MAX_VALUE);
+    SPINBOX_SetValue(AC_control, AC_MIN_VALUE);
+    SPINBOX_SetStep(AC_control, 1);
+    SPINBOX_SetButtonSize(AC_control, 70);
+    SPINBOX_SetFont(AC_control, GUI_FONT_24_1);
+
+
     // USER START (Optionally insert additional code for further widget initialization)
     // USER END
     break;
@@ -156,7 +198,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
         // USER START (Optionally insert code for reacting on notification message)
-//    	 send_command_to_projector_screen(1);
+    	  send_command_to_projector_screen(PROJECTOR_UP);
         // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
@@ -171,7 +213,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
         // USER START (Optionally insert code for reacting on notification message)
-//    	send_command_to_projector_screen(2);
+    	  send_command_to_projector_screen(PROJECTOR_STOP);
         // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
@@ -186,11 +228,90 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
         // USER START (Optionally insert code for reacting on notification message)
-//    	send_command_to_projector_screen(3);
+    	  send_command_to_projector_screen(PROJECTOR_DOWN);
         // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
         // USER START (Optionally insert code for reacting on notification message)
+        // USER END
+        break;
+      // USER START (Optionally insert additional code for further notification handling)
+      // USER END
+      }
+      break;
+    case ID_BUTTON_3: // Notifications sent by 'ON/OFF'
+      switch(NCode) {
+      case WM_NOTIFICATION_CLICKED:
+        // USER START (Optionally insert code for reacting on notification message)
+    	  switch(ac_state) {
+    	  case 0:
+    		  send_command_to_ac(AC_ON);		//TODO: correct sending
+    		  ac_state = 1;
+    		  BUTTON_SetText(AC_on_off, "AC is ON");
+    		  break;
+    	  case 1:
+    		  send_command_to_ac(AC_OFF);		//TODO: correct sending
+    		  ac_state = 0;
+    		  BUTTON_SetText(AC_on_off, "AC is OFF");
+    		  break;
+    	  }
+        // USER END
+        break;
+      case WM_NOTIFICATION_RELEASED:
+        // USER START (Optionally insert code for reacting on notification message)
+        // USER END
+        break;
+      // USER START (Optionally insert additional code for further notification handling)
+      // USER END
+      }
+      break;
+    case ID_BUTTON_4: // Notifications sent by 'Swing'
+      switch(NCode) {
+      case WM_NOTIFICATION_CLICKED:
+        // USER START (Optionally insert code for reacting on notification message)
+    	  switch(ac_swing_state) {
+    	  case 0:
+    		  send_command_to_ac(AC_SWING_ON);
+    		  ac_swing_state = 1;
+    		  BUTTON_SetText(swing_button, "Swinging");
+    		  break;
+    	  case 1:
+    		  send_command_to_ac(AC_SWING_OFF);
+    		  ac_swing_state = 0;
+    		  BUTTON_SetText(swing_button, "No swing");
+    		  break;
+    	  }
+        // USER END
+        break;
+      case WM_NOTIFICATION_RELEASED:
+        // USER START (Optionally insert code for reacting on notification message)
+        // USER END
+        break;
+      // USER START (Optionally insert additional code for further notification handling)
+      // USER END
+      }
+      break;
+    case ID_SPINBOX_0: // Notifications sent by 'Spinbox'
+      switch(NCode) {
+      case WM_NOTIFICATION_CLICKED:
+        // USER START (Optionally insert code for reacting on notification message)
+        // USER END
+        break;
+      case WM_NOTIFICATION_RELEASED:
+        // USER START (Optionally insert code for reacting on notification message)
+        // USER END
+        break;
+      case WM_NOTIFICATION_MOVED_OUT:
+        // USER START (Optionally insert code for reacting on notification message)
+        // USER END
+        break;
+      case WM_NOTIFICATION_VALUE_CHANGED:
+        // USER START (Optionally insert code for reacting on notification message)
+//    	  ac_temperature = (uint8_t)SPINBOX_GetValue(AC_control);
+//    	  uint8_t second_int_to_send = ac_temperature / 10;
+//    	  uint8_t first_int_to_send = ac_temperature - second_int_to_send * 10;
+//    	  send_command_to_ac(first_int_to_send);		//TODO: correct send!
+//    	  send_command_to_ac(second_int_to_send);
         // USER END
         break;
       // USER START (Optionally insert additional code for further notification handling)
@@ -249,7 +370,7 @@ void gui_update_press(float press)
 *       CreateWindow
 */
 WM_HWIN CreateWindow(void) {
-  main_window = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, WM_HBKWIN, 0, 0);
+  main_window = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, WM_HBKWIN, 0, 0);		//
   return main_window;
 }
 
@@ -257,6 +378,6 @@ WM_HWIN CreateWindow(void) {
 void MainTask(void) {
    CreateWindow() ;
 }
-
 // USER END
+
 /*************************** End of file ****************************/

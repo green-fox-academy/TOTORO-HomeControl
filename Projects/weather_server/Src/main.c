@@ -103,7 +103,7 @@ int main(void)
 	MPU_Config();
 
 	/* Enable the CPU Cache */
-	CPU_CACHE_Enable();
+	CPU_CACHE_Enable();							//TODO: SD will need it...
 
 	/* STM32F7xx HAL library initialization:
 	   - Configure the Flash ART accelerator on ITCM interface
@@ -395,11 +395,11 @@ static void MPU_Config(void)
 	/* Configure the MPU attributes as Device for Ethernet Descriptors in the SRAM */
 	MPU_InitStruct.Enable = MPU_REGION_ENABLE;
 	MPU_InitStruct.BaseAddress = 0x20010000;
-	MPU_InitStruct.Size = MPU_REGION_SIZE_256B;
+	MPU_InitStruct.Size = MPU_REGION_SIZE_256KB; //was MPU_REGION_SIZE_256B //crispo: MPU_REGION_SIZE_256KB
 	MPU_InitStruct.AccessPermission = MPU_REGION_FULL_ACCESS;
-	MPU_InitStruct.IsBufferable = MPU_ACCESS_BUFFERABLE;
-	MPU_InitStruct.IsCacheable = MPU_ACCESS_NOT_CACHEABLE;
-	MPU_InitStruct.IsShareable = MPU_ACCESS_SHAREABLE;
+	MPU_InitStruct.IsBufferable = MPU_ACCESS_NOT_SHAREABLE;	//was MPU_ACCESS_BUFFERABLE	//crispo: MPU_ACCESS_NOT_BUFFERABLE
+	MPU_InitStruct.IsCacheable = MPU_ACCESS_CACHEABLE; //was MPU_ACCESS_NOT_CACHEABLE 	//crispo: MPU_ACCESS_CACHEABLE
+	MPU_InitStruct.IsShareable = MPU_ACCESS_NOT_SHAREABLE;	//was MPU_ACCESS_SHAREABLE	//crispo: MPU_ACCESS_NOT_SHAREABLE
 	MPU_InitStruct.Number = MPU_REGION_NUMBER0;
 	MPU_InitStruct.TypeExtField = MPU_TEX_LEVEL0;
 	MPU_InitStruct.SubRegionDisable = 0x00;

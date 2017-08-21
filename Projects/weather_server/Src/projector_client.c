@@ -8,21 +8,17 @@
 #include <string.h>
 #include "stm32746g_discovery_lcd.h"
 #include "projector_client.h"
-#include <stdint.h>
+#define SERVER_IP           "10.27.99.33"
+#define SERVER_PORT         8003
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
-
-#define SERVER_IP "10.27.99.160"
-#define SERVER_PORT 8003
-//#define SERVER_PORT 16000
-#define CONN_RETRY_COUNT	10
-
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
+#define CONN_RETRY_COUNT	10
 
 int8_t send_command_to_projector_screen(uint8_t comm)
 {
@@ -42,17 +38,20 @@ int8_t send_command_to_projector_screen(uint8_t comm)
 		if (connect(client_sock, (struct sockaddr *)&addr_in, sizeof(addr_in)) == 0) {
 			if (send(client_sock, &comm, sizeof(comm), 0) > 0) {
 				closesocket(client_sock);
+				//break;
 			} else {
 				closesocket(client_sock);
 			}
 		}
 		osDelay(100);
 	}
+
 	if (i == CONN_RETRY_COUNT)
 		return -1;
 
 	return 0;
 }
+
 
 void projector_client_thread(void const *argument)
 {
@@ -73,7 +72,5 @@ void projector_client_thread(void const *argument)
 			}
 	}
 }
-
-
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

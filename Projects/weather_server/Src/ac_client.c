@@ -8,9 +8,12 @@
 #include <string.h>
 #include "stm32746g_discovery_lcd.h"
 #include "ac_client.h"
+
+
 #define DATA_BUFFER_SIZE    100
-#define SERVER_IP           "10.27.99.160"
+#define SERVER_IP           "10.27.99.33"
 #define SERVER_PORT         8004
+#define CONN_RETRY_COUNT	10
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -19,7 +22,6 @@
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
-#define CONN_RETRY_COUNT	10
 
 int8_t send_command_to_ac(uint8_t comm)
 {

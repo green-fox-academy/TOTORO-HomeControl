@@ -71,6 +71,16 @@
 			<locationURI>PARENT-2-PROJECT_LOC/Src/projector_server.c</locationURI>
 		</link>
 		<link>
+			<name>Application/User/rc522.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/Src/rc522.c</locationURI>
+		</link>
+		<link>
+			<name>Application/User/rfid.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/Src/rfid.c</locationURI>
+		</link>
+		<link>
 			<name>Application/User/socket_client.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Src/socket_client.c</locationURI>
@@ -79,6 +89,11 @@
 			<name>Application/User/socket_server.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Src/socket_server.c</locationURI>
+		</link>
+		<link>
+			<name>Application/User/stm32f7xx_hal_msp.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/Src/stm32f7xx_hal_msp.c</locationURI>
 		</link>
 		<link>
 			<name>Application/User/stm32f7xx_hal_timebase_tim.c</name>
@@ -179,6 +194,11 @@
 			<name>Drivers/STM32F7xx_HAL_Driver/stm32f7xx_hal_sdram.c</name>
 			<type>1</type>
 			<locationURI>PARENT-4-PROJECT_LOC/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_sdram.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/STM32F7xx_HAL_Driver/stm32f7xx_hal_spi.c</name>
+			<type>1</type>
+			<locationURI>PARENT-10-copy_PARENT/Project/TOTORO-HomeControl/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_spi.c</locationURI>
 		</link>
 		<link>
 			<name>Drivers/STM32F7xx_HAL_Driver/stm32f7xx_hal_tim.c</name>

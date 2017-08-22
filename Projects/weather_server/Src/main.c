@@ -61,7 +61,8 @@
 #include "httpserver-netconn.h"
 #include "projector_server.h"
 #include "ac_client.h"
-
+#include "rfid.h"
+#include "rc522.h"
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/

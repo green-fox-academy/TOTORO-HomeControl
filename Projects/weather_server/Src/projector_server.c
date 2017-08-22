@@ -8,8 +8,8 @@
 #include <string.h>
 #include "stm32746g_discovery_lcd.h"
 #include "projector_server.h"
-#define SERVER_IP           "10.27.6.141"
-#define SERVER_PORT         8003
+#define SERVER_IP           "10.27.99.170"
+#define SERVER_PORT         16000
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -20,7 +20,7 @@
 
 #define CONN_RETRY_COUNT	10
 
-int8_t send_command_to_projector_screen(uint8_t comm)
+int8_t send_command_to_projector_screen(char comm)
 {
 	int client_sock;
 	client_sock = socket(AF_INET, SOCK_STREAM, 0);
@@ -61,13 +61,13 @@ void projector_client_thread(void const *argument)
 			if (TS_State.touchDetected > 0) {
 				if (TS_State.touchX[0] >= 400 && TS_State.touchX[0] <= 450
 							&& TS_State.touchY[0] >= 147 && TS_State.touchY[0] <= 197) {
-					send_command_to_projector_screen(3);												//down
+					send_command_to_projector_screen('3');												//down
 				} else if (TS_State.touchX[0] >= 400 && TS_State.touchX[0] <= 450
 							&& TS_State.touchY[0] >= 87 && TS_State.touchY[0] <= 137) {
-					send_command_to_projector_screen(2);												//stop
+					send_command_to_projector_screen('2');												//stop
 				} else if (TS_State.touchX[0] >= 400 && TS_State.touchX[0] <= 450
 							&& TS_State.touchY[0] >= 27 && TS_State.touchY[0] <= 77) {
-					send_command_to_projector_screen(1);												//up
+					send_command_to_projector_screen('1');												//up
 				}
 			}
 	}

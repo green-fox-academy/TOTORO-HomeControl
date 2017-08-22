@@ -59,7 +59,7 @@
 #include "socket_client.h"
 #include "stm32746g_discovery_lcd.h"
 #include "httpserver-netconn.h"
-#include "projector_server.h"
+//#include "projector_server.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/

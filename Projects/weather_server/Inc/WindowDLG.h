@@ -17,6 +17,7 @@ void gui_update_press(float temp);
 
 
 extern uint8_t ctrl;
+
 #endif /* __WINDOWDLG_H */
 
 

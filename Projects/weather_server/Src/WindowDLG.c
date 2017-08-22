@@ -26,6 +26,9 @@
 #include <string.h>
 #include "projector_client.h"
 #include "ac_client.h"
+#include "WindowDLG.h"
+
+#include "cmsis_os.h"
 
 /*********************************************************************
 *
@@ -94,6 +97,7 @@ uint8_t ac_swing_state = 0;
 uint8_t ac_lever_state = 0;
 int ac_temperature;
 uint8_t ac_controls[5];
+uint8_t proj_control;
 
 char swing[10] = "No swing";
 
@@ -116,7 +120,7 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
   { TEXT_CreateIndirect, "", ID_TEXT_5, 280, 0, 85, 85, 0, 0x0, 0 },
   { TEXT_CreateIndirect, "", ID_TEXT_6, 280, 90, 85, 85, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "AC OFF", ID_BUTTON_3, 5, 215, 80, 50, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, swing, ID_BUTTON_4, 95, 215, 80, 50, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "Swing", ID_BUTTON_4, 95, 215, 80, 50, 0, 0x0, 0 },
   { SPINBOX_CreateIndirect, "", ID_SPINBOX_0, 185, 195, 150, 70, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "L_control", ID_BUTTON_5, 5, 135, 80, 70, 0, 0x0, 0 },
   // USER START (Optionally insert additional widgets)
@@ -216,7 +220,10 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
         // USER START (Optionally insert code for reacting on notification message)
-    	  send_command_to_projector_screen(PROJECTOR_UP);
+    	  proj_control = PROJECTOR_UP;
+    	  //start projector client thread
+    	  osThreadDef(PROJECTOR, projector_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+    	  osThreadCreate (osThread(PROJECTOR), proj_control);
         // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
@@ -231,7 +238,9 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
         // USER START (Optionally insert code for reacting on notification message)
-    	  send_command_to_projector_screen(PROJECTOR_STOP);
+    	  proj_control = PROJECTOR_STOP;
+    	  osThreadDef(PROJECTOR, projector_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+    	  osThreadCreate (osThread(PROJECTOR), proj_control);
         // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
@@ -246,7 +255,9 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
         // USER START (Optionally insert code for reacting on notification message)
-    	  send_command_to_projector_screen(PROJECTOR_DOWN);
+    	  proj_control = PROJECTOR_DOWN;
+    	  osThreadDef(PROJECTOR, projector_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+    	  osThreadCreate (osThread(PROJECTOR), proj_control);
         // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
@@ -292,21 +303,21 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     	  switch(ac_swing_state) {
     	  case 0:
     		  ac_swing_state = 1;
-    		  strcpy(swing, "Swinging");
-    		  BUTTON_SetText(swing_button, swing);
+//    		  strcpy(swing, "Swinging");
+//    		  BUTTON_SetText(swing_button, swing);
     		  ac_controls[2] = AC_SWING_ON;
     		  //add value "No change" for ON/OFF control
     		  ac_controls[4] = AC_STATE_NOCHANGE;
-    		  send_command_to_ac(*ac_controls);
+//    		  send_command_to_ac(*ac_controls);
     		  break;
     	  case 1:
     		  ac_swing_state = 0;
-    		  strcpy(swing, "No swing");
-    		  BUTTON_SetText(swing_button, swing);
+//    		  strcpy(swing, "No swing");
+//    		  BUTTON_SetText(swing_button, swing);
     		  ac_controls[2] = AC_SWING_OFF;
     		  //add value "No change" for ON/OFF control
     		  ac_controls[4] = AC_STATE_NOCHANGE;
-    		  send_command_to_ac(*ac_controls);
+//    		  send_command_to_ac(*ac_controls);
     		  break;
     	  }
         // USER END
@@ -401,7 +412,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     	  ac_controls[1] = second_int_to_send;
  		 //add value "No change" for ON/OFF control
  		 ac_controls[4] = AC_STATE_NOCHANGE;
-    	  send_command_to_ac(*ac_controls);
+//    	  send_command_to_ac(*ac_controls);
         // USER END
         break;
       // USER START (Optionally insert additional code for further notification handling)

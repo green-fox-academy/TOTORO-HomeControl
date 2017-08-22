@@ -52,24 +52,32 @@ int8_t send_command_to_projector_screen(uint8_t comm)
 	return 0;
 }
 
+//
+//void projector_client_thread(void const *argument)
+//{
+//	while (1) {
+//		TS_StateTypeDef TS_State;
+//		BSP_TS_GetState(&TS_State);
+//			if (TS_State.touchDetected > 0) {
+//				if (TS_State.touchX[0] >= 400 && TS_State.touchX[0] <= 450
+//							&& TS_State.touchY[0] >= 147 && TS_State.touchY[0] <= 197) {
+//					send_command_to_projector_screen(3);												//down
+//				} else if (TS_State.touchX[0] >= 400 && TS_State.touchX[0] <= 450
+//							&& TS_State.touchY[0] >= 87 && TS_State.touchY[0] <= 137) {
+//					send_command_to_projector_screen(2);												//stop
+//				} else if (TS_State.touchX[0] >= 400 && TS_State.touchX[0] <= 450
+//							&& TS_State.touchY[0] >= 27 && TS_State.touchY[0] <= 77) {
+//					send_command_to_projector_screen(1);												//up
+//				}
+//			}
+//	}
+//}
 
 void projector_client_thread(void const *argument)
 {
+	send_command_to_projector_screen(argument);
 	while (1) {
-		TS_StateTypeDef TS_State;
-		BSP_TS_GetState(&TS_State);
-			if (TS_State.touchDetected > 0) {
-				if (TS_State.touchX[0] >= 400 && TS_State.touchX[0] <= 450
-							&& TS_State.touchY[0] >= 147 && TS_State.touchY[0] <= 197) {
-					send_command_to_projector_screen(3);												//down
-				} else if (TS_State.touchX[0] >= 400 && TS_State.touchX[0] <= 450
-							&& TS_State.touchY[0] >= 87 && TS_State.touchY[0] <= 137) {
-					send_command_to_projector_screen(2);												//stop
-				} else if (TS_State.touchX[0] >= 400 && TS_State.touchX[0] <= 450
-							&& TS_State.touchY[0] >= 27 && TS_State.touchY[0] <= 77) {
-					send_command_to_projector_screen(1);												//up
-				}
-			}
+		osDelay(10);
 	}
 }
 

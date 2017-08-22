@@ -80,7 +80,10 @@ WM_HWIN AC_on_off;
 
 uint8_t ac_state = 0;
 uint8_t ac_swing_state = 0;
+uint8_t ac_lever_state = 0;
 int ac_temperature;
+char swing[10] = "No swing";
+
 // USER END
 
 /*********************************************************************
@@ -100,9 +103,9 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
   { TEXT_CreateIndirect, "", ID_TEXT_5, 280, 0, 85, 85, 0, 0x0, 0 },
   { TEXT_CreateIndirect, "", ID_TEXT_6, 280, 90, 85, 85, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "AC OFF", ID_BUTTON_3, 5, 215, 80, 50, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "No swing", ID_BUTTON_4, 95, 215, 80, 50, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, swing, ID_BUTTON_4, 95, 215, 80, 50, 0, 0x0, 0 },
   { SPINBOX_CreateIndirect, "", ID_SPINBOX_0, 185, 195, 150, 70, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "L", ID_BUTTON_5, 5, 135, 80, 70, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "L_1", ID_BUTTON_5, 5, 135, 80, 70, 0, 0x0, 0 },
   // USER START (Optionally insert additional widgets)
   // USER END
 };
@@ -273,14 +276,16 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         // USER START (Optionally insert code for reacting on notification message)
     	  switch(ac_swing_state) {
     	  case 0:
-    		  send_command_to_ac(AC_SWING_ON);
+//    		  send_command_to_ac(AC_SWING_ON);
     		  ac_swing_state = 1;
-    		  BUTTON_SetText(swing_button, "Swinging");
+    		  strcpy(swing, "Swinging");
+    		  BUTTON_SetText(swing_button, swing);
     		  break;
     	  case 1:
-    		  send_command_to_ac(AC_SWING_OFF);
+//    		  send_command_to_ac(AC_SWING_OFF);
     		  ac_swing_state = 0;
-    		  BUTTON_SetText(swing_button, "No swing");
+    		  strcpy(swing, "No swing");
+    		  BUTTON_SetText(swing_button, swing);
     		  break;
     	  }
         // USER END
@@ -294,11 +299,30 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       }
       break;
 
-      case ID_BUTTON_5: // Notifications sent by 'L'
+      case ID_BUTTON_5: // Notifications sent by 'AC lever control button'
          switch(NCode) {
          case WM_NOTIFICATION_CLICKED:
            // USER START (Optionally insert code for reacting on notification message)
-
+        	 switch(ac_lever_state) {
+        	 case 0:
+        		 ac_lever_state = 1;
+        		 break;
+        	 case 1:
+        		 ac_lever_state = 2;
+        		 break;
+        	 case 3:
+        		 ac_lever_state = 4;
+        		 break;
+        	 case 4:
+        		 ac_lever_state = 5;
+        		 break;
+        	 case 5:
+        		 ac_lever_state = 6;
+        		 break;
+        	 case 6:
+        		 ac_lever_state = 7;
+        		 break;
+        	 }
            // USER END
            break;
          case WM_NOTIFICATION_RELEASED:

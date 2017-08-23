@@ -110,4 +110,24 @@
 #define MFRC522_DUMMY								0x00		// Dummy byte
 #define MFRC522_MAX_LEN								16			// Buf len byte
 
+uint8_t MFRC522_Check(uint8_t* id);
+uint8_t MFRC522_Compare(uint8_t* CardID, uint8_t* CompareID);
+void MFRC522_WriteRegister(uint8_t addr, uint8_t val);
+uint8_t MFRC522_ReadRegister(uint8_t addr);
+void MFRC522_SetBitMask(uint8_t reg, uint8_t mask);
+void MFRC522_ClearBitMask(uint8_t reg, uint8_t mask);
+uint8_t MFRC522_Request(uint8_t reqMode, uint8_t* TagType);
+uint8_t MFRC522_ToCard(uint8_t command, uint8_t* sendData, uint8_t sendLen, uint8_t* backData, uint16_t* backLen);
+uint8_t MFRC522_Anticoll(uint8_t* serNum);
+void MFRC522_CalulateCRC(uint8_t* pIndata, uint8_t len, uint8_t* pOutData);
+uint8_t MFRC522_SelectTag(uint8_t* serNum);
+uint8_t MFRC522_Auth(uint8_t authMode, uint8_t BlockAddr, uint8_t* Sectorkey, uint8_t* serNum);
+uint8_t MFRC522_Read(uint8_t blockAddr, uint8_t* recvData);
+uint8_t MFRC522_Write(uint8_t blockAddr, uint8_t* writeData);
+void MFRC522_Init(void);
+void MFRC522_Reset(void);
+void MFRC522_AntennaOn(void);
+void MFRC522_AntennaOff(void);
+void MFRC522_Halt(void);
+
 #endif /* __rc522_H*/

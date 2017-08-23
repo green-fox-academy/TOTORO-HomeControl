@@ -112,8 +112,6 @@ int main(void)
 	   - Global MSP (MCU Support Package) initialization
 	*/
 	HAL_Init();
-
-
   
 	/* Configure the system clock to 200 MHz */
 	SystemClock_Config();

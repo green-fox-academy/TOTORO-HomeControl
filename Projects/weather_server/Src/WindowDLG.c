@@ -69,7 +69,7 @@
 #define AC_LEVER_3			14
 #define AC_LEVER_4			15
 #define AC_LEVER_5			16
-#define AC_LEVER_6			17
+
 
 #define AC_IS_OFF			0
 #define AC_IS_ON			1
@@ -91,15 +91,16 @@ WM_HWIN hItem;
 WM_HWIN swing_button;
 WM_HWIN AC_control;
 WM_HWIN AC_on_off;
+WM_HWIN AC_L_control;
 
 uint8_t ac_state = 0;
 uint8_t ac_swing_state = 0;
 uint8_t ac_lever_state = 0;
 int ac_temperature;
 uint8_t ac_controls[5];
+
 uint8_t proj_control;
 
-char swing[10] = "No swing";
 
 // USER END
 
@@ -120,9 +121,9 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
   { TEXT_CreateIndirect, "", ID_TEXT_5, 280, 0, 85, 85, 0, 0x0, 0 },
   { TEXT_CreateIndirect, "", ID_TEXT_6, 280, 90, 85, 85, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "AC OFF", ID_BUTTON_3, 5, 215, 80, 50, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "Swing", ID_BUTTON_4, 95, 215, 80, 50, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "No swing", ID_BUTTON_4, 95, 215, 80, 50, 0, 0x0, 0 },
   { SPINBOX_CreateIndirect, "", ID_SPINBOX_0, 185, 195, 150, 70, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "L_control", ID_BUTTON_5, 5, 135, 80, 70, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "L_State_0", ID_BUTTON_5, 5, 135, 80, 70, 0, 0x0, 0 },
   // USER START (Optionally insert additional widgets)
   // USER END
 };
@@ -208,6 +209,22 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     SPINBOX_SetButtonSize(AC_control, 70);
     SPINBOX_SetFont(AC_control, GUI_FONT_24_1);
 
+    //
+    // Initialization of 'Swing button'
+    //
+    swing_button = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_4);
+
+    //
+    // Initialization of 'AC ON/OFF button'
+    //
+    AC_on_off = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_3);
+
+    //
+    // Initialization of 'AC lever control button'
+    //
+    AC_L_control = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_5);
+
+
 
     // USER START (Optionally insert additional code for further widget initialization)
     // USER END
@@ -275,15 +292,19 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     	  switch(ac_state) {
     	  case AC_IS_OFF:
     		  ac_state = AC_IS_ON;
-    		  BUTTON_SetText(AC_on_off, "AC is ON");
-    		  ac_controls[4] = AC_STATE_CHANGE;
-    		  send_command_to_ac(*ac_controls);
+    		  BUTTON_SetText(AC_on_off, "AC ON");
+
+    		  ac_controls[0] = 3;
+    		  ac_controls[1] = 4;
+
+//        	  osThreadDef(AC, ac_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+//        	  osThreadCreate (osThread(AC), *ac_controls);
     		  break;
     	  case AC_IS_ON:
     		  ac_state = AC_IS_OFF;
-    		  BUTTON_SetText(AC_on_off, "AC is OFF");
+    		  BUTTON_SetText(AC_on_off, "AC OFF");
     		  ac_controls[4] = AC_STATE_CHANGE;
-    		  send_command_to_ac(*ac_controls);
+//    		  send_command_to_ac(*ac_controls);
     		  break;
     	  }
         // USER END
@@ -303,8 +324,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     	  switch(ac_swing_state) {
     	  case 0:
     		  ac_swing_state = 1;
-//    		  strcpy(swing, "Swinging");
-//    		  BUTTON_SetText(swing_button, swing);
+    		  BUTTON_SetText(swing_button, "Swinging");
     		  ac_controls[2] = AC_SWING_ON;
     		  //add value "No change" for ON/OFF control
     		  ac_controls[4] = AC_STATE_NOCHANGE;
@@ -312,8 +332,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     		  break;
     	  case 1:
     		  ac_swing_state = 0;
-//    		  strcpy(swing, "No swing");
-//    		  BUTTON_SetText(swing_button, swing);
+    		  BUTTON_SetText(swing_button, "No swing");
     		  ac_controls[2] = AC_SWING_OFF;
     		  //add value "No change" for ON/OFF control
     		  ac_controls[4] = AC_STATE_NOCHANGE;
@@ -339,44 +358,50 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         	 case 0:
         		 ac_lever_state = 1;
         		 ac_controls[3] = AC_LEVER_1;
+        		 BUTTON_SetText(AC_L_control, "L_State_1");
         		 //add value "No change" for ON/OFF control
         		 ac_controls[4] = AC_STATE_NOCHANGE;
-        		 send_command_to_ac(*ac_controls);
+//        		 send_command_to_ac(*ac_controls);
         		 break;
         	 case 1:
         		 ac_lever_state = 2;
         		 ac_controls[3] = AC_LEVER_2;
+        		 BUTTON_SetText(AC_L_control, "L_State_2");
         		 //add value "No change" for ON/OFF control
         		 ac_controls[4] = AC_STATE_NOCHANGE;
-        		 send_command_to_ac(*ac_controls);
+//        		 send_command_to_ac(*ac_controls);
         		 break;
         	 case 2:
         		 ac_lever_state = 3;
         		 ac_controls[3] = AC_LEVER_3;
+        		 BUTTON_SetText(AC_L_control, "L_State_3");
         		 //add value "No change" for ON/OFF control
         		 ac_controls[4] = AC_STATE_NOCHANGE;
-        		 send_command_to_ac(*ac_controls);
+//        		 send_command_to_ac(*ac_controls);
         		 break;
         	 case 3:
         		 ac_lever_state = 4;
         		 ac_controls[3] = AC_LEVER_4;
+        		 BUTTON_SetText(AC_L_control, "L_State_4");
         		 //add value "No change" for ON/OFF control
         		 ac_controls[4] = AC_STATE_NOCHANGE;
-        		 send_command_to_ac(*ac_controls);
+//        		 send_command_to_ac(*ac_controls);
         		 break;
         	 case 4:
         		 ac_lever_state = 5;
         		 ac_controls[3] = AC_LEVER_5;
+        		 BUTTON_SetText(AC_L_control, "L_State_5");
         		 //add value "No change" for ON/OFF control
         		 ac_controls[4] = AC_STATE_NOCHANGE;
-        		 send_command_to_ac(*ac_controls);
+//        		 send_command_to_ac(*ac_controls);
         		 break;
         	 case 5:
-        		 ac_lever_state = 6;
-        		 ac_controls[3] = AC_LEVER_6;
+        		 ac_lever_state = 0;
+        		 ac_controls[3] = AC_LEVER_0;
+        		 BUTTON_SetText(AC_L_control, "L_State_0");
         		 //add value "No change" for ON/OFF control
         		 ac_controls[4] = AC_STATE_NOCHANGE;
-        		 send_command_to_ac(*ac_controls);
+//        		 send_command_to_ac(*ac_controls);
         		 break;
         	 }
            // USER END

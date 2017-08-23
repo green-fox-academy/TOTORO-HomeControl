@@ -24,6 +24,7 @@
 #include "DIALOG.h"
 #include <stdint.h>
 #include <string.h>
+#include <stdio.h>
 #include "projector_client.h"
 #include "ac_client.h"
 #include "WindowDLG.h"
@@ -63,12 +64,12 @@
 #define AC_SWING_OFF		0
 #define AC_MIN_VALUE		16
 #define AC_MAX_VALUE		30
-#define AC_LEVER_0			11
-#define AC_LEVER_1			12
-#define AC_LEVER_2			13
-#define AC_LEVER_3			14
-#define AC_LEVER_4			15
-#define AC_LEVER_5			16
+#define AC_LEVER_0			0
+#define AC_LEVER_1			1
+#define AC_LEVER_2			2
+#define AC_LEVER_3			3
+#define AC_LEVER_4			4
+#define AC_LEVER_5			5
 
 
 #define AC_IS_OFF			0
@@ -77,6 +78,9 @@
 
 // USER START (Optionally insert additional defines)
 // USER END
+
+osThreadDef(PROJECTOR, projector_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+osThreadDef(AC, ac_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
 
 /*********************************************************************
 *
@@ -97,7 +101,7 @@ uint8_t ac_state = 0;
 uint8_t ac_swing_state = 0;
 uint8_t ac_lever_state = 0;
 int ac_temperature;
-uint8_t ac_controls[5];
+uint8_t ac_controls[5] = {6, 1, 0, 3, 0};	//initialization for testing
 
 uint8_t proj_control;
 
@@ -239,7 +243,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         // USER START (Optionally insert code for reacting on notification message)
     	  proj_control = PROJECTOR_UP;
     	  //start projector client thread
-    	  osThreadDef(PROJECTOR, projector_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+//    	  osThreadDef(PROJECTOR, projector_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
     	  osThreadCreate (osThread(PROJECTOR), proj_control);
         // USER END
         break;
@@ -256,7 +260,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       case WM_NOTIFICATION_CLICKED:
         // USER START (Optionally insert code for reacting on notification message)
     	  proj_control = PROJECTOR_STOP;
-    	  osThreadDef(PROJECTOR, projector_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+//    	  osThreadDef(PROJECTOR, projector_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
     	  osThreadCreate (osThread(PROJECTOR), proj_control);
         // USER END
         break;
@@ -273,7 +277,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       case WM_NOTIFICATION_CLICKED:
         // USER START (Optionally insert code for reacting on notification message)
     	  proj_control = PROJECTOR_DOWN;
-    	  osThreadDef(PROJECTOR, projector_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+//    	  osThreadDef(PROJECTOR, projector_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
     	  osThreadCreate (osThread(PROJECTOR), proj_control);
         // USER END
         break;
@@ -292,19 +296,16 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     	  switch(ac_state) {
     	  case AC_IS_OFF:
     		  ac_state = AC_IS_ON;
-    		  BUTTON_SetText(AC_on_off, "AC ON");
-
-    		  ac_controls[0] = 3;
-    		  ac_controls[1] = 4;
-
+    		  BUTTON_SetText(AC_on_off, "AC is ON");
+    		  ac_controls[4] = AC_STATE_CHANGE;
 //        	  osThreadDef(AC, ac_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
-//        	  osThreadCreate (osThread(AC), *ac_controls);
+        	  osThreadCreate (osThread(AC), (void*)ac_controls);
     		  break;
     	  case AC_IS_ON:
     		  ac_state = AC_IS_OFF;
-    		  BUTTON_SetText(AC_on_off, "AC OFF");
+    		  BUTTON_SetText(AC_on_off, "AC is OFF");
     		  ac_controls[4] = AC_STATE_CHANGE;
-//    		  send_command_to_ac(*ac_controls);
+    		  osThreadCreate (osThread(AC), (void*)ac_controls);
     		  break;
     	  }
         // USER END
@@ -324,19 +325,21 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     	  switch(ac_swing_state) {
     	  case 0:
     		  ac_swing_state = 1;
-    		  BUTTON_SetText(swing_button, "Swinging");
+    		  BUTTON_SetText(swing_button, "Swing is ON");
     		  ac_controls[2] = AC_SWING_ON;
     		  //add value "No change" for ON/OFF control
     		  ac_controls[4] = AC_STATE_NOCHANGE;
-//    		  send_command_to_ac(*ac_controls);
+//        	  osThreadDef(AC, ac_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+        	  osThreadCreate (osThread(AC), (void*)ac_controls);
     		  break;
     	  case 1:
     		  ac_swing_state = 0;
-    		  BUTTON_SetText(swing_button, "No swing");
+    		  BUTTON_SetText(swing_button, "Swing is OFF");
     		  ac_controls[2] = AC_SWING_OFF;
     		  //add value "No change" for ON/OFF control
     		  ac_controls[4] = AC_STATE_NOCHANGE;
-//    		  send_command_to_ac(*ac_controls);
+//        	  osThreadDef(AC, ac_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+        	  osThreadCreate (osThread(AC), (void*)ac_controls);
     		  break;
     	  }
         // USER END
@@ -358,50 +361,55 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         	 case 0:
         		 ac_lever_state = 1;
         		 ac_controls[3] = AC_LEVER_1;
-        		 BUTTON_SetText(AC_L_control, "L_State_1");
+        		 BUTTON_SetText(AC_L_control, "L in state 1");
         		 //add value "No change" for ON/OFF control
         		 ac_controls[4] = AC_STATE_NOCHANGE;
-//        		 send_command_to_ac(*ac_controls);
+//        		 osThreadDef(AC, ac_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+        		 osThreadCreate (osThread(AC), (void*)ac_controls);
         		 break;
         	 case 1:
         		 ac_lever_state = 2;
         		 ac_controls[3] = AC_LEVER_2;
-        		 BUTTON_SetText(AC_L_control, "L_State_2");
+        		 BUTTON_SetText(AC_L_control, "L in state 2");
         		 //add value "No change" for ON/OFF control
         		 ac_controls[4] = AC_STATE_NOCHANGE;
-//        		 send_command_to_ac(*ac_controls);
+//        		 osThreadDef(AC, ac_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+        		 osThreadCreate (osThread(AC), (void*)ac_controls);
         		 break;
         	 case 2:
         		 ac_lever_state = 3;
         		 ac_controls[3] = AC_LEVER_3;
-        		 BUTTON_SetText(AC_L_control, "L_State_3");
+        		 BUTTON_SetText(AC_L_control, "L in state 3");
         		 //add value "No change" for ON/OFF control
         		 ac_controls[4] = AC_STATE_NOCHANGE;
-//        		 send_command_to_ac(*ac_controls);
+//        		 osThreadDef(AC, ac_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+        		 osThreadCreate (osThread(AC), (void*)ac_controls);
         		 break;
         	 case 3:
         		 ac_lever_state = 4;
         		 ac_controls[3] = AC_LEVER_4;
-        		 BUTTON_SetText(AC_L_control, "L_State_4");
+        		 BUTTON_SetText(AC_L_control, "L in state 4");
         		 //add value "No change" for ON/OFF control
         		 ac_controls[4] = AC_STATE_NOCHANGE;
-//        		 send_command_to_ac(*ac_controls);
+//        		 osThreadDef(AC, ac_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+        		 osThreadCreate (osThread(AC), (void*)ac_controls);
         		 break;
         	 case 4:
         		 ac_lever_state = 5;
         		 ac_controls[3] = AC_LEVER_5;
-        		 BUTTON_SetText(AC_L_control, "L_State_5");
+        		 BUTTON_SetText(AC_L_control, "L in state 5");
         		 //add value "No change" for ON/OFF control
         		 ac_controls[4] = AC_STATE_NOCHANGE;
-//        		 send_command_to_ac(*ac_controls);
+//        		 osThreadDef(AC, ac_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+        		 osThreadCreate (osThread(AC), (void*)ac_controls);
         		 break;
         	 case 5:
         		 ac_lever_state = 0;
         		 ac_controls[3] = AC_LEVER_0;
-        		 BUTTON_SetText(AC_L_control, "L_State_0");
+        		 BUTTON_SetText(AC_L_control, "L in state 0");
         		 //add value "No change" for ON/OFF control
-        		 ac_controls[4] = AC_STATE_NOCHANGE;
-//        		 send_command_to_ac(*ac_controls);
+//        		 osThreadDef(AC, ac_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+        		 osThreadCreate (osThread(AC), (void*)ac_controls);
         		 break;
         	 }
            // USER END
@@ -437,7 +445,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     	  ac_controls[1] = second_int_to_send;
  		 //add value "No change" for ON/OFF control
  		 ac_controls[4] = AC_STATE_NOCHANGE;
-//    	  send_command_to_ac(*ac_controls);
+ 		osThreadCreate (osThread(AC), (void*)ac_controls);
         // USER END
         break;
       // USER START (Optionally insert additional code for further notification handling)

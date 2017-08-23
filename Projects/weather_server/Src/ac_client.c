@@ -39,7 +39,7 @@ int8_t send_command_to_ac(uint8_t *comm)
 	uint8_t i;
 	for (i = 0; i < CONN_RETRY_COUNT; i++) {
 		if (connect(client_sock, (struct sockaddr *)&addr_in, sizeof(addr_in)) == 0) {
-			if (send(client_sock, &comm, sizeof(comm), 0) > 0) {
+			if (send(client_sock, comm, 5, 0) > 0) {
 				closesocket(client_sock);
 				//break;
 			} else {
@@ -57,12 +57,15 @@ int8_t send_command_to_ac(uint8_t *comm)
 
 void ac_client_thread(void const *argument)
 {
+	send_command_to_ac((uint8_t*)argument);
 	while (1) {
-
-		send_command_to_ac(argument);
-
-		osDelay(1000);
+		osThreadTerminate(NULL);
 	}
+}
+
+void ac_client_init()
+{
+
 }
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

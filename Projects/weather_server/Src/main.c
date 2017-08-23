@@ -63,6 +63,7 @@
 #include "ac_client.h"
 #include "rfid.h"
 #include "rc522.h"
+
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
@@ -121,6 +122,14 @@ int main(void)
 
 	/* Initialize LCD */
 	BSP_Config();
+
+	while (1) {
+		spi_init();
+		MFRC522_Init();
+		uint8_t str[MFRC522_MAX_LEN];
+		uint8_t ret = MFRC522_Request(PICC_REQIDL, str);
+		ret = MFRC522_Anticoll(str);
+	}
 
 	/* Create GUI task */
 	//osThreadDef(GUI_Thread, GUIThread, osPriorityBelowNormal, 0, configMINIMAL_STACK_SIZE * 20);	//2048

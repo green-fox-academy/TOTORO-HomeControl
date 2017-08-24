@@ -68,6 +68,7 @@
 
 
 
+
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 //#define LCD_USERLOG			/*LCD userlog needed for IP address check */
@@ -75,9 +76,6 @@
 /* Private variables ---------------------------------------------------------*/
 struct netif gnetif; /* network interface structure */
 osTimerId lcd_timer;
-
-
-char wdays [7][12] = {"MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"};
 
 
 /* Private function prototypes -----------------------------------------------*/
@@ -132,7 +130,6 @@ int main(void)
 	GUI_SetLayerVisEx (1, 0);
 	GUI_SelectLayer(0);
 
-//	GUI_Startup();
 #endif
 	/* Create Touch screen Timer */
 	osTimerDef(TS_Timer, TimerCallback);

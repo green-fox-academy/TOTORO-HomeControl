@@ -193,7 +193,7 @@ static void StartThread(void const * argument)
 	//osDelay(2000);
 
 	/* Start httpserver thread */
-	http_server_netconn_init();
+//	http_server_netconn_init();
 
 #ifndef LCD_USERLOG
 	/* Create GUI task */

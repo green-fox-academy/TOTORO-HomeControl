@@ -13,6 +13,27 @@
 #include "projector_client.h"
 
 /* Private typedef -----------------------------------------------------------*/
+/*Time structure */
+typedef struct  {
+   int tm_sec;         /* seconds,  range 0 to 59          */
+   int tm_min;         /* minutes, range 0 to 59           */
+   int tm_hour;        /* hours, range 0 to 23             */
+   int tm_mday;        /* day of the month, range 1 to 31  */
+   int tm_mon;         /* month, range 0 to 11             */
+   int tm_year;        /* The number of years since 1900   */
+   int tm_wday;        /* day of the week, range 0 to 6    */
+   int tm_yday;        /* day in the year, range 0 to 365  */
+   int tm_isdst;       /* daylight saving time             */
+}rtc_time;
+
+/*Structure for sending data to HQ */
+typedef struct {
+	float sensor_values[3];	// Storing Temperature, Humidity and Pressure values
+	rtc_time hq_time;
+}hq_data_t;
+
+hq_data_t received_data;
+
 /* Private define ------------------------------------------------------------*/
 #define SERVER_QUEUE_SIZE 100
 #define SERVER_BUFF_LEN 100
@@ -20,7 +41,8 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-float received_weather_data[3];
+//float received_weather_data[3];
+
 
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
@@ -91,12 +113,16 @@ void socket_server_thread(void const *argument)
 			// Receive data
 			float received_bytes;
 			do {
-				received_bytes = recv(client_socket, received_weather_data, sizeof(received_weather_data), 0);
-				LCD_UsrLog("Temperature: %.1f C, Humidity: %.1f%%, Pressure: %.1f Pa,\n", received_weather_data[0], received_weather_data[1], received_weather_data[2]);
+//				received_bytes = recv(client_socket, received_weather_data, sizeof(received_weather_data), 0);
+//				LCD_UsrLog("Temperature: %.1f C, Humidity: %.1f%%, Pressure: %.1f Pa,\n", received_weather_data[0], received_weather_data[1], received_weather_data[2]);
 
-				gui_update_temp(received_weather_data[0]);
-				gui_update_hum(received_weather_data[1]);
-				gui_update_press(received_weather_data[2]);
+				received_bytes = recv(client_socket, &received_data, sizeof(received_data), 0);	//added &
+
+				gui_update_temp(received_data.sensor_values[0]);
+				gui_update_hum(received_data.sensor_values[1]);
+				gui_update_press(received_data.sensor_values[2]);
+				gui_update_time(received_data.hq_time.tm_hour, received_data.hq_time.tm_min, received_data.hq_time.tm_sec);
+
 			} while (received_bytes > 0);
 
 			// Close the socket

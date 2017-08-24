@@ -177,7 +177,8 @@ uint8_t MFRC522_ToCard(uint8_t command, uint8_t* sendData, uint8_t sendLen, uint
 	MFRC522_ClearBitMask(MFRC522_REG_BIT_FRAMING, 0x80);									// StartSend=0
 
 	if (i != 0)  {
-		if (!(MFRC522_ReadRegister(MFRC522_REG_ERROR) & 0x1B)) {
+		volatile uint8_t err = MFRC522_ReadRegister(MFRC522_REG_ERROR);
+		if (!(err & 0x1B)) {
 			status = MI_OK;
 			if (n & irqEn & 0x01) status = MI_NOTAGERR;
 			if (command == PCD_TRANSCEIVE) {

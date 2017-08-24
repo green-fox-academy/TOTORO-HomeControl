@@ -10,6 +10,7 @@
 #include "GUI.h"
 #include "DIALOG.h"
 #include "WindowDLG.h"
+#include "ff.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -19,6 +20,7 @@
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 float received_weather_data[3];
+FIL w_log;
 
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
@@ -74,6 +76,7 @@ void socket_server_thread(void const *argument)
 	struct sockaddr_in client_addr;
 	socklen_t client_addr_len = sizeof(client_addr);
 	int client_socket;
+	char temp[128];
 
 	while (1) {
 		// Accept incoming connections
@@ -87,16 +90,20 @@ void socket_server_thread(void const *argument)
 			//GUI_DispString("Socket server - invalid client socket\n");
 		} else {
 			// Receive data
+			f_open(&w_log, "W.CSV", FA_OPEN_ALWAYS | FA_WRITE);
 			float received_bytes;
 			do {
 				received_bytes = recv(client_socket, received_weather_data, sizeof(received_weather_data), 0);
 				LCD_UsrLog("Temperature: %.1f C, Humidity: %.1f%%, Pressure: %.1f Pa,\n", received_weather_data[0], received_weather_data[1], received_weather_data[2]);
+				memcpy(temp, &received_weather_data, sizeof(float));
+				sprintf(temp, "%.2f,%.1f,%.2f\n", received_weather_data[0], received_weather_data[1], received_weather_data[2]);
+				f_printf(&w_log, temp);
 
 				gui_update_temp(received_weather_data[0]);
 				gui_update_hum(received_weather_data[1]);
 				gui_update_press(received_weather_data[2]);
 			} while (received_bytes > 0);
-
+			f_close(&w_log);
 			// Close the socket
 			closesocket(client_socket);
 			LCD_UsrLog("Socket server - connection closed\n");

@@ -96,7 +96,7 @@ void socket_server_thread(void const *argument)
 				received_bytes = recv(client_socket, received_weather_data, sizeof(received_weather_data), 0);
 				LCD_UsrLog("Temperature: %.1f C, Humidity: %.1f%%, Pressure: %.1f Pa,\n", received_weather_data[0], received_weather_data[1], received_weather_data[2]);
 				memcpy(temp, &received_weather_data, sizeof(float));
-				sprintf(temp, "%.2f,%.1f,%.2f\n", received_weather_data[0], received_weather_data[1], received_weather_data[2]);
+				sprintf(temp, "%.2f;%.1f;%.2f\n", received_weather_data[0], received_weather_data[1], received_weather_data[2]);
 				f_printf(&w_log, temp);
 
 				gui_update_temp(received_weather_data[0]);

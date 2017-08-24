@@ -14,26 +14,6 @@
 #include "projector_client.h"
 
 /* Private typedef -----------------------------------------------------------*/
-/*Time structure */
-typedef struct  {
-   int tm_sec;         /* seconds,  range 0 to 59          */
-   int tm_min;         /* minutes, range 0 to 59           */
-   int tm_hour;        /* hours, range 0 to 23             */
-   int tm_mday;        /* day of the month, range 1 to 31  */
-   int tm_mon;         /* month, range 0 to 11             */
-   int tm_year;        /* The number of years since 1900   */
-   int tm_wday;        /* day of the week, range 0 to 6    */
-   int tm_yday;        /* day in the year, range 0 to 365  */
-   int tm_isdst;       /* daylight saving time             */
-}rtc_time;
-
-/*Structure for sending data to HQ */
-typedef struct {
-	float sensor_values[3];	// Storing Temperature, Humidity and Pressure values
-	rtc_time hq_time;
-}hq_data_t;
-
-hq_data_t received_data;
 
 /* Private define ------------------------------------------------------------*/
 #define SERVER_QUEUE_SIZE 100
@@ -55,6 +35,7 @@ void terminate_thread()
 
 void socket_server_thread(void const *argument)
 {
+	BSP_PB_Init(2, 0);
 	LCD_UsrLog("Socket server - startup...\n");
 	LCD_UsrLog("Socket server - waiting for IP address...\n");
 
@@ -101,7 +82,7 @@ void socket_server_thread(void const *argument)
 	int client_socket;
 	char temp[100];
 	char temptime[255];
-
+	char header[] = "Time; Temperature; Humidity; Pressure\n";
 	while (1) {
 		// Accept incoming connections
 		client_socket = accept(server_socket, (struct sockaddr*)&client_addr, &client_addr_len);
@@ -115,6 +96,8 @@ void socket_server_thread(void const *argument)
 		} else {
 			// Receive data
 			f_open(&w_log, "W.CSV", FA_OPEN_ALWAYS | FA_WRITE);
+			f_printf(&w_log, header);
+
 			float received_bytes;
 			do {
 				received_bytes = recv(client_socket, received_data.sensor_values, sizeof(received_data.sensor_values), 0);
@@ -133,6 +116,8 @@ void socket_server_thread(void const *argument)
 				gui_update_hum(received_data.sensor_values[1]);
 				gui_update_press(received_data.sensor_values[2]);
 				gui_update_time(received_data.hq_time.tm_hour, received_data.hq_time.tm_min, received_data.hq_time.tm_sec);
+
+
 
 			} while (received_bytes > 0);
 			f_close(&w_log);

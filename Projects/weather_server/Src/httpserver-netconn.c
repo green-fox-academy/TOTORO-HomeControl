@@ -186,17 +186,17 @@ void http_server_netconn_init()
 void DynWebPage(struct netconn *conn)
 {
     portCHAR PAGE_BODY[512];
-    portFLOAT weather_data [3];
+
     portCHAR buf[128];
     UINT byteCount;
 
 
     memset(PAGE_BODY, 0,512);
-    memcpy(buf, &weather_data, sizeof(float));
+    memcpy(buf, &received_data.sensor_values, sizeof(float));
 
     strcat((char *)PAGE_BODY, "<w_data><pre><br>Temperature (�C):		Humidity (%):		Pressure (Pa):" );
     strcat((char *)PAGE_BODY, "<br>--------------------------------------------------------------------<br>");
-    sprintf(buf, "%.2f 	 			%.1f 			%.2f", received_weather_data[0], received_weather_data[1], received_weather_data[2]);
+    sprintf(buf, "%.2f 	 			%.1f 			%.2f",received_data.sensor_values[0], received_data.sensor_values[1], received_data.sensor_values[2]);
     strcat(PAGE_BODY, buf);
     strcat((char *)PAGE_BODY, "<br>---------------------------------------------------------------------<br></w_data>");
     strcat((char *)PAGE_BODY, "<style>w_data {text-align: center; color: #D3D3D3; font-family: Arial;} </style>");

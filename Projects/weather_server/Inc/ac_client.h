@@ -1,24 +1,20 @@
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __WINDOWDLG_H
-#define __WINDOWDLG_H
+#ifndef __AC_CLIENT_H
+#define __AC_CLIENT_H
 
 /* Includes ------------------------------------------------------------------*/
+
+
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
-static void _cbDialog(WM_MESSAGE * pMsg);
-WM_HWIN CreateWindow(void);
-void MainTask(void);
+//int8_t send_command_to_ac(uint8_t comm);
+int8_t send_command_to_ac(uint8_t *comm);
+void ac_client_thread(void const *argument);
+void ac_client_init();
 
-void gui_update_temp(float temp);
-void gui_update_hum(float temp);
-void gui_update_press(float temp);
-void gui_update_time(uint8_t hour, uint8_t min, uint8_t sec);
-
-extern uint8_t ctrl;
-
-#endif /* __WINDOWDLG_H */
+#endif /* __AC_CLIENT_H */
 
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

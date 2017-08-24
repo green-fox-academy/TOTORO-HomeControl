@@ -65,6 +65,7 @@
 #include "gui_setup.h"
 #include "WindowDLG.h"
 #include "k_bsp.h"
+#include "ac_client.h"
 
 
 
@@ -105,7 +106,7 @@ int main(void)
 	MPU_Config();
 
 	/* Enable the CPU Cache */
-	CPU_CACHE_Enable();
+	CPU_CACHE_Enable();							//TODO: SD will need it...
 
 	/* STM32F7xx HAL library initialization:
 	   - Configure the Flash ART accelerator on ITCM interface
@@ -114,14 +115,13 @@ int main(void)
 	   - Global MSP (MCU Support Package) initialization
 	*/
 	HAL_Init();
-
-
   
 	/* Configure the system clock to 200 MHz */
 	SystemClock_Config();
 
 	/* Initialize LCD */
 	BSP_Config();
+
 #ifndef LCD_USERLOG
 	 /* Initialize GUI */
 	GUI_Init();
@@ -133,7 +133,6 @@ int main(void)
 	GUI_SelectLayer(0);
 
 //	GUI_Startup();
-
 #endif
 	/* Create Touch screen Timer */
 	osTimerDef(TS_Timer, TimerCallback);
@@ -141,7 +140,6 @@ int main(void)
 
 	/* Start the TS Timer */
 	osTimerStart(lcd_timer, 100);
-
 
 	/*Init thread */
 	osThreadDef(Start, StartThread, osPriorityHigh, 0, configMINIMAL_STACK_SIZE * 1);
@@ -194,7 +192,7 @@ static void StartThread(void const * argument)
 	//osDelay(2000);
 
 	/* Start httpserver thread */
-	http_server_netconn_init();
+//	http_server_netconn_init();
 
 	if(FATFS_LinkDriver(&SD_Driver, SDPath) == 0)
 	{
@@ -203,7 +201,7 @@ static void StartThread(void const * argument)
 
 #ifndef LCD_USERLOG
 	/* Create GUI task */
-	osThreadDef(GUI_Thread, GUIThread,   osPriorityBelowNormal, 0, configMINIMAL_STACK_SIZE * 2);	//2048 //configMINIMAL_STACK_SIZE * 20
+	osThreadDef(GUI_Thread, GUIThread,   osPriorityBelowNormal, 0, configMINIMAL_STACK_SIZE * 2);
 	volatile osThreadId id = osThreadCreate (osThread(GUI_Thread), NULL);
 #endif
 
@@ -215,7 +213,7 @@ static void StartThread(void const * argument)
 //	osThreadDef(PROJECTOR_SERVER, projector_server_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 4);
 //	osThreadCreate (osThread(PROJECTOR_SERVER), NULL);
 
-	//Define and start the projector thread
+//	Define and start the projector thread
 //	osThreadDef(PROJECTOR_CLIENT, projector_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 4);
 //	osThreadCreate (osThread(PROJECTOR_CLIENT), NULL);
 
@@ -399,11 +397,11 @@ static void MPU_Config(void)
 	/* Configure the MPU attributes as Device for Ethernet Descriptors in the SRAM */
 	MPU_InitStruct.Enable = MPU_REGION_ENABLE;
 	MPU_InitStruct.BaseAddress = 0x20010000;
-	MPU_InitStruct.Size = MPU_REGION_SIZE_256B;
+	MPU_InitStruct.Size = MPU_REGION_SIZE_256KB; //was MPU_REGION_SIZE_256B //crispo: MPU_REGION_SIZE_256KB
 	MPU_InitStruct.AccessPermission = MPU_REGION_FULL_ACCESS;
-	MPU_InitStruct.IsBufferable = MPU_ACCESS_BUFFERABLE;
-	MPU_InitStruct.IsCacheable = MPU_ACCESS_NOT_CACHEABLE;
-	MPU_InitStruct.IsShareable = MPU_ACCESS_SHAREABLE;
+	MPU_InitStruct.IsBufferable = MPU_ACCESS_NOT_BUFFERABLE;	//was MPU_ACCESS_BUFFERABLE	//crispo: MPU_ACCESS_NOT_BUFFERABLE
+	MPU_InitStruct.IsCacheable = MPU_ACCESS_CACHEABLE; //was MPU_ACCESS_NOT_CACHEABLE 	//crispo: MPU_ACCESS_CACHEABLE
+	MPU_InitStruct.IsShareable = MPU_ACCESS_NOT_SHAREABLE;	//was MPU_ACCESS_SHAREABLE	//crispo: MPU_ACCESS_NOT_SHAREABLE
 	MPU_InitStruct.Number = MPU_REGION_NUMBER0;
 	MPU_InitStruct.TypeExtField = MPU_TEX_LEVEL0;
 	MPU_InitStruct.SubRegionDisable = 0x00;

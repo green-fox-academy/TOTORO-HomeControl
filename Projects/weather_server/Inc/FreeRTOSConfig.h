@@ -99,9 +99,9 @@
 #define configMINIMAL_STACK_SIZE		( ( uint16_t ) 128 )
 #if defined(__GNUC__)
 // #define configTOTAL_HEAP_SIZE			( ( size_t ) (40 * 1024 ) )		//further increased
- #define configTOTAL_HEAP_SIZE			( ( size_t ) (50 * 1024 ) )
+ #define configTOTAL_HEAP_SIZE			( ( size_t ) (60 * 1024 ) )
 #else
- #define configTOTAL_HEAP_SIZE			( ( size_t ) ( 20 * 1024 ) )
+ #define configTOTAL_HEAP_SIZE			( ( size_t ) ( 50 * 1024 ) )	//was 20
 #endif
 #define configMAX_TASK_NAME_LEN			( 16 )
 #define configUSE_TRACE_FACILITY		1

@@ -65,12 +65,12 @@
 #define AC_SWING_OFF		0
 #define AC_MIN_VALUE		16
 #define AC_MAX_VALUE		30
-#define AC_LEVER_0			0
-#define AC_LEVER_1			1
-#define AC_LEVER_2			2
-#define AC_LEVER_3			3
-#define AC_LEVER_4			4
-#define AC_LEVER_5			5
+#define AC_BLADE_0			0
+#define AC_BLADE_1			1
+#define AC_BLADE_2			2
+#define AC_BLADE_3			3
+#define AC_BLADE_4			4
+#define AC_BLADE_5			5
 
 
 #define AC_IS_OFF			0
@@ -129,7 +129,7 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
   { BUTTON_CreateIndirect, "AC is OFF", ID_BUTTON_3, 5, 215, 80, 50, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "Swing is OFF", ID_BUTTON_4, 95, 215, 80, 50, 0, 0x0, 0 },
   { SPINBOX_CreateIndirect, "", ID_SPINBOX_0, 185, 195, 100, 70, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "L_State_0", ID_BUTTON_5, 5, 135, 80, 70, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "Blade in 0", ID_BUTTON_5, 5, 135, 80, 70, 0, 0x0, 0 },
   { TEXT_CreateIndirect, "", ID_TEXT_7, 5, 30, 100, 100, 0, 0x0, 0 },		//date placeholder
   { TEXT_CreateIndirect, "", ID_TEXT_8, 300, 210, 160, 50, 0, 0x0, 0 },		//time hrs and min placeholder
   // USER START (Optionally insert additional widgets)
@@ -238,7 +238,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_7);
     TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
     TEXT_SetTextAlign(hItem, GUI_TA_LEFT | GUI_TA_TOP);
-    TEXT_SetFont(hItem, GUI_FONT_24_1);
+    TEXT_SetFont(hItem, GUI_FONT_20_1);
 
     //
     // Initialization of 'time_hm_data'		display hour and minutes
@@ -372,48 +372,48 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         	 switch(ac_lever_state) {
         	 case 0:
         		 ac_lever_state = 1;
-        		 ac_controls[3] = AC_LEVER_1;
-        		 BUTTON_SetText(AC_L_control, "L in state 1");
+        		 ac_controls[3] = AC_BLADE_1;
+        		 BUTTON_SetText(AC_L_control, "Blade in 1");
         		 //add value "No change" for ON/OFF control
         		 ac_controls[4] = AC_STATE_NOCHANGE;
         		 osThreadCreate (osThread(AC), (void*)ac_controls);
         		 break;
         	 case 1:
         		 ac_lever_state = 2;
-        		 ac_controls[3] = AC_LEVER_2;
-        		 BUTTON_SetText(AC_L_control, "L in state 2");
+        		 ac_controls[3] = AC_BLADE_2;
+        		 BUTTON_SetText(AC_L_control, "Blade in 2");
         		 //add value "No change" for ON/OFF control
         		 ac_controls[4] = AC_STATE_NOCHANGE;
         		 osThreadCreate (osThread(AC), (void*)ac_controls);
         		 break;
         	 case 2:
         		 ac_lever_state = 3;
-        		 ac_controls[3] = AC_LEVER_3;
-        		 BUTTON_SetText(AC_L_control, "L in state 3");
+        		 ac_controls[3] = AC_BLADE_3;
+        		 BUTTON_SetText(AC_L_control, "Blade in 3");
         		 //add value "No change" for ON/OFF control
         		 ac_controls[4] = AC_STATE_NOCHANGE;
         		 osThreadCreate (osThread(AC), (void*)ac_controls);
         		 break;
         	 case 3:
         		 ac_lever_state = 4;
-        		 ac_controls[3] = AC_LEVER_4;
-        		 BUTTON_SetText(AC_L_control, "L in state 4");
+        		 ac_controls[3] = AC_BLADE_4;
+        		 BUTTON_SetText(AC_L_control, "Blade in 4");
         		 //add value "No change" for ON/OFF control
         		 ac_controls[4] = AC_STATE_NOCHANGE;
         		 osThreadCreate (osThread(AC), (void*)ac_controls);
         		 break;
         	 case 4:
         		 ac_lever_state = 5;
-        		 ac_controls[3] = AC_LEVER_5;
-        		 BUTTON_SetText(AC_L_control, "L in state 5");
+        		 ac_controls[3] = AC_BLADE_5;
+        		 BUTTON_SetText(AC_L_control, "Blade in 5");
         		 //add value "No change" for ON/OFF control
         		 ac_controls[4] = AC_STATE_NOCHANGE;
         		 osThreadCreate (osThread(AC), (void*)ac_controls);
         		 break;
         	 case 5:
         		 ac_lever_state = 0;
-        		 ac_controls[3] = AC_LEVER_0;
-        		 BUTTON_SetText(AC_L_control, "L in state 0");
+        		 ac_controls[3] = AC_BLADE_0;
+        		 BUTTON_SetText(AC_L_control, "Blade in 0");
         		 //add value "No change" for ON/OFF control
         		 osThreadCreate (osThread(AC), (void*)ac_controls);
         		 break;

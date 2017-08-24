@@ -192,7 +192,7 @@ static void StartThread(void const * argument)
 	//osDelay(2000);
 
 	/* Start httpserver thread */
-//	http_server_netconn_init();
+	http_server_netconn_init();
 
 	if(FATFS_LinkDriver(&SD_Driver, SDPath) == 0)
 	{

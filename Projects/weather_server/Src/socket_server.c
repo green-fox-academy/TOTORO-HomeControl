@@ -99,7 +99,8 @@ void socket_server_thread(void const *argument)
 	struct sockaddr_in client_addr;
 	socklen_t client_addr_len = sizeof(client_addr);
 	int client_socket;
-	char temp[128];
+	char temp[100];
+	char temptime[255];
 
 	while (1) {
 		// Accept incoming connections
@@ -116,11 +117,15 @@ void socket_server_thread(void const *argument)
 			f_open(&w_log, "W.CSV", FA_OPEN_ALWAYS | FA_WRITE);
 			float received_bytes;
 			do {
-				received_bytes = recv(client_socket, received_weather_data, sizeof(received_weather_data), 0);
-				LCD_UsrLog("Temperature: %.1f C, Humidity: %.1f%%, Pressure: %.1f Pa,\n", received_weather_data[0], received_weather_data[1], received_weather_data[2]);
-				memcpy(temp, &received_weather_data, sizeof(float));
-				sprintf(temp, "%.2f;%.1f;%.2f\n", received_weather_data[0], received_weather_data[1], received_weather_data[2]);
-				f_printf(&w_log, temp);
+				received_bytes = recv(client_socket, received_data.sensor_values, sizeof(received_data.sensor_values), 0);
+				LCD_UsrLog("Temperature: %.1f C, Humidity: %.1f%%, Pressure: %.1f Pa,\n", received_data.sensor_values[0], received_data.sensor_values[1], received_data.sensor_values[2]);
+				memcpy(temp, &received_data.sensor_values, sizeof(float));
+				sprintf(temp, "%.2f;%.1f;%.2f\n", received_data.sensor_values[0], received_data.sensor_values[1], received_data.sensor_values[2]);
+				sprintf(temptime, "%d.%d.%d. %d:%d:%d;", received_data.hq_time.tm_year, received_data.hq_time.tm_mon, received_data.hq_time.tm_mday, received_data.hq_time.tm_hour, received_data.hq_time.tm_min, received_data.hq_time.tm_sec);
+				strcat(temptime, temp);
+
+				f_printf(&w_log, temptime);
+
 
 				received_bytes = recv(client_socket, &received_data, sizeof(received_data), 0);	//added &
 

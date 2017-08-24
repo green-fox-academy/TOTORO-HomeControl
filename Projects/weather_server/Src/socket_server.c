@@ -122,7 +122,7 @@ void socket_server_thread(void const *argument)
 				gui_update_hum(received_data.sensor_values[1]);
 				gui_update_press(received_data.sensor_values[2]);
 				gui_update_time(received_data.hq_time.tm_hour, received_data.hq_time.tm_min, received_data.hq_time.tm_sec);
-
+				gui_update_date(received_data.hq_time.tm_year, received_data.hq_time.tm_mon, received_data.hq_time.tm_mday, received_data.hq_time.tm_wday);
 			} while (received_bytes > 0);
 
 			// Close the socket

@@ -77,6 +77,9 @@ struct netif gnetif; /* network interface structure */
 osTimerId lcd_timer;
 
 
+char wdays [7][12] = {"MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"};
+
+
 /* Private function prototypes -----------------------------------------------*/
 static void SystemClock_Config(void);
 static void StartThread(void const * argument);
@@ -198,22 +201,12 @@ static void StartThread(void const * argument)
 #ifndef LCD_USERLOG
 	/* Create GUI task */
 	osThreadDef(GUI_Thread, GUIThread,   osPriorityBelowNormal, 0, configMINIMAL_STACK_SIZE * 2);
-	volatile osThreadId id = osThreadCreate (osThread(GUI_Thread), NULL);
+	osThreadCreate (osThread(GUI_Thread), NULL);
 #endif
 
 	//Define and start the weather server thread
 	osThreadDef(SOCKET_SERVER, socket_server_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 10);
 	osThreadCreate (osThread(SOCKET_SERVER), NULL);
-
-//	//Define and start the projector thread
-//	osThreadDef(PROJECTOR_SERVER, projector_server_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 4);
-//	osThreadCreate (osThread(PROJECTOR_SERVER), NULL);
-
-//	Define and start the projector thread
-//	osThreadDef(PROJECTOR_CLIENT, projector_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 4);
-//	osThreadCreate (osThread(PROJECTOR_CLIENT), NULL);
-
-
 
 	while (1) {
 		/* Delete the Init Thread */

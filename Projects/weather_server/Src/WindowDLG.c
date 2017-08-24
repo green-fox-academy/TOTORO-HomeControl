@@ -52,7 +52,7 @@
 #define ID_BUTTON_4 (GUI_ID_USER + 0x10)
 #define ID_SPINBOX_0 (GUI_ID_USER + 0x11)
 #define ID_BUTTON_5 (GUI_ID_USER + 0x12)
-#define ID_TEXT_7 (GUI_ID_USER + 0x0F)
+#define ID_TEXT_7 (GUI_ID_USER + 0x1B)
 #define ID_TEXT_8 (GUI_ID_USER + 0x1A)
 
 /* Sent value defines */
@@ -107,6 +107,7 @@ uint8_t ac_controls[5] = {6, 1, 0, 3, 0};	//initialization for testing
 uint8_t proj_control;
 
 
+
 // USER END
 
 /*********************************************************************
@@ -129,7 +130,7 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
   { BUTTON_CreateIndirect, "Swing is OFF", ID_BUTTON_4, 95, 215, 80, 50, 0, 0x0, 0 },
   { SPINBOX_CreateIndirect, "", ID_SPINBOX_0, 185, 195, 100, 70, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "L_State_0", ID_BUTTON_5, 5, 135, 80, 70, 0, 0x0, 0 },
-  { TEXT_CreateIndirect, "DATE", ID_TEXT_7, 5, 40, 85, 85, 0, 0x0, 0 },		//date placeholder
+  { TEXT_CreateIndirect, "", ID_TEXT_7, 5, 30, 100, 100, 0, 0x0, 0 },		//date placeholder
   { TEXT_CreateIndirect, "", ID_TEXT_8, 300, 210, 160, 50, 0, 0x0, 0 },		//time hrs and min placeholder
   // USER START (Optionally insert additional widgets)
   // USER END
@@ -236,7 +237,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_7);
     TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
-    TEXT_SetTextAlign(hItem, GUI_TA_LEFT | GUI_TA_BOTTOM);
+    TEXT_SetTextAlign(hItem, GUI_TA_LEFT | GUI_TA_TOP);
     TEXT_SetFont(hItem, GUI_FONT_24_1);
 
     //
@@ -527,16 +528,21 @@ void gui_update_time(uint8_t hour, uint8_t min, uint8_t sec)
 	sprintf(str, "%d:%d", hour, min);
 	TEXT_SetText(hItem, str);
 
+
+
 }
 
 /* Update displayed date in GUI */
-void gui_update_date(float press)
+void gui_update_date(uint8_t year, uint8_t month, uint8_t day, uint8_t wday)
 {
     WM_HWIN hItem;
-    char str[10];
-	hItem = WM_GetDialogItem(main_window, ID_TEXT_6);
-	sprintf(str, "%.0f", press);
+    char str[15];
+	hItem = WM_GetDialogItem(main_window, ID_TEXT_7);
+	const char* wdays[] = {"Monday", "Tuesday", "Wednesday","Thursday", "Friday", "Saturday", "Sunday"};		//TODO: check implementation
+	const char* months[] = {"JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"};	//TODO: check implementation
+	sprintf(str, "%s\n%s %d\n%d", wdays[wday], months[month], day + 1, year + 1900);
 	TEXT_SetText(hItem, str);
+
 }
 
 

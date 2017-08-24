@@ -46,6 +46,11 @@
 			<locationURI>PARENT-2-PROJECT_LOC/Src/WindowDLG.c</locationURI>
 		</link>
 		<link>
+			<name>Application/User/ac_client.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/Src/ac_client.c</locationURI>
+		</link>
+		<link>
 			<name>Application/User/app_ethernet.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Src/app_ethernet.c</locationURI>
@@ -99,11 +104,6 @@
 			<name>Application/User/stm32f7xx_it.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Src/stm32f7xx_it.c</locationURI>
-		</link>
-		<link>
-			<name>Application/User/usd_handle.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/Src/usd_handle.c</locationURI>
 		</link>
 		<link>
 			<name>Application/Utilities/lcd_log.c</name>

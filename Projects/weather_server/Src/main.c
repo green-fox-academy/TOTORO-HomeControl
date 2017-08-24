@@ -59,25 +59,24 @@
 #include "socket_client.h"
 #include "stm32746g_discovery_lcd.h"
 #include "httpserver-netconn.h"
-#include "usd_handle.h"
-#include "ff.h"
 #include "projector_client.h"
 #include "gui_setup.h"
 #include "WindowDLG.h"
 #include "k_bsp.h"
+#include "ac_client.h"
+
 
 
 
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
-#define LCD_USERLOG			/*LCD userlog needed for IP address check */
+//#define LCD_USERLOG			/*LCD userlog needed for IP address check */
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 struct netif gnetif; /* network interface structure */
 osTimerId lcd_timer;
-char SDPath[4];
-FATFS htmlFAT; /*File system object for SD card logical drive*/
+
 
 /* Private function prototypes -----------------------------------------------*/
 static void SystemClock_Config(void);
@@ -105,7 +104,7 @@ int main(void)
 	MPU_Config();
 
 	/* Enable the CPU Cache */
-	CPU_CACHE_Enable();
+	CPU_CACHE_Enable();							//TODO: SD will need it...
 
 	/* STM32F7xx HAL library initialization:
 	   - Configure the Flash ART accelerator on ITCM interface
@@ -114,14 +113,13 @@ int main(void)
 	   - Global MSP (MCU Support Package) initialization
 	*/
 	HAL_Init();
-
-
   
 	/* Configure the system clock to 200 MHz */
 	SystemClock_Config();
 
 	/* Initialize LCD */
 	BSP_Config();
+
 #ifndef LCD_USERLOG
 	 /* Initialize GUI */
 	GUI_Init();
@@ -132,8 +130,6 @@ int main(void)
 	GUI_SetLayerVisEx (1, 0);
 	GUI_SelectLayer(0);
 
-//	GUI_Startup();
-
 #endif
 	/* Create Touch screen Timer */
 	osTimerDef(TS_Timer, TimerCallback);
@@ -142,14 +138,9 @@ int main(void)
 	/* Start the TS Timer */
 	osTimerStart(lcd_timer, 100);
 
-
 	/*Init thread */
 	osThreadDef(Start, StartThread, osPriorityHigh, 0, configMINIMAL_STACK_SIZE * 1);
 	osThreadCreate (osThread(Start), NULL);
-
-	/*##-1- Start task #########################################################*/
-	//osThreadDef(uSDThread, usd_card_thread, osPriorityNormal, 0, 8 * configMINIMAL_STACK_SIZE);
-	//osThreadCreate(osThread(uSDThread), NULL);
 
 	/* Start scheduler */
 	osKernelStart();
@@ -160,6 +151,17 @@ int main(void)
 }
 
 
+static void GUIThread(void const * argument)
+{
+
+  MainTask();
+
+  /* Gui background Task */
+  while(1) {
+    GUI_Exec(); /* Do the background work ... Update windows etc.) */
+    osDelay(100); /* Nothing left to do for the moment ... Idle processing */
+  }
+}
 
 
 static void TimerCallback(void const *n)
@@ -185,41 +187,23 @@ static void StartThread(void const * argument)
 	/* Notify user about the network interface config */
 	User_notification(&gnetif);
 
-	//Define and start uSD card thread
-//	osThreadDef(USD_CARD, usd_card_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 10);
-//	osThreadCreate (osThread(USD_CARD), NULL);
 	/* Start DHCPClient */
 	osThreadDef(DHCP, DHCP_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
 	osThreadCreate (osThread(DHCP), &gnetif);
 	//osDelay(2000);
 
 	/* Start httpserver thread */
-	http_server_netconn_init();
-
-	if(FATFS_LinkDriver(&SD_Driver, SDPath) == 0)
-	{
-	    f_mount(&htmlFAT, (TCHAR const*)SDPath, 0);
-	}
+//	http_server_netconn_init();
 
 #ifndef LCD_USERLOG
 	/* Create GUI task */
-	osThreadDef(GUI_Thread, GUIThread,   osPriorityBelowNormal, 0, configMINIMAL_STACK_SIZE * 2);	//2048 //configMINIMAL_STACK_SIZE * 20
-	volatile osThreadId id = osThreadCreate (osThread(GUI_Thread), NULL);
+	osThreadDef(GUI_Thread, GUIThread,   osPriorityBelowNormal, 0, configMINIMAL_STACK_SIZE * 2);
+	osThreadCreate (osThread(GUI_Thread), NULL);
 #endif
 
 	//Define and start the weather server thread
 	osThreadDef(SOCKET_SERVER, socket_server_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 10);
 	osThreadCreate (osThread(SOCKET_SERVER), NULL);
-
-//	//Define and start the projector thread
-//	osThreadDef(PROJECTOR_SERVER, projector_server_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 4);
-//	osThreadCreate (osThread(PROJECTOR_SERVER), NULL);
-
-	//Define and start the projector thread
-//	osThreadDef(PROJECTOR_CLIENT, projector_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 4);
-//	osThreadCreate (osThread(PROJECTOR_CLIENT), NULL);
-
-
 
 	while (1) {
 		/* Delete the Init Thread */
@@ -399,11 +383,11 @@ static void MPU_Config(void)
 	/* Configure the MPU attributes as Device for Ethernet Descriptors in the SRAM */
 	MPU_InitStruct.Enable = MPU_REGION_ENABLE;
 	MPU_InitStruct.BaseAddress = 0x20010000;
-	MPU_InitStruct.Size = MPU_REGION_SIZE_256B;
+	MPU_InitStruct.Size = MPU_REGION_SIZE_256KB; //was MPU_REGION_SIZE_256B //crispo: MPU_REGION_SIZE_256KB
 	MPU_InitStruct.AccessPermission = MPU_REGION_FULL_ACCESS;
-	MPU_InitStruct.IsBufferable = MPU_ACCESS_BUFFERABLE;
-	MPU_InitStruct.IsCacheable = MPU_ACCESS_NOT_CACHEABLE;
-	MPU_InitStruct.IsShareable = MPU_ACCESS_SHAREABLE;
+	MPU_InitStruct.IsBufferable = MPU_ACCESS_NOT_BUFFERABLE;	//was MPU_ACCESS_BUFFERABLE	//crispo: MPU_ACCESS_NOT_BUFFERABLE
+	MPU_InitStruct.IsCacheable = MPU_ACCESS_CACHEABLE; //was MPU_ACCESS_NOT_CACHEABLE 	//crispo: MPU_ACCESS_CACHEABLE
+	MPU_InitStruct.IsShareable = MPU_ACCESS_NOT_SHAREABLE;	//was MPU_ACCESS_SHAREABLE	//crispo: MPU_ACCESS_NOT_SHAREABLE
 	MPU_InitStruct.Number = MPU_REGION_NUMBER0;
 	MPU_InitStruct.TypeExtField = MPU_TEX_LEVEL0;
 	MPU_InitStruct.SubRegionDisable = 0x00;

@@ -115,9 +115,9 @@ uint8_t proj_control;
 */
 static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
   { WINDOW_CreateIndirect, "Window", ID_WINDOW_0, 0, 0, 480, 272, 1, 0x0, 0 },
-  { BUTTON_CreateIndirect, "UP", ID_BUTTON_0, 400, 27, 50, 50, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "STOP", ID_BUTTON_1, 400, 87, 50, 50, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "DOWN", ID_BUTTON_2, 400, 147, 50, 50, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "UP", ID_BUTTON_0, 410, 27, 50, 50, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "STOP", ID_BUTTON_1, 410, 87, 50, 50, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "DOWN", ID_BUTTON_2, 410, 147, 50, 50, 0, 0x0, 0 },
   { TEXT_CreateIndirect, "HomeControl", ID_TEXT_0, 8, 4, 80, 20, 0, 0x0, 0 },
   { TEXT_CreateIndirect, "Temperature (C)", ID_TEXT_1, 110, 5, 86, 22, 0, 0x0, 0 },
   { TEXT_CreateIndirect, "Humidity (%)", ID_TEXT_2, 285, 5, 80, 20, 0, 0x0, 0 },
@@ -125,12 +125,12 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
   { TEXT_CreateIndirect, "", ID_TEXT_4, 105, 0, 170, 170, 0, 0x0, 0 },
   { TEXT_CreateIndirect, "", ID_TEXT_5, 280, 0, 85, 85, 0, 0x0, 0 },
   { TEXT_CreateIndirect, "", ID_TEXT_6, 280, 90, 85, 85, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "AC OFF", ID_BUTTON_3, 5, 215, 80, 50, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "No swing", ID_BUTTON_4, 95, 215, 80, 50, 0, 0x0, 0 },
-  { SPINBOX_CreateIndirect, "", ID_SPINBOX_0, 185, 145, 100, 70, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "AC is OFF", ID_BUTTON_3, 5, 215, 80, 50, 0, 0x0, 0 },
+  { BUTTON_CreateIndirect, "Swing is OFF", ID_BUTTON_4, 95, 215, 80, 50, 0, 0x0, 0 },
+  { SPINBOX_CreateIndirect, "", ID_SPINBOX_0, 185, 195, 100, 70, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "L_State_0", ID_BUTTON_5, 5, 135, 80, 70, 0, 0x0, 0 },
   { TEXT_CreateIndirect, "DATE", ID_TEXT_7, 5, 40, 85, 85, 0, 0x0, 0 },		//date placeholder
-  { TEXT_CreateIndirect, "", ID_TEXT_8, 305, 220, 160, 50, 0, 0x0, 0 },		//time placeholder
+  { TEXT_CreateIndirect, "", ID_TEXT_8, 300, 210, 160, 50, 0, 0x0, 0 },		//time hrs and min placeholder
   // USER START (Optionally insert additional widgets)
   // USER END
 };
@@ -213,7 +213,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     SPINBOX_SetRange(AC_control, AC_MIN_VALUE, AC_MAX_VALUE);
     SPINBOX_SetValue(AC_control, AC_MIN_VALUE);
     SPINBOX_SetStep(AC_control, 1);
-    SPINBOX_SetButtonSize(AC_control, 70);
+    SPINBOX_SetButtonSize(AC_control, 50);
     SPINBOX_SetFont(AC_control, GUI_FONT_24_1);
 
     //
@@ -240,12 +240,12 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     TEXT_SetFont(hItem, GUI_FONT_24_1);
 
     //
-    // Initialization of 'time_data'
+    // Initialization of 'time_hm_data'		display hour and minutes
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_8);
     TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
     TEXT_SetTextAlign(hItem, GUI_TA_LEFT | GUI_TA_CENTER);
-    TEXT_SetFont(hItem, GUI_FONT_D32);
+    TEXT_SetFont(hItem, GUI_FONT_D48);
 
 
     // USER START (Optionally insert additional code for further widget initialization)
@@ -524,7 +524,7 @@ void gui_update_time(uint8_t hour, uint8_t min, uint8_t sec)
     WM_HWIN hItem;
     char str[10];
 	hItem = WM_GetDialogItem(main_window, ID_TEXT_8);
-	sprintf(str, "%d:%d:%d", hour, min, sec);
+	sprintf(str, "%d:%d", hour, min);
 	TEXT_SetText(hItem, str);
 
 }

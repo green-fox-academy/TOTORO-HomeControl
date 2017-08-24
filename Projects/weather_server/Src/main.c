@@ -71,12 +71,13 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
-//#define LCD_USERLOG			/*LCD userlog needed for IP address check */
+#define LCD_USERLOG			/*LCD userlog needed for IP address check */
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 struct netif gnetif; /* network interface structure */
 osTimerId lcd_timer;
-
+char SDPath[4];
+FATFS htmlFAT; /*File system object for SD card logical drive*/
 
 /* Private function prototypes -----------------------------------------------*/
 static void SystemClock_Config(void);
@@ -159,17 +160,6 @@ int main(void)
 }
 
 
-static void GUIThread(void const * argument)
-{
-
-  MainTask();
-
-  /* Gui background Task */
-  while(1) {
-    GUI_Exec(); /* Do the background work ... Update windows etc.) */
-    osDelay(100); /* Nothing left to do for the moment ... Idle processing */
-  }
-}
 
 
 static void TimerCallback(void const *n)
@@ -196,8 +186,8 @@ static void StartThread(void const * argument)
 	User_notification(&gnetif);
 
 	//Define and start uSD card thread
-	osThreadDef(USD_CARD, usd_card_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
-	osThreadCreate (osThread(USD_CARD), NULL);
+//	osThreadDef(USD_CARD, usd_card_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 10);
+//	osThreadCreate (osThread(USD_CARD), NULL);
 	/* Start DHCPClient */
 	osThreadDef(DHCP, DHCP_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
 	osThreadCreate (osThread(DHCP), &gnetif);
@@ -205,6 +195,11 @@ static void StartThread(void const * argument)
 
 	/* Start httpserver thread */
 	http_server_netconn_init();
+
+	if(FATFS_LinkDriver(&SD_Driver, SDPath) == 0)
+	{
+	    f_mount(&htmlFAT, (TCHAR const*)SDPath, 0);
+	}
 
 #ifndef LCD_USERLOG
 	/* Create GUI task */

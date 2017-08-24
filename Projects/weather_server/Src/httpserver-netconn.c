@@ -67,11 +67,11 @@
 #define THREAD_STACKSIZE	( configMINIMAL_STACK_SIZE * 24 )
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-FATFS htmlFAT; /*File system object for SD card logical drive*/
+
 FIL dynamic_header;
-char SDPath[4];
+
 unsigned char d_content[512];
-UINT byteCount;
+
 
 
 /* Format of dynamic web page: the page header */
@@ -185,39 +185,32 @@ void http_server_netconn_init()
   */
 void DynWebPage(struct netconn *conn)
 {
-  portCHAR PAGE_BODY[512];
-  portFLOAT weather_data [3];
-  portCHAR buf[128];
+    portCHAR PAGE_BODY[512];
+    portFLOAT weather_data [3];
+    portCHAR buf[128];
+    UINT byteCount;
 
 
-  memset(PAGE_BODY, 0,512);
-  memcpy(buf, &weather_data, sizeof(float));
+    memset(PAGE_BODY, 0,512);
+    memcpy(buf, &weather_data, sizeof(float));
 
-  strcat((char *)PAGE_BODY, "<w_data><pre><br>Temperature (�C):		Humidity (%):		Pressure (Pa):" );
-  strcat((char *)PAGE_BODY, "<br>--------------------------------------------------------------------<br>");
-  sprintf(buf, "%.2f 	 			%.1f 			%.2f", received_weather_data[0], received_weather_data[1], received_weather_data[2]);
-  strcat(PAGE_BODY, buf);
-  strcat((char *)PAGE_BODY, "<br>---------------------------------------------------------------------<br></w_data>");
-  strcat((char *)PAGE_BODY, "<style>w_data {text-align: center; color: #D3D3D3; font-family: Arial;} </style>");
-  /* Send the dynamically generated page */
-  if(FATFS_LinkDriver(&SD_Driver, SDPath) == 0)
-  {
-      if(f_mount(&htmlFAT, (TCHAR const*)SDPath, 0) == FR_OK)
-      {
-	f_open(&dynamic_header, "STARTPAGE.HTML", FA_OPEN_EXISTING | FA_READ);
+    strcat((char *)PAGE_BODY, "<w_data><pre><br>Temperature (�C):		Humidity (%):		Pressure (Pa):" );
+    strcat((char *)PAGE_BODY, "<br>--------------------------------------------------------------------<br>");
+    sprintf(buf, "%.2f 	 			%.1f 			%.2f", received_weather_data[0], received_weather_data[1], received_weather_data[2]);
+    strcat(PAGE_BODY, buf);
+    strcat((char *)PAGE_BODY, "<br>---------------------------------------------------------------------<br></w_data>");
+    strcat((char *)PAGE_BODY, "<style>w_data {text-align: center; color: #D3D3D3; font-family: Arial;} </style>");
+    /* Send the dynamically generated page */
 
-	while(!f_eof(&dynamic_header))
-	{
-	    f_read(&dynamic_header, d_content, 512, &byteCount);
-//	    sprintf(PAGE_START, "%s\n", d_content);
-	    netconn_write(conn, d_content, byteCount, NETCONN_COPY);
-	}
-	f_close(&dynamic_header);
-	netconn_write(conn, PAGE_BODY, strlen(PAGE_BODY), NETCONN_COPY);
-      }
-  }
-  FATFS_UnLinkDriver(SDPath);
+    f_open(&dynamic_header, "STARTPAGE.HTML", FA_OPEN_EXISTING | FA_READ);
 
+    while(!f_eof(&dynamic_header))
+    {
+	f_read(&dynamic_header, d_content, 512, &byteCount);
 
+	netconn_write(conn, d_content, byteCount, NETCONN_COPY);
+    }
+    f_close(&dynamic_header);
+    netconn_write(conn, PAGE_BODY, strlen(PAGE_BODY), NETCONN_COPY);
 
 }

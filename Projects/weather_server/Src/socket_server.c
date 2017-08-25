@@ -12,6 +12,7 @@
 #include "WindowDLG.h"
 #include "ff.h"
 #include "projector_client.h"
+#include "time.h"
 
 /* Private typedef -----------------------------------------------------------*/
 
@@ -83,6 +84,10 @@ void socket_server_thread(void const *argument)
 	char temp[100];
 	char temptime[255];
 	char header[] = "Time; Temperature; Humidity; Pressure\n";
+
+	f_open(&w_log, "W.CSV", FA_OPEN_ALWAYS | FA_WRITE);
+	f_printf(&w_log, header);
+
 	while (1) {
 		// Accept incoming connections
 		client_socket = accept(server_socket, (struct sockaddr*)&client_addr, &client_addr_len);
@@ -95,22 +100,22 @@ void socket_server_thread(void const *argument)
 			//GUI_DispString("Socket server - invalid client socket\n");
 		} else {
 			// Receive data
-			f_open(&w_log, "W.CSV", FA_OPEN_ALWAYS | FA_WRITE);
-			f_printf(&w_log, header);
 
 			float received_bytes;
 			do {
-				received_bytes = recv(client_socket, received_data.sensor_values, sizeof(received_data.sensor_values), 0);
+				received_bytes = recv(client_socket, &received_data, sizeof(received_data), 0);	//added &
+//				received_bytes = recv(client_socket, received_data.sensor_values, sizeof(received_data.sensor_values), 0);
 				LCD_UsrLog("Temperature: %.1f C, Humidity: %.1f%%, Pressure: %.1f Pa,\n", received_data.sensor_values[0], received_data.sensor_values[1], received_data.sensor_values[2]);
-				memcpy(temp, &received_data.sensor_values, sizeof(float));
+//				memcpy(temp, received_data.sensor_values, sizeof(float));
 				sprintf(temp, "%.2f;%.1f;%.2f\n", received_data.sensor_values[0], received_data.sensor_values[1], received_data.sensor_values[2]);
-				sprintf(temptime, "%d.%d.%d. %d:%d:%d;", received_data.hq_time.tm_year, received_data.hq_time.tm_mon, received_data.hq_time.tm_mday, received_data.hq_time.tm_hour, received_data.hq_time.tm_min, received_data.hq_time.tm_sec);
+				strftime(temptime,100,"%c;", (struct tm*)&(received_data.hq_time));
+//				sprintf(temptime, "%d.%d.%d. %d:%d:%d;", received_data.hq_time.tm_year, received_data.hq_time.tm_mon, received_data.hq_time.tm_mday, received_data.hq_time.tm_hour, received_data.hq_time.tm_min, received_data.hq_time.tm_sec);
 				strcat(temptime, temp);
 
 				f_printf(&w_log, temptime);
+				f_sync(&w_log);
 
-
-				received_bytes = recv(client_socket, &received_data, sizeof(received_data), 0);	//added &
+//				received_bytes = recv(client_socket, &received_data, sizeof(received_data), 0);	//added &
 
 				gui_update_temp(received_data.sensor_values[0]);
 				gui_update_hum(received_data.sensor_values[1]);
@@ -120,7 +125,6 @@ void socket_server_thread(void const *argument)
 
 
 			} while (received_bytes > 0);
-			f_close(&w_log);
 			// Close the socket
 			closesocket(client_socket);
 			LCD_UsrLog("Socket server - connection closed\n");
@@ -128,6 +132,7 @@ void socket_server_thread(void const *argument)
 		}//else
 	}//while(1)
 
+	f_close(&w_log);
 	// Close socket
 	closesocket(server_socket);
 

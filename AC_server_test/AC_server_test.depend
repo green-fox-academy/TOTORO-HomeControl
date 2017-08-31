@@ -1,0 +1,24 @@
+# depslib dependency file v1.0
+1503049252 source:c:\users\orsi\documents\gfa\week_15\ac_server_test\main.c
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<winsock2.h>
+	<windows.h>
+
+1503503216 source:c:\users\orsi\documents\gfa\week_16\ac_server_test\main.c
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<winsock2.h>
+	<windows.h>
+	<stdint.h>
+
+1503652978 source:c:\users\orsi\documents\gfa\week_16\demo\ac_server_test\main.c
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<winsock2.h>
+	<windows.h>
+	<stdint.h>
+

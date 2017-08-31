@@ -28,6 +28,7 @@
 #include "projector_client.h"
 #include "ac_client.h"
 #include "WindowDLG.h"
+#include "access_projector.h"
 
 #include "cmsis_os.h"
 
@@ -79,9 +80,9 @@
 
 // USER START (Optionally insert additional defines)
 // USER END
-
-osThreadDef(PROJECTOR, projector_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
-osThreadDef(AC, ac_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+//
+//osThreadDef(PROJECTOR, projector_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+//osThreadDef(AC, ac_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
 
 /*********************************************************************
 *
@@ -91,7 +92,7 @@ osThreadDef(AC, ac_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE 
 */
 
 // USER START (Optionally insert additional static data)
-WM_HWIN main_window;
+WM_HWIN proj_window;
 WM_HWIN hItem;
 WM_HWIN swing_button;
 WM_HWIN AC_control;
@@ -114,12 +115,12 @@ uint8_t proj_control;
 *
 *       _aDialogCreate
 */
-static const GUI_WIDGET_CREATE_INFO _aDialogCreate_full[] = {
+static const GUI_WIDGET_CREATE_INFO _aDialogCreate_proj[] = {
   { WINDOW_CreateIndirect, "Window", ID_WINDOW_0, 0, 0, 480, 272, 1, 0x0, 0 },
   { BUTTON_CreateIndirect, "UP", ID_BUTTON_0, 410, 27, 50, 50, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "STOP", ID_BUTTON_1, 410, 87, 50, 50, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "DOWN", ID_BUTTON_2, 410, 147, 50, 50, 0, 0x0, 0 },
-  { TEXT_CreateIndirect, "HomeControl", ID_TEXT_0, 8, 4, 80, 20, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "PROJ ACCESS", ID_TEXT_0, 8, 4, 80, 20, 0, 0x0, 0 },
   { TEXT_CreateIndirect, "Temperature (C)", ID_TEXT_1, 110, 5, 86, 22, 0, 0x0, 0 },
   { TEXT_CreateIndirect, "Humidity (%)", ID_TEXT_2, 285, 5, 80, 20, 0, 0x0, 0 },
   { TEXT_CreateIndirect, "Pressure (Pa)", ID_TEXT_3, 285, 95, 80, 20, 0, 0x0, 0 },
@@ -151,7 +152,7 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate_full[] = {
 *
 *       _cbDialog
 */
-static void _cbDialog_full(WM_MESSAGE * pMsg) {
+static void _cbDialog_proj(WM_MESSAGE * pMsg) {
   WM_HWIN hItem;
   int     NCode;
   int     Id;
@@ -479,75 +480,75 @@ static void _cbDialog_full(WM_MESSAGE * pMsg) {
 **********************************************************************
 */
 /* Update displayed temperature in GUI */
-void gui_update_temp(float temp)
-{
-    WM_HWIN hItem;
-    char str[10];
-	hItem = WM_GetDialogItem(main_window, ID_TEXT_4);
-	sprintf(str, "%.0f", temp);
-	TEXT_SetText(hItem, str);
-}
-
-/* Update displayed humidity in GUI */
-void gui_update_hum(float hum)
-{
-    WM_HWIN hItem;
-    char str[10];
-	hItem = WM_GetDialogItem(main_window, ID_TEXT_5);
-	sprintf(str, "%.0f", hum);
-	TEXT_SetText(hItem, str);
-}
-
-/* Update displayed pressure in GUI */
-void gui_update_press(float press)
-{
-    WM_HWIN hItem;
-    char str[10];
-	hItem = WM_GetDialogItem(main_window, ID_TEXT_6);
-	sprintf(str, "%.0f", press);
-	TEXT_SetText(hItem, str);
-}
-
-/* Update displayed time in GUI */
-void gui_update_time(uint8_t hour, uint8_t min, uint8_t sec)
-{
-    WM_HWIN hItem;
-    char str[10];
-	hItem = WM_GetDialogItem(main_window, ID_TEXT_8);
-	if(min < 10) {
-		sprintf(str, "%d:0%d", hour, min);
-	} else {
-		sprintf(str, "%d:%d", hour, min);
-	}
-	TEXT_SetText(hItem, str);
-}
-
-/* Update displayed date in GUI */
-void gui_update_date(uint8_t year, uint8_t month, uint8_t day, uint8_t wday)
-{
-    WM_HWIN hItem;
-    char str[15];
-	hItem = WM_GetDialogItem(main_window, ID_TEXT_7);
-	const char* wdays[] = {"Sunday", "Monday", "Tuesday", "Wednesday","Thursday", "Friday", "Saturday"};			//TODO: check implementation
-	const char* months[] = {"JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"};	//TODO: check implementation
-	sprintf(str, "%s\n%s %d\n%d", wdays[wday], months[month], day, year + 1900);
-	TEXT_SetText(hItem, str);
-}
+//void gui_update_temp(float temp)
+//{
+//    WM_HWIN hItem;
+//    char str[10];
+//	hItem = WM_GetDialogItem(proj_window, ID_TEXT_4);
+//	sprintf(str, "%.0f", temp);
+//	TEXT_SetText(hItem, str);
+//}
+//
+///* Update displayed humidity in GUI */
+//void gui_update_hum(float hum)
+//{
+//    WM_HWIN hItem;
+//    char str[10];
+//	hItem = WM_GetDialogItem(proj_window, ID_TEXT_5);
+//	sprintf(str, "%.0f", hum);
+//	TEXT_SetText(hItem, str);
+//}
+//
+///* Update displayed pressure in GUI */
+//void gui_update_press(float press)
+//{
+//    WM_HWIN hItem;
+//    char str[10];
+//	hItem = WM_GetDialogItem(proj_window, ID_TEXT_6);
+//	sprintf(str, "%.0f", press);
+//	TEXT_SetText(hItem, str);
+//}
+//
+///* Update displayed time in GUI */
+//void gui_update_time(uint8_t hour, uint8_t min, uint8_t sec)
+//{
+//    WM_HWIN hItem;
+//    char str[10];
+//	hItem = WM_GetDialogItem(proj_window, ID_TEXT_8);
+//	if(min < 10) {
+//		sprintf(str, "%d:0%d", hour, min);
+//	} else {
+//		sprintf(str, "%d:%d", hour, min);
+//	}
+//	TEXT_SetText(hItem, str);
+//}
+//
+///* Update displayed date in GUI */
+//void gui_update_date(uint8_t year, uint8_t month, uint8_t day, uint8_t wday)
+//{
+//    WM_HWIN hItem;
+//    char str[15];
+//	hItem = WM_GetDialogItem(proj_window, ID_TEXT_7);
+//	const char* wdays[] = {"Sunday", "Monday", "Tuesday", "Wednesday","Thursday", "Friday", "Saturday"};			//TODO: check implementation
+//	const char* months[] = {"JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"};	//TODO: check implementation
+//	sprintf(str, "%s\n%s %d\n%d", wdays[wday], months[month], day, year + 1900);
+//	TEXT_SetText(hItem, str);
+//}
 
 
 /*********************************************************************
 *
 *       CreateWindow
 */
-WM_HWIN CreateWindow_full(void) {
-  main_window = GUI_CreateDialogBox(_aDialogCreate_full, GUI_COUNTOF(_aDialogCreate_full), _cbDialog_full, WM_HBKWIN, 0, 0);
-  return main_window;
+WM_HWIN CreateWindow_proj(void) {
+  proj_window = GUI_CreateDialogBox(_aDialogCreate_proj, GUI_COUNTOF(_aDialogCreate_proj), _cbDialog_proj, WM_HBKWIN, 0, 0);
+  return proj_window;
 }
 
 // USER START (Optionally insert additional public code)
-void MainTask(void) {
-   CreateWindow() ;
-}
+//void MainTask(void) {
+//   CreateWindow() ;
+//}
 // USER END
 
 /*************************** End of file ****************************/

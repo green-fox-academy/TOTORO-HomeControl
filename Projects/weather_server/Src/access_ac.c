@@ -546,7 +546,7 @@ WM_HWIN CreateWindow_full(void) {
 
 // USER START (Optionally insert additional public code)
 void MainTask(void) {
-   CreateWindow() ;
+   CreateWindow_full() ;
 }
 // USER END
 

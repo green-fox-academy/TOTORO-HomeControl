@@ -59,26 +59,27 @@
 #include "socket_client.h"
 #include "stm32746g_discovery_lcd.h"
 #include "httpserver-netconn.h"
-#include "usd_handle.h"
-#include "ff.h"
 #include "projector_client.h"
 #include "gui_setup.h"
 #include "WindowDLG.h"
 #include "k_bsp.h"
 #include "ac_client.h"
+#include "startup_screen.h"
+#include "access_projector.h"
+#include "access_ac.h"
+
 
 
 
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
-#define LCD_USERLOG			/*LCD userlog needed for IP address check */
+//#define LCD_USERLOG			/*LCD userlog needed for IP address check */
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 struct netif gnetif; /* network interface structure */
 osTimerId lcd_timer;
-char SDPath[4];
-FATFS htmlFAT; /*File system object for SD card logical drive*/
+uint8_t user_select = 1;
 
 /* Private function prototypes -----------------------------------------------*/
 static void SystemClock_Config(void);
@@ -132,7 +133,6 @@ int main(void)
 	GUI_SetLayerVisEx (1, 0);
 	GUI_SelectLayer(0);
 
-//	GUI_Startup();
 #endif
 	/* Create Touch screen Timer */
 	osTimerDef(TS_Timer, TimerCallback);
@@ -145,10 +145,6 @@ int main(void)
 	osThreadDef(Start, StartThread, osPriorityHigh, 0, configMINIMAL_STACK_SIZE * 1);
 	osThreadCreate (osThread(Start), NULL);
 
-	/*##-1- Start task #########################################################*/
-	//osThreadDef(uSDThread, usd_card_thread, osPriorityNormal, 0, 8 * configMINIMAL_STACK_SIZE);
-	//osThreadCreate(osThread(uSDThread), NULL);
-
 	/* Start scheduler */
 	osKernelStart();
 
@@ -158,6 +154,45 @@ int main(void)
 }
 
 
+//static void GUIThread(void const * argument)
+//{
+//
+////  MainTask();
+//	CreateWindow_full() ;
+//
+//  /* GuU background Task */
+//  while(1) {
+//    GUI_Exec(); /* Do the background work ... Update windows etc.) */
+//    osDelay(100); /* Nothing left to do for the moment ... Idle processing */
+//  }
+//}
+
+static void GUIThread(void const * argument)
+{
+	switch((uint8_t)argument) {
+	case 0:
+		CreateWindow_start();
+		break;
+	case 1:
+		CreateWindow_full();
+		break;
+//	case 2:
+//		CreateWindow_ac();
+//		break;
+//	case 3:
+//		CreateWindow_proj();
+//		break;
+
+	}
+
+
+
+  /* GuU background Task */
+  while(1) {
+    GUI_Exec(); /* Do the background work ... Update windows etc.) */
+    osDelay(100); /* Nothing left to do for the moment ... Idle processing */
+  }
+}
 
 
 static void TimerCallback(void const *n)
@@ -183,9 +218,6 @@ static void StartThread(void const * argument)
 	/* Notify user about the network interface config */
 	User_notification(&gnetif);
 
-	//Define and start uSD card thread
-//	osThreadDef(USD_CARD, usd_card_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 10);
-//	osThreadCreate (osThread(USD_CARD), NULL);
 	/* Start DHCPClient */
 	osThreadDef(DHCP, DHCP_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
 	osThreadCreate (osThread(DHCP), &gnetif);
@@ -194,30 +226,18 @@ static void StartThread(void const * argument)
 	/* Start httpserver thread */
 	http_server_netconn_init();
 
-	if(FATFS_LinkDriver(&SD_Driver, SDPath) == 0)
-	{
-	    f_mount(&htmlFAT, (TCHAR const*)SDPath, 0);
-	}
-
 #ifndef LCD_USERLOG
 	/* Create GUI task */
+//	osThreadDef(GUI_Thread, GUIThread,   osPriorityBelowNormal, 0, configMINIMAL_STACK_SIZE * 2);
+//	osThreadCreate (osThread(GUI_Thread), NULL);
+	/* Create GUI task */
 	osThreadDef(GUI_Thread, GUIThread,   osPriorityBelowNormal, 0, configMINIMAL_STACK_SIZE * 2);
-	volatile osThreadId id = osThreadCreate (osThread(GUI_Thread), NULL);
+	osThreadCreate (osThread(GUI_Thread), (void*)user_select);
 #endif
 
 	//Define and start the weather server thread
 	osThreadDef(SOCKET_SERVER, socket_server_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 10);
 	osThreadCreate (osThread(SOCKET_SERVER), NULL);
-
-//	//Define and start the projector thread
-//	osThreadDef(PROJECTOR_SERVER, projector_server_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 4);
-//	osThreadCreate (osThread(PROJECTOR_SERVER), NULL);
-
-//	Define and start the projector thread
-//	osThreadDef(PROJECTOR_CLIENT, projector_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 4);
-//	osThreadCreate (osThread(PROJECTOR_CLIENT), NULL);
-
-
 
 	while (1) {
 		/* Delete the Init Thread */

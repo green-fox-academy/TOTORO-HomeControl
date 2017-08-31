@@ -79,7 +79,7 @@
 /* #define HAL_RNG_MODULE_ENABLED */   
 /* #define HAL_RTC_MODULE_ENABLED */
 /* #define HAL_SAI_MODULE_ENABLED */  
-#define HAL_SD_MODULE_ENABLED
+/* #define HAL_SD_MODULE_ENABLED */  
 /* #define HAL_SPDIFRX_MODULE_ENABLED */
 #define HAL_SPI_MODULE_ENABLED
 #define HAL_TIM_MODULE_ENABLED
@@ -180,7 +180,7 @@
 #define MAC_ADDR2   0U
 #define MAC_ADDR3   0U
 #define MAC_ADDR4   0U
-#define MAC_ADDR5   3U
+#define MAC_ADDR5   14U
 
 /* Definition of the Ethernet driver buffers size and count */   
 #define ETH_RX_BUF_SIZE                ETH_MAX_PACKET_SIZE /* buffer size for receive               */

@@ -96,6 +96,11 @@
 			<locationURI>PARENT-2-PROJECT_LOC/Src/socket_server.c</locationURI>
 		</link>
 		<link>
+			<name>Application/User/startup_screen.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/Src/startup_screen.c</locationURI>
+		</link>
+		<link>
 			<name>Application/User/stm32f7xx_hal_timebase_tim.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Src/stm32f7xx_hal_timebase_tim.c</locationURI>
@@ -104,11 +109,6 @@
 			<name>Application/User/stm32f7xx_it.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Src/stm32f7xx_it.c</locationURI>
-		</link>
-		<link>
-			<name>Application/User/usd_handle.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/Src/usd_handle.c</locationURI>
 		</link>
 		<link>
 			<name>Application/Utilities/lcd_log.c</name>
@@ -289,36 +289,6 @@
 			<name>Drivers/BSP/STM32746G_Discovery/stm32746g_discovery_ts.h</name>
 			<type>1</type>
 			<locationURI>PARENT-4-PROJECT_LOC/Drivers/BSP/STM32746G-Discovery/stm32746g_discovery_ts.h</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FatFs/Core/diskio.c</name>
-			<type>1</type>
-			<locationURI>copy_PARENT1/Middlewares/Third_Party/FatFs/src/diskio.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FatFs/Core/ff.c</name>
-			<type>1</type>
-			<locationURI>copy_PARENT1/Middlewares/Third_Party/FatFs/src/ff.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FatFs/Core/ff_gen_drv.c</name>
-			<type>1</type>
-			<locationURI>copy_PARENT1/Middlewares/Third_Party/FatFs/src/ff_gen_drv.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FatFs/Drivers/sd_diskio.c</name>
-			<type>1</type>
-			<locationURI>copy_PARENT1/Middlewares/Third_Party/FatFs/src/drivers/sd_diskio.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FatFs/Options/syscall.c</name>
-			<type>1</type>
-			<locationURI>copy_PARENT1/Middlewares/Third_Party/FatFs/src/option/syscall.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FatFs/Options/unicode.c</name>
-			<type>1</type>
-			<locationURI>copy_PARENT1/Middlewares/Third_Party/FatFs/src/option/unicode.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/FreeRTOS/portable/cmsis_os.c</name>
@@ -530,10 +500,6 @@
 		<variable>
 			<name>copy_PARENT</name>
 			<value>$%7BPARENT-6-PROJECT_LOC%7D/Documents/GFA/Week_14/en.stm32cubef7/STM32Cube_FW_F7_V1.7.0/Projects/STM32746G-Discovery/Applications/LwIP/LwIP_HTTP_Server_Netconn_RTOS</value>
-		</variable>
-		<variable>
-			<name>copy_PARENT1</name>
-			<value>$%7BPARENT-2-ECLIPSE_HOME%7D/Desktop/STM32Cube_FW_F7_V1.7.0</value>
 		</variable>
 	</variableList>
 </projectDescription>

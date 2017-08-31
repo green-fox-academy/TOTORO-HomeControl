@@ -10,10 +10,29 @@
 #include "GUI.h"
 #include "DIALOG.h"
 #include "WindowDLG.h"
-#include "ff.h"
 #include "projector_client.h"
 
 /* Private typedef -----------------------------------------------------------*/
+/*Time structure */
+typedef struct  {
+   int tm_sec;         /* seconds,  range 0 to 59          */
+   int tm_min;         /* minutes, range 0 to 59           */
+   int tm_hour;        /* hours, range 0 to 23             */
+   int tm_mday;        /* day of the month, range 1 to 31  */
+   int tm_mon;         /* month, range 0 to 11             */
+   int tm_year;        /* The number of years since 1900   */
+   int tm_wday;        /* day of the week, range 0 to 6    */
+   int tm_yday;        /* day in the year, range 0 to 365  */
+   int tm_isdst;       /* daylight saving time             */
+}rtc_time;
+
+/*Structure for sending data to HQ */
+typedef struct {
+	float sensor_values[3];	// Storing Temperature, Humidity and Pressure values
+	rtc_time hq_time;
+}hq_data_t;
+
+hq_data_t received_data;
 
 /* Private define ------------------------------------------------------------*/
 #define SERVER_QUEUE_SIZE 100
@@ -22,7 +41,7 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-FIL w_log;
+float received_weather_data[3];
 
 
 /* Private function prototypes -----------------------------------------------*/
@@ -35,7 +54,6 @@ void terminate_thread()
 
 void socket_server_thread(void const *argument)
 {
-	BSP_PB_Init(2, 0);
 	LCD_UsrLog("Socket server - startup...\n");
 	LCD_UsrLog("Socket server - waiting for IP address...\n");
 
@@ -80,9 +98,7 @@ void socket_server_thread(void const *argument)
 	struct sockaddr_in client_addr;
 	socklen_t client_addr_len = sizeof(client_addr);
 	int client_socket;
-	char temp[100];
-	char temptime[255];
-	char header[] = "Time; Temperature; Humidity; Pressure\n";
+
 	while (1) {
 		// Accept incoming connections
 		client_socket = accept(server_socket, (struct sockaddr*)&client_addr, &client_addr_len);
@@ -95,32 +111,24 @@ void socket_server_thread(void const *argument)
 			//GUI_DispString("Socket server - invalid client socket\n");
 		} else {
 			// Receive data
-			f_open(&w_log, "W.CSV", FA_OPEN_ALWAYS | FA_WRITE);
-			f_printf(&w_log, header);
-
 			float received_bytes;
 			do {
-				received_bytes = recv(client_socket, received_data.sensor_values, sizeof(received_data.sensor_values), 0);
-				LCD_UsrLog("Temperature: %.1f C, Humidity: %.1f%%, Pressure: %.1f Pa,\n", received_data.sensor_values[0], received_data.sensor_values[1], received_data.sensor_values[2]);
-				memcpy(temp, &received_data.sensor_values, sizeof(float));
-				sprintf(temp, "%.2f;%.1f;%.2f\n", received_data.sensor_values[0], received_data.sensor_values[1], received_data.sensor_values[2]);
-				sprintf(temptime, "%d.%d.%d. %d:%d:%d;", received_data.hq_time.tm_year, received_data.hq_time.tm_mon, received_data.hq_time.tm_mday, received_data.hq_time.tm_hour, received_data.hq_time.tm_min, received_data.hq_time.tm_sec);
-				strcat(temptime, temp);
-
-				f_printf(&w_log, temptime);
-
+//				received_bytes = recv(client_socket, received_weather_data, sizeof(received_weather_data), 0);
+//				LCD_UsrLog("Temperature: %.1f C, Humidity: %.1f%%, Pressure: %.1f Pa,\n", received_weather_data[0], received_weather_data[1], received_weather_data[2]);
 
 				received_bytes = recv(client_socket, &received_data, sizeof(received_data), 0);	//added &
+
+				received_weather_data[0] = received_data.sensor_values[0];
+				received_weather_data[1] = received_data.sensor_values[1];
+				received_weather_data[2] = received_data.sensor_values[2];
 
 				gui_update_temp(received_data.sensor_values[0]);
 				gui_update_hum(received_data.sensor_values[1]);
 				gui_update_press(received_data.sensor_values[2]);
 				gui_update_time(received_data.hq_time.tm_hour, received_data.hq_time.tm_min, received_data.hq_time.tm_sec);
-
-
-
+				gui_update_date(received_data.hq_time.tm_year, received_data.hq_time.tm_mon, received_data.hq_time.tm_mday, received_data.hq_time.tm_wday);
 			} while (received_bytes > 0);
-			f_close(&w_log);
+
 			// Close the socket
 			closesocket(client_socket);
 			LCD_UsrLog("Socket server - connection closed\n");

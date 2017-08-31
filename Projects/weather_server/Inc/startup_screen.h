@@ -1,18 +1,19 @@
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __SOCKET_SERVER_H
-#define __SOCKET_SERVER_H
+#ifndef __STARTUP_SCREEN_H
+#define __STARTUP_SCREEN_H
 
 /* Includes ------------------------------------------------------------------*/
+#include "stm32746g_discovery_ts.h"
+#include "socket_server.h"
+
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
-void socket_server_thread(void const *argument);
-void projector_server_thread(void const *argument);
+static void _cbDialog_start(WM_MESSAGE * pMsg);
+WM_HWIN CreateWindow_start(void);
 
-
-extern float received_weather_data[3];
-#endif /* __SOCKET_SERVER_H */
+#endif /* __STARTUP_SCREEN_H*/
 
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

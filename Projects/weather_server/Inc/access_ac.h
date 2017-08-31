@@ -1,18 +1,18 @@
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __SOCKET_SERVER_H
-#define __SOCKET_SERVER_H
+#ifndef __SOCKET_CLIENT_H
+#define __SOCKET_CLIENT_H
 
 /* Includes ------------------------------------------------------------------*/
+#include "stm32746g_discovery_ts.h"
+#include "socket_server.h"
+
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
-void socket_server_thread(void const *argument);
-void projector_server_thread(void const *argument);
+void socket_client_thread(void const *argument);
 
-
-extern float received_weather_data[3];
-#endif /* __SOCKET_SERVER_H */
+#endif /* __SOCKET_CLIENT_H */
 
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

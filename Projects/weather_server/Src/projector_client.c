@@ -8,7 +8,7 @@
 #include <string.h>
 #include "stm32746g_discovery_lcd.h"
 #include "projector_client.h"
-#define SERVER_IP           "10.27.99.33"
+#define SERVER_IP           "10.27.99.106"
 #define SERVER_PORT         8003
 
 /* Private typedef -----------------------------------------------------------*/

@@ -1,0 +1,22 @@
+# depslib dependency file v1.0
+1503049566 source:c:\users\orsi\documents\gfa\week_15\projector_server_new\main.c
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<winsock2.h>
+	<windows.h>
+
+1503652060 source:c:\users\orsi\documents\gfa\week_16\projector_server_new\main.c
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<winsock2.h>
+	<windows.h>
+
+1503656734 source:c:\users\orsi\documents\gfa\week_16\demo\projector_server_new\main.c
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<winsock2.h>
+	<windows.h>
+

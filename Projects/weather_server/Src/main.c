@@ -72,6 +72,7 @@
 
 
 
+
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 //#define LCD_USERLOG			/*LCD userlog needed for IP address check */
@@ -232,7 +233,11 @@ static void StartThread(void const * argument)
 //	osThreadCreate (osThread(GUI_Thread), NULL);
 	/* Create GUI task */
 	osThreadDef(GUI_Thread, GUIThread,   osPriorityBelowNormal, 0, configMINIMAL_STACK_SIZE * 2);
+<<<<<<< HEAD
 	osThreadCreate (osThread(GUI_Thread), (void*)user_select);
+=======
+	osThreadCreate (osThread(GUI_Thread), NULL);
+>>>>>>> gui-freertos-int
 #endif
 
 	//Define and start the weather server thread

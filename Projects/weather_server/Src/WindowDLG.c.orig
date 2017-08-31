@@ -277,7 +277,10 @@ static void _cbDialog_full(WM_MESSAGE * pMsg) {
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
         // USER START (Optionally insert code for reacting on notification message)
-      	  osThreadCreate (osThread(PROJECTOR), proj_control);
+<<<<<<< HEAD
+    	  proj_control = PROJECTOR_STOP;
+=======
+>>>>>>> gui-freertos-int
       	  osThreadCreate (osThread(PROJECTOR), proj_control);
         // USER END
         break;
@@ -416,7 +419,10 @@ static void _cbDialog_full(WM_MESSAGE * pMsg) {
         		 ac_controls[3] = AC_BLADE_0;
         		 BUTTON_SetText(AC_L_control, "Blade in 0");
         		 //add value "No change" for ON/OFF control
+<<<<<<< HEAD
         		 ac_controls[4] = AC_STATE_NOCHANGE;
+=======
+>>>>>>> gui-freertos-int
         		 osThreadCreate (osThread(AC), (void*)ac_controls);
         		 break;
         	 }
@@ -520,8 +526,12 @@ void gui_update_time(uint8_t hour, uint8_t min, uint8_t sec)
 		sprintf(str, "%d:%d", hour, min);
 	}
 	TEXT_SetText(hItem, str);
+<<<<<<< HEAD
+=======
 
 
+
+>>>>>>> gui-freertos-int
 }
 
 /* Update displayed date in GUI */
@@ -530,9 +540,15 @@ void gui_update_date(uint8_t year, uint8_t month, uint8_t day, uint8_t wday)
     WM_HWIN hItem;
     char str[15];
 	hItem = WM_GetDialogItem(main_window, ID_TEXT_7);
+<<<<<<< HEAD
 	const char* wdays[] = {"Sunday", "Monday", "Tuesday", "Wednesday","Thursday", "Friday", "Saturday"};			//TODO: check implementation
 	const char* months[] = {"JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"};	//TODO: check implementation
 	sprintf(str, "%s\n%s %d\n%d", wdays[wday], months[month], day, year + 1900);
+=======
+	const char* wdays[] = {"Monday", "Tuesday", "Wednesday","Thursday", "Friday", "Saturday", "Sunday"};		//TODO: check implementation
+	const char* months[] = {"JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"};	//TODO: check implementation
+	sprintf(str, "%s\n%s %d\n%d", wdays[wday], months[month], day + 1, year + 1900);
+>>>>>>> gui-freertos-int
 	TEXT_SetText(hItem, str);
 }
 

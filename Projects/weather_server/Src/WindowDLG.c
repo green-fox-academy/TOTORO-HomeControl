@@ -56,14 +56,12 @@
 #define ID_TEXT_7 (GUI_ID_USER + 0x1B)
 #define ID_TEXT_8 (GUI_ID_USER + 0x1A)
 
-
-uint8_t ac_state = 0;
-uint8_t ac_swing_state = 0;
-uint8_t ac_lever_state = 0;
+uint8_t ac_state;
+uint8_t ac_swing_state;
+uint8_t ac_lever_state;
 int ac_temperature;
-uint8_t ac_controls[5] = {6, 1, 0, 3, 0};
+uint8_t ac_controls[5];
 uint8_t proj_control;
-
 
 
 osThreadDef(PROJECTOR, projector_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
@@ -83,6 +81,7 @@ WM_HWIN swing_button;
 WM_HWIN AC_control;
 WM_HWIN AC_on_off;
 WM_HWIN AC_L_control;
+
 
 
 

@@ -22,6 +22,8 @@ void gui_update_time(uint8_t hour, uint8_t min, uint8_t sec);
 
 extern uint8_t ctrl;
 
+
+
 #endif /* __WINDOWDLG_H */
 
 

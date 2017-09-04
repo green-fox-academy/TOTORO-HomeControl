@@ -51,6 +51,16 @@
 			<locationURI>PARENT-2-PROJECT_LOC/Src/ac_client.c</locationURI>
 		</link>
 		<link>
+			<name>Application/User/access_ac.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/Src/access_ac.c</locationURI>
+		</link>
+		<link>
+			<name>Application/User/access_projector.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/Src/access_projector.c</locationURI>
+		</link>
+		<link>
 			<name>Application/User/app_ethernet.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Src/app_ethernet.c</locationURI>

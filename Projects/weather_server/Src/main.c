@@ -80,7 +80,7 @@
 /* Private variables ---------------------------------------------------------*/
 struct netif gnetif; /* network interface structure */
 osTimerId lcd_timer;
-uint8_t user_select = 1;
+uint8_t user_select = 2;
 
 /* Private function prototypes -----------------------------------------------*/
 static void SystemClock_Config(void);
@@ -177,18 +177,18 @@ static void GUIThread(void const * argument)
 	case 1:
 		CreateWindow_full();
 		break;
-//	case 2:
-//		CreateWindow_ac();
-//		break;
-//	case 3:
-//		CreateWindow_proj();
-//		break;
+	case 2:
+		CreateWindow_ac();
+		break;
+	case 3:
+		CreateWindow_proj();
+		break;
 
 	}
 
 
 
-  /* GuU background Task */
+  /* GUI background Task */
   while(1) {
     GUI_Exec(); /* Do the background work ... Update windows etc.) */
     osDelay(100); /* Nothing left to do for the moment ... Idle processing */
@@ -233,11 +233,10 @@ static void StartThread(void const * argument)
 //	osThreadCreate (osThread(GUI_Thread), NULL);
 	/* Create GUI task */
 	osThreadDef(GUI_Thread, GUIThread,   osPriorityBelowNormal, 0, configMINIMAL_STACK_SIZE * 2);
-<<<<<<< HEAD
 	osThreadCreate (osThread(GUI_Thread), (void*)user_select);
-=======
-	osThreadCreate (osThread(GUI_Thread), NULL);
->>>>>>> gui-freertos-int
+
+//	osThreadCreate (osThread(GUI_Thread), NULL);
+
 #endif
 
 	//Define and start the weather server thread

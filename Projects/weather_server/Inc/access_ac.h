@@ -1,18 +1,19 @@
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __SOCKET_CLIENT_H
-#define __SOCKET_CLIENT_H
+#ifndef __ACCESS_AC_H
+#define __ACCESS_AC_H
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32746g_discovery_ts.h"
-#include "socket_server.h"
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
-void socket_client_thread(void const *argument);
 
-#endif /* __SOCKET_CLIENT_H */
+static void _cbDialog_ac(WM_MESSAGE * pMsg);
+WM_HWIN CreateWindow_ac(void);
+
+#endif /* __ACCESS_AC_H */
 
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

@@ -28,7 +28,7 @@
 #include "ac_client.h"
 #include "access_ac.h"
 #include "cmsis_os.h"
-#include "WindowDLG.h"
+//#include "WindowDLG.h"
 
 /*********************************************************************
 *
@@ -52,8 +52,24 @@
 #define ID_BUTTON_2    (GUI_ID_USER + 0x17)
 
 
-// USER START (Optionally insert additional defines)
-// USER END
+/* Sent value defines */
+#define AC_STATE_CHANGE		1
+#define AC_STATE_NOCHANGE	0
+#define AC_SWING_ON			1
+#define AC_SWING_OFF		0
+#define AC_MIN_VALUE		16
+#define AC_MAX_VALUE		30
+#define AC_BLADE_0			0
+#define AC_BLADE_1			1
+#define AC_BLADE_2			2
+#define AC_BLADE_3			3
+#define AC_BLADE_4			4
+#define AC_BLADE_5			5
+
+#define AC_IS_OFF			0
+#define AC_IS_ON			1
+
+
 
 /*********************************************************************
 *
@@ -64,6 +80,22 @@
 
 // USER START (Optionally insert additional static data)
 WM_HWIN main_window;
+WM_HWIN hItem;
+WM_HWIN swing_button;
+WM_HWIN AC_control;
+WM_HWIN AC_on_off;
+WM_HWIN AC_L_control;
+uint8_t ac_state;
+
+
+
+uint8_t ac_state_ac = 0;
+uint8_t ac_swing_state_ac = 0;
+uint8_t ac_lever_state_ac = 0;
+int ac_temperature_ac;
+uint8_t ac_controls_ac[5] = {6, 1, 0, 3, 0};	//initialization for testing
+
+
 // USER END
 
 /*********************************************************************
@@ -71,7 +103,7 @@ WM_HWIN main_window;
 *       _aDialogCreate
 */
 static const GUI_WIDGET_CREATE_INFO _aDialogCreate_ac[] = {
-  { WINDOW_CreateIndirect, "Window", ID_WINDOW_0, 0, 0, 480, 272, 0, 0x0, 0 },
+  { WINDOW_CreateIndirect, "Window", ID_WINDOW_0, 0, 0, 480, 272, 1, 0x0, 0 },
   { TEXT_CreateIndirect, "HomeControl", ID_TEXT_0, 8, 4, 80, 20, 0, 0x0, 0 },
   { TEXT_CreateIndirect, "Temperature (C)", ID_TEXT_1, 110, 5, 86, 22, 0, 0x0, 0 },
   { TEXT_CreateIndirect, "Humidity (%)", ID_TEXT_2, 285, 5, 80, 20, 0, 0x0, 0 },
@@ -172,6 +204,31 @@ static void _cbDialog_ac(WM_MESSAGE * pMsg) {
     TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
     TEXT_SetTextAlign(hItem, GUI_TA_RIGHT | GUI_TA_VCENTER);
     TEXT_SetFont(hItem, GUI_FONT_24_1);
+
+    // Initialization of 'AC control spinbox'
+    //
+    AC_control = WM_GetDialogItem(pMsg->hWin, ID_SPINBOX_0);
+    SPINBOX_SetRange(AC_control, AC_MIN_VALUE, AC_MAX_VALUE);
+    SPINBOX_SetValue(AC_control, AC_MIN_VALUE);
+    SPINBOX_SetStep(AC_control, 1);
+    SPINBOX_SetButtonSize(AC_control, 50);
+    SPINBOX_SetFont(AC_control, GUI_FONT_24_1);
+
+    //
+    // Initialization of 'Swing button'
+    //
+    swing_button = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_1);
+
+    //
+    // Initialization of 'AC ON/OFF button'
+    //
+    AC_on_off = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_0);
+
+    //
+    // Initialization of 'AC lever control button'
+    //
+    AC_L_control = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_2);
+
     // USER START (Optionally insert additional code for further widget initialization)
     // USER END
     break;
@@ -195,6 +252,14 @@ static void _cbDialog_ac(WM_MESSAGE * pMsg) {
         break;
       case WM_NOTIFICATION_VALUE_CHANGED:
         // USER START (Optionally insert code for reacting on notification message)
+    	  ac_temperature_ac = (uint8_t)SPINBOX_GetValue(AC_control);
+    	  uint8_t second_int_to_send = ac_temperature_ac / 10;
+    	  uint8_t first_int_to_send = ac_temperature_ac - second_int_to_send * 10;
+    	  ac_controls_ac[0] = first_int_to_send;
+    	  ac_controls_ac[1] = second_int_to_send;
+ 		 //add value "No change" for ON/OFF control
+ 		 ac_controls_ac[4] = AC_STATE_NOCHANGE;
+// 		osThreadCreate (osThread(AC), (void*)ac_controls);
         // USER END
         break;
       // USER START (Optionally insert additional code for further notification handling)
@@ -205,6 +270,20 @@ static void _cbDialog_ac(WM_MESSAGE * pMsg) {
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
         // USER START (Optionally insert code for reacting on notification message)
+    	  switch(ac_state) {
+    	  case AC_IS_OFF:
+    		  ac_state_ac = AC_IS_ON;
+    		  BUTTON_SetText(AC_on_off, "AC is ON");
+    		  ac_controls_ac[4] = AC_STATE_CHANGE;
+//        	  osThreadCreate (osThread(AC), (void*)ac_controls);
+    		  break;
+    	  case AC_IS_ON:
+    		  ac_state_ac = AC_IS_OFF;
+    		  BUTTON_SetText(AC_on_off, "AC is OFF");
+    		  ac_controls_ac[4] = AC_STATE_CHANGE;
+//    		  osThreadCreate (osThread(AC), (void*)ac_controls);
+    		  break;
+    	  }
         // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
@@ -219,6 +298,24 @@ static void _cbDialog_ac(WM_MESSAGE * pMsg) {
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
         // USER START (Optionally insert code for reacting on notification message)
+    	  switch(ac_swing_state_ac) {
+    	  case 0:
+    		  ac_swing_state_ac = 1;
+    		  BUTTON_SetText(swing_button, "Swing is ON");
+    		  ac_controls_ac[2] = AC_SWING_ON;
+    		  //add value "No change" for ON/OFF control
+    		  ac_controls_ac[4] = AC_STATE_NOCHANGE;
+//        	  osThreadCreate (osThread(AC), (void*)ac_controls);
+    		  break;
+    	  case 1:
+    		  ac_swing_state_ac = 0;
+    		  BUTTON_SetText(swing_button, "Swing is OFF");
+    		  ac_controls_ac[2] = AC_SWING_OFF;
+    		  //add value "No change" for ON/OFF control
+    		  ac_controls_ac[4] = AC_STATE_NOCHANGE;
+//        	  osThreadCreate (osThread(AC), (void*)ac_controls);
+    		  break;
+    	  }
         // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
@@ -233,6 +330,56 @@ static void _cbDialog_ac(WM_MESSAGE * pMsg) {
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
         // USER START (Optionally insert code for reacting on notification message)
+     	 switch(ac_lever_state_ac) {
+     	 case 0:
+     		 ac_lever_state_ac = 1;
+     		 ac_controls_ac[3] = AC_BLADE_1;
+     		 BUTTON_SetText(AC_L_control, "Blade in 1");
+     		 //add value "No change" for ON/OFF control
+     		 ac_controls_ac[4] = AC_STATE_NOCHANGE;
+//     		 osThreadCreate (osThread(AC), (void*)ac_controls);
+     		 break;
+     	 case 1:
+     		 ac_lever_state_ac = 2;
+     		 ac_controls_ac[3] = AC_BLADE_2;
+     		 BUTTON_SetText(AC_L_control, "Blade in 2");
+     		 //add value "No change" for ON/OFF control
+     		 ac_controls_ac[4] = AC_STATE_NOCHANGE;
+//     		 osThreadCreate (osThread(AC), (void*)ac_controls);
+     		 break;
+     	 case 2:
+     		 ac_lever_state_ac = 3;
+     		 ac_controls_ac[3] = AC_BLADE_3;
+     		 BUTTON_SetText(AC_L_control, "Blade in 3");
+     		 //add value "No change" for ON/OFF control
+     		 ac_controls_ac[4] = AC_STATE_NOCHANGE;
+//     		 osThreadCreate (osThread(AC), (void*)ac_controls);
+     		 break;
+     	 case 3:
+     		 ac_lever_state_ac = 4;
+     		 ac_controls_ac[3] = AC_BLADE_4;
+     		 BUTTON_SetText(AC_L_control, "Blade in 4");
+     		 //add value "No change" for ON/OFF control
+     		 ac_controls_ac[4] = AC_STATE_NOCHANGE;
+//     		 osThreadCreate (osThread(AC), (void*)ac_controls);
+     		 break;
+     	 case 4:
+     		 ac_lever_state_ac = 5;
+     		 ac_controls_ac[3] = AC_BLADE_5;
+     		 BUTTON_SetText(AC_L_control, "Blade in 5");
+     		 //add value "No change" for ON/OFF control
+     		 ac_controls_ac[4] = AC_STATE_NOCHANGE;
+//     		 osThreadCreate (osThread(AC), (void*)ac_controls);
+     		 break;
+     	 case 5:
+     		 ac_lever_state_ac = 0;
+     		 ac_controls_ac[3] = AC_BLADE_0;
+     		 BUTTON_SetText(AC_L_control, "Blade in 0");
+     		 //add value "No change" for ON/OFF control
+     		 ac_controls_ac[4] = AC_STATE_NOCHANGE;
+//     		 osThreadCreate (osThread(AC), (void*)ac_controls);
+     		 break;
+     	 }
         // USER END
         break;
       case WM_NOTIFICATION_RELEASED:

@@ -277,7 +277,7 @@ static void _cbDialog_full(WM_MESSAGE * pMsg) {
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
         // USER START (Optionally insert code for reacting on notification message)
-      	  osThreadCreate (osThread(PROJECTOR), proj_control);
+    	  proj_control = PROJECTOR_STOP;
       	  osThreadCreate (osThread(PROJECTOR), proj_control);
         // USER END
         break;

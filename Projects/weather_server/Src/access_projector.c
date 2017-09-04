@@ -29,6 +29,7 @@
 #include "projector_client.h"
 #include "cmsis_os.h"
 #include "WindowDLG.h"
+#include "gui_setup.h"
 
 /*********************************************************************
 *
@@ -51,13 +52,6 @@
 #define ID_TEXT_8    (GUI_ID_USER + 0x13)
 
 
-///* Sent value defines */
-#define PROJECTOR_UP		1
-#define PROJECTOR_STOP		2
-#define PROJECTOR_DOWN		3
-
-// USER START (Optionally insert additional defines)
-// USER END
 
 /*********************************************************************
 *

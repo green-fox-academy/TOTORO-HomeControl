@@ -28,6 +28,7 @@
 #include "projector_client.h"
 #include "ac_client.h"
 #include "WindowDLG.h"
+#include "gui_setup.h"
 
 #include "cmsis_os.h"
 
@@ -55,30 +56,6 @@
 #define ID_TEXT_7 (GUI_ID_USER + 0x1B)
 #define ID_TEXT_8 (GUI_ID_USER + 0x1A)
 
-/* Sent value defines */
-#define PROJECTOR_UP		1
-#define PROJECTOR_STOP		2
-#define PROJECTOR_DOWN		3
-#define AC_STATE_CHANGE		1
-#define AC_STATE_NOCHANGE	0
-#define AC_SWING_ON			1
-#define AC_SWING_OFF		0
-#define AC_MIN_VALUE		16
-#define AC_MAX_VALUE		30
-#define AC_BLADE_0			0
-#define AC_BLADE_1			1
-#define AC_BLADE_2			2
-#define AC_BLADE_3			3
-#define AC_BLADE_4			4
-#define AC_BLADE_5			5
-
-
-#define AC_IS_OFF			0
-#define AC_IS_ON			1
-
-
-// USER START (Optionally insert additional defines)
-// USER END
 
 osThreadDef(PROJECTOR, projector_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
 osThreadDef(AC, ac_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);

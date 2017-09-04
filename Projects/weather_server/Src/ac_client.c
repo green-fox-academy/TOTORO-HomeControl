@@ -11,7 +11,7 @@
 
 
 #define DATA_BUFFER_SIZE    100
-#define SERVER_IP           "10.27.99.106"
+#define SERVER_IP           "10.27.99.45"
 #define SERVER_PORT         8004
 #define CONN_RETRY_COUNT	10
 

@@ -9,12 +9,12 @@ WEATHER STATION TEST CLIENT
 #include <conio.h>
 #include <windows.h>
 
-#define SERVER_IP           "10.27.99.150"
+#define SERVER_IP           "10.27.99.64"
 #define SERVER_PORT         8002
 /*Time structure */
 typedef struct  {
    int tm_sec;         /* seconds,  range 0 to 59          */
-   int tm_min;         /* minutes, range 0 to 59           */
+   int tm_min;         /* minutes, range o 59           */
    int tm_hour;        /* hours, range 0 to 23             */
    int tm_mday;        /* day of the month, range 1 to 31  */
    int tm_mon;         /* month, range 0 to 11             */

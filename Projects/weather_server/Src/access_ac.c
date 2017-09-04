@@ -28,7 +28,7 @@
 #include "ac_client.h"
 #include "access_ac.h"
 #include "cmsis_os.h"
-//#include "WindowDLG.h"
+#include "WindowDLG.h"
 
 /*********************************************************************
 *

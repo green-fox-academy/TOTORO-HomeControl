@@ -116,7 +116,7 @@ static void _cbDialog_proj(WM_MESSAGE * pMsg) {
     // Initialization of 'Window'
     //
     hItem = pMsg->hWin;
-    WINDOW_SetBkColor(hItem, GUI_MAKE_COLOR(0x00FF0000));
+    WINDOW_SetBkColor(hItem, GUI_MAKE_COLOR(0x00F0000F));
     //
     // Initialization of 'HomeControl'
     //

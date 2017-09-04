@@ -27,7 +27,12 @@
 #define AC_IS_ON			1
 
 
-
+//extern uint8_t ac_state;
+extern uint8_t ac_swing_state;
+extern uint8_t ac_lever_state;
+extern int ac_temperature;
+extern uint8_t ac_controls[5];
+extern uint8_t proj_control;
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/

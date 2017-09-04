@@ -69,9 +69,6 @@ WM_HWIN swing_button;
 WM_HWIN AC_control;
 WM_HWIN AC_on_off;
 WM_HWIN AC_L_control;
-uint8_t ac_state;
-
-
 
 uint8_t ac_state_ac = 0;
 uint8_t ac_swing_state_ac = 0;
@@ -132,7 +129,7 @@ static void _cbDialog_ac(WM_MESSAGE * pMsg) {
     // Initialization of 'Window'
     //
     hItem = pMsg->hWin;
-    WINDOW_SetBkColor(hItem, GUI_MAKE_COLOR(0x00FF0000));
+    WINDOW_SetBkColor(hItem, GUI_MAKE_COLOR(0x00F0000F));
     //
     // Initialization of 'HomeControl'
     //
@@ -254,7 +251,7 @@ static void _cbDialog_ac(WM_MESSAGE * pMsg) {
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
         // USER START (Optionally insert code for reacting on notification message)
-    	  switch(ac_state) {
+    	  switch(ac_state_ac) {
     	  case AC_IS_OFF:
     		  ac_state_ac = AC_IS_ON;
     		  BUTTON_SetText(AC_on_off, "AC is ON");

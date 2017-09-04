@@ -8,8 +8,6 @@
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
 static void _cbDialog(WM_MESSAGE * pMsg);
-//WM_HWIN CreateWindow(void);
-
 WM_HWIN CreateWindow_full(void);
 
 
@@ -18,9 +16,6 @@ void gui_update_hum(float temp);
 void gui_update_press(float temp);
 void gui_update_date(uint8_t year, uint8_t month, uint8_t day, uint8_t wday);
 void gui_update_time(uint8_t hour, uint8_t min, uint8_t sec);
-
-
-extern uint8_t ctrl;
 
 
 

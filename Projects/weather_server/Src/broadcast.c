@@ -10,3 +10,45 @@
 #include "GUI.h"
 #include "DIALOG.h"
 #include "broadcast.h"
+
+#define PORT 8006
+#define BROADCAST_IP         "255.255.255.255"
+#define BC_UNIQUE_STR        "SMARTHOME_HQ"
+
+void socket_broadcast_thread(void const *argument)
+{
+	// Create broadcast socket
+	    int broadcast_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+	    if (broadcast_socket < 0) {
+	        printf("Error: send_broadcast_msg - socket()\n");
+	        terminate_thread();
+	    }
+
+	    // Set the socket as broadcasting socket
+	    int setsockopt_retval = setsockopt(broadcast_socket, SOL_SOCKET, SO_BROADCAST, "1", 1);
+	    if (setsockopt_retval < 0) {
+	        printf("Error: send_broadcast_msg - setsockopt()\n");
+	        terminate_thread();
+	    }
+
+	    // Set up destination address
+	    struct sockaddr_in broadcast_addr;
+	    broadcast_addr.sin_family = AF_INET;
+	    broadcast_addr.sin_port = htons(PORT);
+	    broadcast_addr.sin_addr.s_addr = inet_addr(BROADCAST_IP);
+
+	    // Send broadcast message
+	    while (1) {
+			sendto(broadcast_socket, BC_UNIQUE_STR, strlen(BC_UNIQUE_STR), 0,
+									  (struct sockaddr *)&broadcast_addr, sizeof(broadcast_addr));
+			osDelay(10000);
+	    }
+
+//	    if (sendto_retval < strlen(BC_UNIQUE_STR)) {
+//	        printf("Error: send_broadcast_msg - sendto()\n");
+//	        terminate_thread();
+//	    }
+
+	    // Close the broadcast socket
+	    closesocket(broadcast_socket);
+}

@@ -68,11 +68,6 @@
 #include "access_projector.h"
 #include "access_ac.h"
 
-
-
-
-
-
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 //#define LCD_USERLOG			/*LCD userlog needed for IP address check */
@@ -80,7 +75,7 @@
 /* Private variables ---------------------------------------------------------*/
 struct netif gnetif; /* network interface structure */
 osTimerId lcd_timer;
-uint8_t user_select = 2;
+uint8_t user_select = 0;
 
 /* Private function prototypes -----------------------------------------------*/
 static void SystemClock_Config(void);
@@ -108,7 +103,7 @@ int main(void)
 	MPU_Config();
 
 	/* Enable the CPU Cache */
-	CPU_CACHE_Enable();							//TODO: SD will need it...
+	CPU_CACHE_Enable();
 
 	/* STM32F7xx HAL library initialization:
 	   - Configure the Flash ART accelerator on ITCM interface
@@ -155,19 +150,6 @@ int main(void)
 }
 
 
-//static void GUIThread(void const * argument)
-//{
-//
-////  MainTask();
-//	CreateWindow_full() ;
-//
-//  /* GuU background Task */
-//  while(1) {
-//    GUI_Exec(); /* Do the background work ... Update windows etc.) */
-//    osDelay(100); /* Nothing left to do for the moment ... Idle processing */
-//  }
-//}
-
 static void GUIThread(void const * argument)
 {
 	switch((uint8_t)argument) {
@@ -183,11 +165,7 @@ static void GUIThread(void const * argument)
 	case 3:
 		CreateWindow_proj();
 		break;
-
 	}
-
-
-
   /* GUI background Task */
   while(1) {
     GUI_Exec(); /* Do the background work ... Update windows etc.) */
@@ -234,9 +212,6 @@ static void StartThread(void const * argument)
 	/* Create GUI task */
 	osThreadDef(GUI_Thread, GUIThread,   osPriorityBelowNormal, 0, configMINIMAL_STACK_SIZE * 2);
 	osThreadCreate (osThread(GUI_Thread), (void*)user_select);
-
-//	osThreadCreate (osThread(GUI_Thread), NULL);
-
 #endif
 
 	//Define and start the weather server thread

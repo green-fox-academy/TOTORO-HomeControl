@@ -236,8 +236,8 @@ static void _cbDialog_full(WM_MESSAGE * pMsg) {
         // USER START (Optionally insert code for reacting on notification message)
     	  proj_control = PROJECTOR_UP;
     	  //start projector client thread
-    	  osThreadDef(PROJECTOR, projector_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
-    	  osThreadCreate (osThread(PROJECTOR), proj_control);
+    	  {osThreadDef(PROJECTOR, projector_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+    	  osThreadCreate (osThread(PROJECTOR), proj_control);}
         // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
@@ -253,8 +253,8 @@ static void _cbDialog_full(WM_MESSAGE * pMsg) {
       case WM_NOTIFICATION_CLICKED:
         // USER START (Optionally insert code for reacting on notification message)
     	  proj_control = PROJECTOR_STOP;
-    	  osThreadDef(PROJECTOR, projector_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
-      	  osThreadCreate (osThread(PROJECTOR), proj_control);
+    	  {osThreadDef(PROJECTOR, projector_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+      	  osThreadCreate (osThread(PROJECTOR), proj_control);}
         // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
@@ -270,8 +270,8 @@ static void _cbDialog_full(WM_MESSAGE * pMsg) {
       case WM_NOTIFICATION_CLICKED:
         // USER START (Optionally insert code for reacting on notification message)
     	  proj_control = PROJECTOR_DOWN;
-    	  osThreadDef(PROJECTOR, projector_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
-    	  osThreadCreate (osThread(PROJECTOR), proj_control);
+    	  {osThreadDef(PROJECTOR, projector_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+    	  osThreadCreate (osThread(PROJECTOR), proj_control);}
         // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
@@ -332,8 +332,8 @@ static void _cbDialog_full(WM_MESSAGE * pMsg) {
     		  ac_controls[2] = AC_SWING_OFF;
     		  //add value "No change" for ON/OFF control
     		  ac_controls[4] = AC_STATE_NOCHANGE;
-    		  osThreadDef(AC, ac_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
-        	  osThreadCreate (osThread(AC), (void*)ac_controls);
+    		  {osThreadDef(AC, ac_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+        	  osThreadCreate (osThread(AC), (void*)ac_controls);}
     		  break;
     	  }
         // USER END
@@ -440,8 +440,8 @@ static void _cbDialog_full(WM_MESSAGE * pMsg) {
     	  ac_controls[1] = second_int_to_send;
  		 //add value "No change" for ON/OFF control
  		 ac_controls[4] = AC_STATE_NOCHANGE;
- 		 osThreadDef(AC, ac_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
- 		 osThreadCreate (osThread(AC), (void*)ac_controls);
+ 		 {osThreadDef(AC, ac_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+ 		 osThreadCreate (osThread(AC), (void*)ac_controls);}
         // USER END
         break;
       // USER START (Optionally insert additional code for further notification handling)
@@ -518,8 +518,8 @@ void gui_update_date(uint8_t year, uint8_t month, uint8_t day, uint8_t wday)
     WM_HWIN hItem;
     char str[15];
 	hItem = WM_GetDialogItem(main_window, ID_TEXT_7);
-	const char* wdays[] = {"Sunday", "Monday", "Tuesday", "Wednesday","Thursday", "Friday", "Saturday"};			//TODO: check implementation
-	const char* months[] = {"JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"};	//TODO: check implementation
+	const char* wdays[] = {"Sunday", "Monday", "Tuesday", "Wednesday","Thursday", "Friday", "Saturday"};
+	const char* months[] = {"JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"};
 	sprintf(str, "%s\n%s %d\n%d", wdays[wday], months[month], day, year + 1900);
 	TEXT_SetText(hItem, str);
 }
@@ -533,11 +533,5 @@ WM_HWIN CreateWindow_full(void) {
   main_window = GUI_CreateDialogBox(_aDialogCreate_full, GUI_COUNTOF(_aDialogCreate_full), _cbDialog_full, WM_HBKWIN, 0, 0);
   return main_window;
 }
-
-// USER START (Optionally insert additional public code)
-//void MainTask(void) {
-//   CreateWindow() ;
-//}
-// USER END
 
 /*************************** End of file ****************************/

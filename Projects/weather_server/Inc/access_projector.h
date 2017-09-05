@@ -10,7 +10,7 @@
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
-static void _cbDialog_proj(WM_MESSAGE * pMsg);
+//static void _cbDialog_proj(WM_MESSAGE * pMsg);
 WM_HWIN CreateWindow_proj(void);
 
 #endif /* __ACCESS_PROJECTOR_H */

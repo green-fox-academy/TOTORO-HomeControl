@@ -64,6 +64,7 @@
  #include "DIALOG.h"
 
 /* Exported types ------------------------------------------------------------*/
+ extern uint8_t user_select;
 /* Exported constants --------------------------------------------------------*/
 
 #define USE_DHCP       /* enable DHCP, if disabled static address is used*/

@@ -24,6 +24,8 @@
 #include "DIALOG.h"
 #include <stdint.h>
 #include "startup_screen.h"
+#include "WindowDLG.h"
+#include "main.h"
 
 
 /*********************************************************************
@@ -51,7 +53,7 @@
 
 // USER START (Optionally insert additional static data)
  WM_HWIN startup_screen;
- uint8_t user_ind;
+ uint8_t user_select;
 // USER END
 
 /*********************************************************************
@@ -116,8 +118,8 @@ static void _cbDialog_start(WM_MESSAGE * pMsg) {
       case WM_NOTIFICATION_CLICKED:
         // USER START (Optionally insert code for reacting on notification message)
     	  //check user permissions in database
-    	  user_ind = 0;
-    	  CreateWindow_start();
+    	  user_select = 1;
+
         // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
@@ -132,7 +134,7 @@ static void _cbDialog_start(WM_MESSAGE * pMsg) {
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
         // USER START (Optionally insert code for reacting on notification message)
-    	  user_ind = 1;
+    	  user_select = 2;
         // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
@@ -147,7 +149,7 @@ static void _cbDialog_start(WM_MESSAGE * pMsg) {
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
         // USER START (Optionally insert code for reacting on notification message)
-    	  user_ind = 2;
+    	  user_select = 3;
         // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
@@ -185,10 +187,5 @@ WM_HWIN CreateWindow_start(void) {
   return startup_screen;
 }
 
-// USER START (Optionally insert additional public code)
-//void MainTask(void) {
-//   CreateWindow_start() ;
-//}
-// USER END
 
 /*************************** End of file ****************************/

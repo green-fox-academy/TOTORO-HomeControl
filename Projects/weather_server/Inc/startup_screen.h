@@ -10,8 +10,9 @@
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
-static void _cbDialog_start(WM_MESSAGE * pMsg);
+//static void _cbDialog_start(WM_MESSAGE * pMsg);
 WM_HWIN CreateWindow_start(void);
+
 
 #endif /* __STARTUP_SCREEN_H*/
 

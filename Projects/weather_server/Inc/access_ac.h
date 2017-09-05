@@ -10,7 +10,7 @@
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
 
-static void _cbDialog_ac(WM_MESSAGE * pMsg);
+//static void _cbDialog_ac(WM_MESSAGE * pMsg);
 WM_HWIN CreateWindow_ac(void);
 
 #endif /* __ACCESS_AC_H */

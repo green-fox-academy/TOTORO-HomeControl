@@ -43,14 +43,22 @@
 #define ID_BUTTON_2    (GUI_ID_USER + 0x07)
 #define ID_TEXT_0    (GUI_ID_USER + 0x08)
 #define ID_TEXT_1    (GUI_ID_USER + 0x0A)
-#define ID_TEXT_2    (GUI_ID_USER + 0x0C)
-#define ID_TEXT_3    (GUI_ID_USER + 0x0D)
-#define ID_TEXT_4    (GUI_ID_USER + 0x0E)
-#define ID_TEXT_5    (GUI_ID_USER + 0x0F)
-#define ID_TEXT_6    (GUI_ID_USER + 0x11)
-#define ID_TEXT_7    (GUI_ID_USER + 0x12)
-#define ID_TEXT_8    (GUI_ID_USER + 0x13)
+//#define ID_TEXT_2    (GUI_ID_USER + 0x0C) original to be changed
+#define ID_TEXT_2 		(GUI_ID_USER + 0x14) 	//new, changed
+//#define ID_TEXT_3    (GUI_ID_USER + 0x0D) original to be changed
+#define ID_TEXT_3		(GUI_ID_USER + 0x15)	//new, changed
+//#define ID_TEXT_4    (GUI_ID_USER + 0x0E) original to be changed
 
+//#define ID_TEXT_5    (GUI_ID_USER + 0x0F)
+//#define ID_TEXT_6    (GUI_ID_USER + 0x11)
+//#define ID_TEXT_7    (GUI_ID_USER + 0x12)
+//#define ID_TEXT_8    (GUI_ID_USER + 0x13)
+
+#define ID_TEXT_4 (GUI_ID_USER + 0x0C) //new
+#define ID_TEXT_5 (GUI_ID_USER + 0x0D) //new
+#define ID_TEXT_6 (GUI_ID_USER + 0x0E) //new
+#define ID_TEXT_7 (GUI_ID_USER + 0x1B) //new
+#define ID_TEXT_8 (GUI_ID_USER + 0x1A) //new
 
 
 /*********************************************************************

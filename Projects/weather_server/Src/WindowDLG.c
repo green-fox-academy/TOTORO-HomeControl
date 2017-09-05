@@ -82,11 +82,6 @@ WM_HWIN AC_on_off;
 WM_HWIN AC_L_control;
 
 
-
-//osThreadDef(PROJECTOR, projector_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
-//osThreadDef(AC, ac_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
-
-
 // USER END
 
 /*********************************************************************

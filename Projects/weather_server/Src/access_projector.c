@@ -53,7 +53,6 @@
 
 
 
-
 /*********************************************************************
 *
 *       Static data
@@ -64,7 +63,6 @@ WM_HWIN main_window;
 uint8_t proj_control;
 
 // USER START (Optionally insert additional static data)
-
 
 // USER END
 
@@ -186,7 +184,9 @@ static void _cbDialog_proj(WM_MESSAGE * pMsg) {
         // USER START (Optionally insert code for reacting on notification message)
     	  proj_control = PROJECTOR_UP;
     	  //start projector client thread
-//    	  osThreadCreate (osThread(PROJECTOR), proj_control);
+    	  {osThreadDef(PROJECTOR, projector_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+    	  osThreadCreate (osThread(PROJECTOR), proj_control);}
+
         // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
@@ -203,6 +203,8 @@ static void _cbDialog_proj(WM_MESSAGE * pMsg) {
         // USER START (Optionally insert code for reacting on notification message)
     	  proj_control = PROJECTOR_STOP;
     	  //start projector client thread
+    	  {osThreadDef(PROJECTOR, projector_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+    	  osThreadCreate (osThread(PROJECTOR), proj_control);}
         // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
@@ -219,6 +221,8 @@ static void _cbDialog_proj(WM_MESSAGE * pMsg) {
         // USER START (Optionally insert code for reacting on notification message)
     	  proj_control = PROJECTOR_DOWN;
     	  //start projector client thread
+    	  {osThreadDef(PROJECTOR, projector_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+    	  osThreadCreate (osThread(PROJECTOR), proj_control);}
         // USER END
         break;
       case WM_NOTIFICATION_RELEASED:

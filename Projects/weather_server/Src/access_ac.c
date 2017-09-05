@@ -240,7 +240,9 @@ static void _cbDialog_ac(WM_MESSAGE * pMsg) {
     	  ac_controls_ac[1] = second_int_to_send;
  		 //add value "No change" for ON/OFF control
  		 ac_controls_ac[4] = AC_STATE_NOCHANGE;
-// 		osThreadCreate (osThread(AC), (void*)ac_controls_ac);
+ 		{osThreadDef(AC, ac_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+ 		osThreadCreate (osThread(AC), (void*)ac_controls_ac);}
+
         // USER END
         break;
       // USER START (Optionally insert additional code for further notification handling)
@@ -256,13 +258,15 @@ static void _cbDialog_ac(WM_MESSAGE * pMsg) {
     		  ac_state_ac = AC_IS_ON;
     		  BUTTON_SetText(AC_on_off, "AC is ON");
     		  ac_controls_ac[4] = AC_STATE_CHANGE;
-//        	  osThreadCreate (osThread(AC), (void*)ac_controls);
+    		  {osThreadDef(AC, ac_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+    		  osThreadCreate (osThread(AC), (void*)ac_controls_ac);}
     		  break;
     	  case AC_IS_ON:
     		  ac_state_ac = AC_IS_OFF;
     		  BUTTON_SetText(AC_on_off, "AC is OFF");
     		  ac_controls_ac[4] = AC_STATE_CHANGE;
-//    		  osThreadCreate (osThread(AC), (void*)ac_controls);
+      		  {osThreadDef(AC, ac_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+      		  osThreadCreate (osThread(AC), (void*)ac_controls_ac);}
     		  break;
     	  }
         // USER END
@@ -286,7 +290,8 @@ static void _cbDialog_ac(WM_MESSAGE * pMsg) {
     		  ac_controls_ac[2] = AC_SWING_ON;
     		  //add value "No change" for ON/OFF control
     		  ac_controls_ac[4] = AC_STATE_NOCHANGE;
-//        	  osThreadCreate (osThread(AC), (void*)ac_controls);
+      		  {osThreadDef(AC, ac_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+      		  osThreadCreate (osThread(AC), (void*)ac_controls_ac);}
     		  break;
     	  case 1:
     		  ac_swing_state_ac = 0;
@@ -294,7 +299,8 @@ static void _cbDialog_ac(WM_MESSAGE * pMsg) {
     		  ac_controls_ac[2] = AC_SWING_OFF;
     		  //add value "No change" for ON/OFF control
     		  ac_controls_ac[4] = AC_STATE_NOCHANGE;
-//        	  osThreadCreate (osThread(AC), (void*)ac_controls);
+      		  {osThreadDef(AC, ac_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+      		  osThreadCreate (osThread(AC), (void*)ac_controls_ac);}
     		  break;
     	  }
         // USER END
@@ -318,7 +324,8 @@ static void _cbDialog_ac(WM_MESSAGE * pMsg) {
      		 BUTTON_SetText(AC_L_control, "Blade in 1");
      		 //add value "No change" for ON/OFF control
      		 ac_controls_ac[4] = AC_STATE_NOCHANGE;
-//     		 osThreadCreate (osThread(AC), (void*)ac_controls);
+     		  {osThreadDef(AC, ac_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+       		  osThreadCreate (osThread(AC), (void*)ac_controls_ac);}
      		 break;
      	 case 1:
      		 ac_lever_state_ac = 2;
@@ -326,7 +333,8 @@ static void _cbDialog_ac(WM_MESSAGE * pMsg) {
      		 BUTTON_SetText(AC_L_control, "Blade in 2");
      		 //add value "No change" for ON/OFF control
      		 ac_controls_ac[4] = AC_STATE_NOCHANGE;
-//     		 osThreadCreate (osThread(AC), (void*)ac_controls);
+     		  {osThreadDef(AC, ac_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+       		  osThreadCreate (osThread(AC), (void*)ac_controls_ac);}
      		 break;
      	 case 2:
      		 ac_lever_state_ac = 3;
@@ -334,7 +342,8 @@ static void _cbDialog_ac(WM_MESSAGE * pMsg) {
      		 BUTTON_SetText(AC_L_control, "Blade in 3");
      		 //add value "No change" for ON/OFF control
      		 ac_controls_ac[4] = AC_STATE_NOCHANGE;
-//     		 osThreadCreate (osThread(AC), (void*)ac_controls);
+     		  {osThreadDef(AC, ac_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+       		  osThreadCreate (osThread(AC), (void*)ac_controls_ac);}
      		 break;
      	 case 3:
      		 ac_lever_state_ac = 4;
@@ -342,7 +351,8 @@ static void _cbDialog_ac(WM_MESSAGE * pMsg) {
      		 BUTTON_SetText(AC_L_control, "Blade in 4");
      		 //add value "No change" for ON/OFF control
      		 ac_controls_ac[4] = AC_STATE_NOCHANGE;
-//     		 osThreadCreate (osThread(AC), (void*)ac_controls);
+     		{osThreadDef(AC, ac_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+     		osThreadCreate (osThread(AC), (void*)ac_controls_ac);}
      		 break;
      	 case 4:
      		 ac_lever_state_ac = 5;
@@ -350,7 +360,8 @@ static void _cbDialog_ac(WM_MESSAGE * pMsg) {
      		 BUTTON_SetText(AC_L_control, "Blade in 5");
      		 //add value "No change" for ON/OFF control
      		 ac_controls_ac[4] = AC_STATE_NOCHANGE;
-//     		 osThreadCreate (osThread(AC), (void*)ac_controls);
+     		{osThreadDef(AC, ac_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+      		osThreadCreate (osThread(AC), (void*)ac_controls_ac);}
      		 break;
      	 case 5:
      		 ac_lever_state_ac = 0;
@@ -358,7 +369,8 @@ static void _cbDialog_ac(WM_MESSAGE * pMsg) {
      		 BUTTON_SetText(AC_L_control, "Blade in 0");
      		 //add value "No change" for ON/OFF control
      		 ac_controls_ac[4] = AC_STATE_NOCHANGE;
-//     		 osThreadCreate (osThread(AC), (void*)ac_controls);
+     		{osThreadDef(AC, ac_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+      		osThreadCreate (osThread(AC), (void*)ac_controls_ac);}
      		 break;
      	 }
         // USER END

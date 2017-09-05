@@ -58,7 +58,8 @@ void projector_client_thread(void const *argument)
 {
 	send_command_to_projector_screen(argument);
 	while (1) {
-		osDelay(10);
+//		osDelay(10);
+		osThreadTerminate(NULL);
 	}
 }
 

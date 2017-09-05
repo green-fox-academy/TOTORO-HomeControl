@@ -63,9 +63,5 @@ void ac_client_thread(void const *argument)
 	}
 }
 
-void ac_client_init()
-{
-
-}
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

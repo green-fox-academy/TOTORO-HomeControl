@@ -59,7 +59,6 @@
 #include "socket_client.h"
 #include "stm32746g_discovery_lcd.h"
 #include "httpserver-netconn.h"
-#include "usd_handle.h"
 #include "ff.h"
 #include "projector_client.h"
 #include "gui_setup.h"

@@ -58,6 +58,7 @@
 #include "socket_server.h"
 #include "stm32746g_discovery_lcd.h"
 #include "httpserver-netconn.h"
+#include "ff.h"
 #include "projector_client.h"
 #include "gui_setup.h"
 #include "WindowDLG.h"
@@ -75,6 +76,8 @@
 struct netif gnetif; /* network interface structure */
 osTimerId lcd_timer;
 uint8_t user_select = 0;
+char SDPath[4];
+FATFS htmlFAT; /*File system object for SD card logical drive*/
 
 /* Private function prototypes -----------------------------------------------*/
 static void SystemClock_Config(void);
@@ -239,6 +242,11 @@ static void StartThread(void const * argument)
 
 	/* Start httpserver thread */
 	http_server_netconn_init();
+
+	if(FATFS_LinkDriver(&SD_Driver, SDPath) == 0)
+	{
+	    f_mount(&htmlFAT, (TCHAR const*)SDPath, 0);
+	}
 
 #ifndef LCD_USERLOG
 	/* Create GUI task */

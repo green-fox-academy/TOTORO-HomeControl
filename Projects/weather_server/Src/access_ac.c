@@ -40,17 +40,17 @@
 #define ID_WINDOW_0    (GUI_ID_USER + 0x00)
 #define ID_TEXT_0    (GUI_ID_USER + 0x08)
 #define ID_TEXT_1    (GUI_ID_USER + 0x0A)
-#define ID_TEXT_2    (GUI_ID_USER + 0x0C)
-#define ID_TEXT_3    (GUI_ID_USER + 0x0D)
-#define ID_TEXT_4    (GUI_ID_USER + 0x0E)
-#define ID_TEXT_5    (GUI_ID_USER + 0x0F)
-#define ID_TEXT_6    (GUI_ID_USER + 0x11)
-#define ID_TEXT_7    (GUI_ID_USER + 0x12)
-#define ID_TEXT_8    (GUI_ID_USER + 0x13)
+#define ID_TEXT_2    (GUI_ID_USER + 0x1C)
+#define ID_TEXT_3    (GUI_ID_USER + 0x1D)
 #define ID_SPINBOX_0    (GUI_ID_USER + 0x14)
 #define ID_BUTTON_0    (GUI_ID_USER + 0x15)
 #define ID_BUTTON_1    (GUI_ID_USER + 0x16)
 #define ID_BUTTON_2    (GUI_ID_USER + 0x17)
+#define ID_TEXT_4 (GUI_ID_USER + 0x0C)
+#define ID_TEXT_5 (GUI_ID_USER + 0x0D)
+#define ID_TEXT_6 (GUI_ID_USER + 0x0E)
+#define ID_TEXT_7 (GUI_ID_USER + 0x1B)
+#define ID_TEXT_8 (GUI_ID_USER + 0x1A)
 
 
 
@@ -184,7 +184,7 @@ static void _cbDialog_ac(WM_MESSAGE * pMsg) {
     hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_8);
     TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x00FFFFFF));
     TEXT_SetTextAlign(hItem, GUI_TA_RIGHT | GUI_TA_VCENTER);
-    TEXT_SetFont(hItem, GUI_FONT_24_1);
+    TEXT_SetFont(hItem, GUI_FONT_D48);
 
     // Initialization of 'AC control spinbox'
     //

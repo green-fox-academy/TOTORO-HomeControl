@@ -63,6 +63,7 @@
 #include "ac_client.h"
 #include "rfid.h"
 #include "rc522.h"
+#include "broadcast.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -259,6 +260,10 @@ static void StartThread(void const * argument)
 	//Define and start the projector thread
 	osThreadDef(AC_CLIENT, ac_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
 	osThreadCreate (osThread(AC_CLIENT), NULL);
+
+	//Define and start the BROADCAST thread
+	osThreadDef(BROADCAST, socket_broadcast_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+	osThreadCreate (osThread(BROADCAST), NULL);
 
 	while (1) {
 		/* Delete the Init Thread */

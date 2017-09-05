@@ -18,8 +18,6 @@
 **********************************************************************
 */
 
-// USER START (Optionally insert additional includes)
-// USER END
 
 #include "DIALOG.h"
 #include <stdint.h>
@@ -29,7 +27,6 @@
 #include "ac_client.h"
 #include "WindowDLG.h"
 #include "gui_setup.h"
-
 #include "cmsis_os.h"
 
 /*********************************************************************
@@ -72,8 +69,6 @@ uint8_t proj_control;
 *
 **********************************************************************
 */
-
-// USER START (Optionally insert additional static data)
 WM_HWIN main_window;
 WM_HWIN hItem;
 WM_HWIN swing_button;
@@ -81,8 +76,6 @@ WM_HWIN AC_control;
 WM_HWIN AC_on_off;
 WM_HWIN AC_L_control;
 
-
-// USER END
 
 /*********************************************************************
 *
@@ -97,17 +90,15 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate_full[] = {
   { TEXT_CreateIndirect, "Temperature (C)", ID_TEXT_1, 110, 5, 86, 22, 0, 0x0, 0 },
   { TEXT_CreateIndirect, "Humidity (%)", ID_TEXT_2, 285, 5, 80, 20, 0, 0x0, 0 },
   { TEXT_CreateIndirect, "Pressure (Pa)", ID_TEXT_3, 285, 95, 80, 20, 0, 0x0, 0 },
-  { TEXT_CreateIndirect, "", ID_TEXT_4, 105, 0, 170, 170, 0, 0x0, 0 },
-  { TEXT_CreateIndirect, "", ID_TEXT_5, 280, 0, 85, 85, 0, 0x0, 0 },
-  { TEXT_CreateIndirect, "", ID_TEXT_6, 280, 90, 85, 85, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "", ID_TEXT_4, 105, 0, 170, 170, 0, 0x0, 0 },				//temperature data
+  { TEXT_CreateIndirect, "", ID_TEXT_5, 280, 0, 85, 85, 0, 0x0, 0 },				//humidity data
+  { TEXT_CreateIndirect, "", ID_TEXT_6, 280, 90, 85, 85, 0, 0x0, 0 },				//pressure data
   { BUTTON_CreateIndirect, "AC is OFF", ID_BUTTON_3, 5, 215, 80, 50, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "Swing is OFF", ID_BUTTON_4, 95, 215, 80, 50, 0, 0x0, 0 },
   { SPINBOX_CreateIndirect, "", ID_SPINBOX_0, 185, 195, 100, 70, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "Blade in 0", ID_BUTTON_5, 5, 135, 80, 70, 0, 0x0, 0 },
-  { TEXT_CreateIndirect, "", ID_TEXT_7, 5, 30, 100, 100, 0, 0x0, 0 },		//date placeholder
-  { TEXT_CreateIndirect, "", ID_TEXT_8, 300, 210, 160, 50, 0, 0x0, 0 },		//time hrs and min placeholder
-  // USER START (Optionally insert additional widgets)
-  // USER END
+  { TEXT_CreateIndirect, "", ID_TEXT_7, 5, 30, 100, 100, 0, 0x0, 0 },				//date
+  { TEXT_CreateIndirect, "", ID_TEXT_8, 300, 210, 160, 50, 0, 0x0, 0 },				//time
 };
 
 
@@ -117,9 +108,6 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate_full[] = {
 *
 **********************************************************************
 */
-
-// USER START (Optionally insert additional static code)
-// USER END
 
 /*********************************************************************
 *

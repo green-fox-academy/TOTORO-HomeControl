@@ -96,11 +96,6 @@
 			<locationURI>PARENT-2-PROJECT_LOC/Src/projector_client.c</locationURI>
 		</link>
 		<link>
-			<name>Application/User/socket_client.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/Src/socket_client.c</locationURI>
-		</link>
-		<link>
 			<name>Application/User/socket_server.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Src/socket_server.c</locationURI>

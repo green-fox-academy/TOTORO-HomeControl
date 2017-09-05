@@ -56,7 +56,6 @@
 #include "app_ethernet.h"
 #include "lcd_log.h"
 #include "socket_server.h"
-#include "socket_client.h"
 #include "stm32746g_discovery_lcd.h"
 #include "httpserver-netconn.h"
 #include "projector_client.h"
@@ -150,28 +149,64 @@ int main(void)
 }
 
 
+//static void GUIThread(void const * argument)
+//{
+//	WM_HWIN curr_window;
+//	switch (*(uint8_t *) argument) {
+//	case 0:
+//		curr_window = CreateWindow_start();
+//		break;
+//	case 1:
+//		curr_window = CreateWindow_full();
+//		break;
+//	case 2:
+//		curr_window = CreateWindow_ac();
+//		break;
+//	case 3:
+//		curr_window = CreateWindow_proj();
+//		break;
+//	}
+//  /* GUI background Task */
+//  while(1) {
+//    GUI_Exec(); /* Do the background work ... Update windows etc.) */
+//    osDelay(100); /* Nothing left to do for the moment ... Idle processing */
+//  }
+//}
+
 static void GUIThread(void const * argument)
 {
-	switch((uint8_t)argument) {
-	case 0:
-		CreateWindow_start();
-		break;
-	case 1:
-		CreateWindow_full();
-		break;
-	case 2:
-		CreateWindow_ac();
-		break;
-	case 3:
-		CreateWindow_proj();
-		break;
-	}
+	WM_HWIN curr_window = CreateWindow_start();
+
   /* GUI background Task */
   while(1) {
-    GUI_Exec(); /* Do the background work ... Update windows etc.) */
-    osDelay(100); /* Nothing left to do for the moment ... Idle processing */
+   if (user_select == 1) {
+    	GUI_EndDialog (curr_window, 0);
+    	CreateWindow_full();
+    	while(1) {
+    		GUI_Exec();
+    		osDelay(100);
+    	}
+   } else if (user_select == 2) {
+		GUI_EndDialog (curr_window, 0);
+		CreateWindow_ac();
+		while(1) {
+			GUI_Exec();
+			osDelay(100);
+   	}
+   } else if (user_select == 3) {
+		GUI_EndDialog (curr_window, 0);
+		CreateWindow_proj();
+		while(1) {
+			GUI_Exec();
+			osDelay(100);
+		}
+   }
+   GUI_Exec(); /* Do the background work ... Update windows etc.) */
+   osDelay(100); /* Nothing left to do for the moment ... Idle processing */
   }
 }
+
+
 
 
 static void TimerCallback(void const *n)
@@ -211,7 +246,7 @@ static void StartThread(void const * argument)
 //	osThreadCreate (osThread(GUI_Thread), NULL);
 	/* Create GUI task */
 	osThreadDef(GUI_Thread, GUIThread,   osPriorityBelowNormal, 0, configMINIMAL_STACK_SIZE * 2);
-	osThreadCreate (osThread(GUI_Thread), (void*)user_select);
+	osThreadCreate (osThread(GUI_Thread), &user_select);
 #endif
 
 	//Define and start the weather server thread

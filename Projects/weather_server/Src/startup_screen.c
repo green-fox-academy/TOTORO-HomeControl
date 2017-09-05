@@ -18,8 +18,6 @@
 **********************************************************************
 */
 
-// USER START (Optionally insert additional includes)
-// USER END
 
 #include "DIALOG.h"
 #include <stdint.h>
@@ -41,8 +39,6 @@
 #define ID_BUTTON_2    (GUI_ID_USER + 0x04)
 
 
-// USER START (Optionally insert additional defines)
-// USER END
 
 /*********************************************************************
 *
@@ -51,10 +47,9 @@
 **********************************************************************
 */
 
-// USER START (Optionally insert additional static data)
  WM_HWIN startup_screen;
  uint8_t user_select;
-// USER END
+
 
 /*********************************************************************
 *
@@ -76,9 +71,6 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate_start[] = {
 *
 **********************************************************************
 */
-
-// USER START (Optionally insert additional static code)
-// USER END
 
 /*********************************************************************
 *

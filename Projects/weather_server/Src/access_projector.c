@@ -61,10 +61,6 @@
 WM_HWIN main_window;
 uint8_t proj_control;
 
-// USER START (Optionally insert additional static data)
-
-// USER END
-
 /*********************************************************************
 *
 *       _aDialogCreate
@@ -78,11 +74,11 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate_proj[] = {
   { TEXT_CreateIndirect, "Temperature (C)", ID_TEXT_1, 110, 5, 86, 22, 0, 0x0, 0 },
   { TEXT_CreateIndirect, "Humidity (%)", ID_TEXT_2, 285, 5, 80, 20, 0, 0x0, 0 },
   { TEXT_CreateIndirect, "Pressure (Pa)", ID_TEXT_3, 285, 95, 80, 20, 0, 0x0, 0 },
-  { TEXT_CreateIndirect, "temp_data", ID_TEXT_4, 105, 0, 170, 170, 0, 0x0, 0 },
-  { TEXT_CreateIndirect, "hum_data", ID_TEXT_5, 280, 0, 85, 85, 0, 0x0, 0 },
-  { TEXT_CreateIndirect, "press_data", ID_TEXT_6, 280, 90, 85, 85, 0, 0x0, 0 },
-  { TEXT_CreateIndirect, "date", ID_TEXT_7, 5, 30, 100, 100, 0, 0x0, 0 },
-  { TEXT_CreateIndirect, "time", ID_TEXT_8, 297, 215, 160, 50, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "", ID_TEXT_4, 105, 0, 170, 170, 0, 0x0, 0 },				//temperature data
+  { TEXT_CreateIndirect, "", ID_TEXT_5, 280, 0, 85, 85, 0, 0x0, 0 },				//humidity data
+  { TEXT_CreateIndirect, "", ID_TEXT_6, 280, 90, 85, 85, 0, 0x0, 0 },				//pressure data
+  { TEXT_CreateIndirect, "", ID_TEXT_7, 5, 30, 100, 100, 0, 0x0, 0 },				//date
+  { TEXT_CreateIndirect, "", ID_TEXT_8, 297, 215, 160, 50, 0, 0x0, 0 },				//time
   // USER START (Optionally insert additional widgets)
   // USER END
 };

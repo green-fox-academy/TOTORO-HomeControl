@@ -132,7 +132,6 @@ void socket_server_thread(void const *argument)
 			// Close the socket
 			closesocket(client_socket);
 			LCD_UsrLog("Socket server - connection closed\n");
-			//GUI_DispString("Socket server - connection closed\n");
 		}//else
 	}//while(1)
 

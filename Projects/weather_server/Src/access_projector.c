@@ -53,6 +53,7 @@
 
 
 
+
 /*********************************************************************
 *
 *       Static data
@@ -185,6 +186,7 @@ static void _cbDialog_proj(WM_MESSAGE * pMsg) {
         // USER START (Optionally insert code for reacting on notification message)
     	  proj_control = PROJECTOR_UP;
     	  //start projector client thread
+//    	  osThreadCreate (osThread(PROJECTOR), proj_control);
         // USER END
         break;
       case WM_NOTIFICATION_RELEASED:

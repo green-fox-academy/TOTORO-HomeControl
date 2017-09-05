@@ -64,8 +64,8 @@ uint8_t ac_controls[5];
 uint8_t proj_control;
 
 
-osThreadDef(PROJECTOR, projector_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
-osThreadDef(AC, ac_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+osThreadDef(PROJECTOR, projector_client_thread, osPriorityNormal, 1, configMINIMAL_STACK_SIZE * 2);
+osThreadDef(AC, ac_client_thread, osPriorityNormal, 1, configMINIMAL_STACK_SIZE * 2);
 
 /*********************************************************************
 *
@@ -526,9 +526,9 @@ WM_HWIN CreateWindow_full(void) {
 }
 
 // USER START (Optionally insert additional public code)
-void MainTask(void) {
-   CreateWindow() ;
-}
+//void MainTask(void) {
+//   CreateWindow() ;
+//}
 // USER END
 
 /*************************** End of file ****************************/

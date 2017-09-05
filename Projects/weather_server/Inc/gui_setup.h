@@ -6,6 +6,8 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32746g_discovery_ts.h"
+#include "cmsis_os.h"
+
 
 /* Sent value defines */
 #define PROJECTOR_UP		1
@@ -25,6 +27,8 @@
 #define AC_BLADE_5			5
 #define AC_IS_OFF			0
 #define AC_IS_ON			1
+
+
 
 
 

@@ -80,7 +80,7 @@
 /* Private variables ---------------------------------------------------------*/
 struct netif gnetif; /* network interface structure */
 osTimerId lcd_timer;
-uint8_t user_select = 3;
+uint8_t user_select = 1;
 
 /* Private function prototypes -----------------------------------------------*/
 static void SystemClock_Config(void);

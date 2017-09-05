@@ -240,7 +240,7 @@ static void _cbDialog_ac(WM_MESSAGE * pMsg) {
     	  ac_controls_ac[1] = second_int_to_send;
  		 //add value "No change" for ON/OFF control
  		 ac_controls_ac[4] = AC_STATE_NOCHANGE;
-// 		osThreadCreate (osThread(AC), (void*)ac_controls);
+// 		osThreadCreate (osThread(AC), (void*)ac_controls_ac);
         // USER END
         break;
       // USER START (Optionally insert additional code for further notification handling)

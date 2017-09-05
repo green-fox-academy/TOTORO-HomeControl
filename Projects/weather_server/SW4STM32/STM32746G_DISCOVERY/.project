@@ -106,11 +106,6 @@
 			<locationURI>PARENT-2-PROJECT_LOC/Src/stm32f7xx_it.c</locationURI>
 		</link>
 		<link>
-			<name>Application/User/usd_handle.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/Src/usd_handle.c</locationURI>
-		</link>
-		<link>
 			<name>Application/Utilities/lcd_log.c</name>
 			<type>1</type>
 			<locationURI>PARENT-4-PROJECT_LOC/Utilities/Log/lcd_log.c</locationURI>
@@ -293,32 +288,32 @@
 		<link>
 			<name>Middlewares/FatFs/Core/diskio.c</name>
 			<type>1</type>
-			<locationURI>copy_PARENT1/Middlewares/Third_Party/FatFs/src/diskio.c</locationURI>
+			<locationURI>PARENT-5-PROJECT_LOC/STM32Cube/Repository/STM32Cube_FW_F7_V1.7.0/Middlewares/Third_Party/FatFs/src/diskio.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/FatFs/Core/ff.c</name>
 			<type>1</type>
-			<locationURI>copy_PARENT1/Middlewares/Third_Party/FatFs/src/ff.c</locationURI>
+			<locationURI>PARENT-5-PROJECT_LOC/STM32Cube/Repository/STM32Cube_FW_F7_V1.7.0/Middlewares/Third_Party/FatFs/src/ff.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/FatFs/Core/ff_gen_drv.c</name>
 			<type>1</type>
-			<locationURI>copy_PARENT1/Middlewares/Third_Party/FatFs/src/ff_gen_drv.c</locationURI>
+			<locationURI>PARENT-5-PROJECT_LOC/STM32Cube/Repository/STM32Cube_FW_F7_V1.7.0/Middlewares/Third_Party/FatFs/src/ff_gen_drv.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/FatFs/Drivers/sd_diskio.c</name>
 			<type>1</type>
-			<locationURI>copy_PARENT1/Middlewares/Third_Party/FatFs/src/drivers/sd_diskio.c</locationURI>
+			<locationURI>PARENT-5-PROJECT_LOC/STM32Cube/Repository/STM32Cube_FW_F7_V1.7.0/Middlewares/Third_Party/FatFs/src/drivers/sd_diskio.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/FatFs/Options/syscall.c</name>
 			<type>1</type>
-			<locationURI>copy_PARENT1/Middlewares/Third_Party/FatFs/src/option/syscall.c</locationURI>
+			<locationURI>PARENT-5-PROJECT_LOC/STM32Cube/Repository/STM32Cube_FW_F7_V1.7.0/Middlewares/Third_Party/FatFs/src/option/syscall.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/FatFs/Options/unicode.c</name>
 			<type>1</type>
-			<locationURI>copy_PARENT1/Middlewares/Third_Party/FatFs/src/option/unicode.c</locationURI>
+			<locationURI>PARENT-5-PROJECT_LOC/STM32Cube/Repository/STM32Cube_FW_F7_V1.7.0/Middlewares/Third_Party/FatFs/src/option/unicode.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/FreeRTOS/portable/cmsis_os.c</name>

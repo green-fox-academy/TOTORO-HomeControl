@@ -93,7 +93,7 @@ static void Error_Handler(void);
 static void CPU_CACHE_Enable(void);
 static void GUIThread(void const * argument);
 static void GUI_Startup();
-extern SPI_HandleTypeDef hspi1;
+//extern SPI_HandleTypeDef hspi1;
 
 /* Private functions ---------------------------------------------------------*/
 
@@ -130,19 +130,19 @@ int main(void)
 	HAL_Delay(500);
 	MFRC522_Init();
 
-	while (1) {
-		uint8_t str[MFRC522_MAX_LEN];
-		memset(str, 0, MFRC522_MAX_LEN);
+//	while (1) {
+//		uint8_t str[MFRC522_MAX_LEN];
+//		memset(str, 0, MFRC522_MAX_LEN);
 //		uint8_t asd;
 //		uint8_t asd2 = 0x55;
 //		cs_reset();
 //		HAL_SPI_TransmitReceive(&hspi1, (uint8_t*)&asd2, (uint8_t*)&asd, 1, 10);
 //		cs_set();
-		volatile uint8_t ret = MFRC522_ReadRegister(0xFF);
+//		volatile uint8_t ret = MFRC522_ReadRegister(0xFF);
 //		volatile uint8_t ret = MFRC522_Request(PICC_REQIDL, str);
 //		ret = MFRC522_Anticoll(str);
-		HAL_Delay(1000);
-	}
+//		HAL_Delay(1000);
+//	}
 
 	/* Create GUI task */
 	//osThreadDef(GUI_Thread, GUIThread, osPriorityBelowNormal, 0, configMINIMAL_STACK_SIZE * 20);	//2048

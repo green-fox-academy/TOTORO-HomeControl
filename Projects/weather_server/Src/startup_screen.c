@@ -109,7 +109,10 @@ static void _cbDialog_start(WM_MESSAGE * pMsg) {
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
         // USER START (Optionally insert code for reacting on notification message)
-    	  //check user permissions in database
+    	  //check user permissions in database:
+    	  //open txt file on SD card
+    	  //search for user number
+    	  //check accesses: set user_select based on granted accesses
     	  user_select = 1;
 
         // USER END

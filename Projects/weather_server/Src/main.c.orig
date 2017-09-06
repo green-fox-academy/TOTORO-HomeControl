@@ -58,7 +58,10 @@
 #include "socket_server.h"
 #include "stm32746g_discovery_lcd.h"
 #include "httpserver-netconn.h"
-//#include "ff.h"
+<<<<<<< HEAD
+=======
+#include "ff.h"
+>>>>>>> SD_final_to_merge
 #include "projector_client.h"
 #include "gui_setup.h"
 #include "WindowDLG.h"
@@ -76,8 +79,6 @@
 struct netif gnetif; /* network interface structure */
 osTimerId lcd_timer;
 uint8_t user_select = 0;
-char SDPath[4];
-FATFS htmlFAT; /*File system object for SD card logical drive*/
 
 /* Private function prototypes -----------------------------------------------*/
 static void SystemClock_Config(void);
@@ -152,6 +153,30 @@ int main(void)
 }
 
 
+//static void GUIThread(void const * argument)
+//{
+//	WM_HWIN curr_window;
+//	switch (*(uint8_t *) argument) {
+//	case 0:
+//		curr_window = CreateWindow_start();
+//		break;
+//	case 1:
+//		curr_window = CreateWindow_full();
+//		break;
+//	case 2:
+//		curr_window = CreateWindow_ac();
+//		break;
+//	case 3:
+//		curr_window = CreateWindow_proj();
+//		break;
+//	}
+//  /* GUI background Task */
+//  while(1) {
+//    GUI_Exec(); /* Do the background work ... Update windows etc.) */
+//    osDelay(100); /* Nothing left to do for the moment ... Idle processing */
+//  }
+//}
+
 static void GUIThread(void const * argument)
 {
 	WM_HWIN curr_window = CreateWindow_start();
@@ -219,18 +244,13 @@ static void StartThread(void const * argument)
 	/* Start httpserver thread */
 	http_server_netconn_init();
 
-	if(FATFS_LinkDriver(&SD_Driver, SDPath) == 0)
-	{
-	    f_mount(&htmlFAT, (TCHAR const*)SDPath, 0);
-	}
-
 #ifndef LCD_USERLOG
 	/* Create GUI task */
-	osThreadDef(GUI_Thread, GUIThread,   osPriorityBelowNormal, 0, configMINIMAL_STACK_SIZE * 2);
-	osThreadCreate (osThread(GUI_Thread), NULL);
-	/* Create GUI task */
 //	osThreadDef(GUI_Thread, GUIThread,   osPriorityBelowNormal, 0, configMINIMAL_STACK_SIZE * 2);
-//	osThreadCreate (osThread(GUI_Thread), &user_select);
+//	osThreadCreate (osThread(GUI_Thread), NULL);
+	/* Create GUI task */
+	osThreadDef(GUI_Thread, GUIThread,   osPriorityBelowNormal, 0, configMINIMAL_STACK_SIZE * 2);
+	osThreadCreate (osThread(GUI_Thread), &user_select);
 #endif
 
 	//Define and start the weather server thread

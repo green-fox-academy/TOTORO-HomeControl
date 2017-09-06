@@ -10,13 +10,23 @@
 #include "GUI.h"
 #include "DIALOG.h"
 #include "broadcast.h"
+#include <string.h>
 
-#define PORT 8006
-#define BROADCAST_IP         "255.255.255.255"
-#define BC_UNIQUE_STR        "SMARTHOME_HQ"
+#define PORT 					12345
+#define WEATHER_SERVER_PORT		8002
+#define BROADCAST_IP        	"255.255.255.255"
+#define BC_UNIQUE_STR        	"SMARTHOME_HQ"
 
 void socket_broadcast_thread(void const *argument)
 {
+	struct bcst {
+		char uniq_str[15];
+		uint16_t port;
+		uint32_t ip;
+	}broadcast_msg;
+	strcpy(broadcast_msg.uniq_str, BC_UNIQUE_STR);
+	broadcast_msg.port = WEATHER_SERVER_PORT;
+	broadcast_msg.ip = ip_address[20];
 	// Create broadcast socket
 	    int broadcast_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 	    if (broadcast_socket < 0) {
@@ -39,8 +49,8 @@ void socket_broadcast_thread(void const *argument)
 
 	    // Send broadcast message
 	    while (1) {
-			sendto(broadcast_socket, BC_UNIQUE_STR, strlen(BC_UNIQUE_STR), 0,
-									  (struct sockaddr *)&broadcast_addr, sizeof(broadcast_addr));
+			sendto(broadcast_socket, &broadcast_msg, strlen(BC_UNIQUE_STR), 0,
+				  (struct sockaddr *)&broadcast_addr, sizeof(broadcast_addr));
 			osDelay(10000);
 	    }
 

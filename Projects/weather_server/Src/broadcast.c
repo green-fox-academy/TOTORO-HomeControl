@@ -22,11 +22,14 @@ void socket_broadcast_thread(void const *argument)
 	struct bcst {
 		char uniq_str[15];
 		uint16_t port;
-		uint32_t ip;
+		uint8_t ip[20];
 	}broadcast_msg;
+
 	strcpy(broadcast_msg.uniq_str, BC_UNIQUE_STR);
 	broadcast_msg.port = WEATHER_SERVER_PORT;
-	broadcast_msg.ip = ip_address[20];
+	uint8_t a = sizeof(ip_address) / sizeof(ip_address[0]);
+	memcpy(broadcast_msg.ip, ip_address, a);
+//	broadcast_msg.ip = ip_address;
 	// Create broadcast socket
 	    int broadcast_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 	    if (broadcast_socket < 0) {

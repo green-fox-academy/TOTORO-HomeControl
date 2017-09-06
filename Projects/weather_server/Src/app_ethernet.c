@@ -146,6 +146,8 @@ void DHCP_thread(void const * argument)
          
           sprintf((char *)iptxt, "%s", ip4addr_ntoa((const ip4_addr_t *)&netif->ip_addr));   
           LCD_UsrLog ("DHCP client - IP address assigned by a DHCP server: %s\n", iptxt);
+          uint8_t a = sizeof(iptxt) / sizeof(iptxt[0]);
+          memcpy(ip_address, iptxt, a);
         }
         else
         {
@@ -167,7 +169,6 @@ void DHCP_thread(void const * argument)
             
             sprintf((char *)iptxt, "%s", ip4addr_ntoa((const ip4_addr_t *)&netif->ip_addr));
             LCD_UsrLog ("DHCP client - DHCP Timeout !! \n");
-
           }
         }
       }

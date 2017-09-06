@@ -59,6 +59,7 @@
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 /* DHCP process states */
+extern uint8_t ip_address[20];
 #define DHCP_OFF                   (uint8_t) 0
 #define DHCP_START                 (uint8_t) 1
 #define DHCP_WAIT_ADDRESS          (uint8_t) 2

@@ -52,7 +52,7 @@
 #include "app_ethernet.h"
 #include "ethernetif.h"
 #include "lcd_log.h"
-
+uint8_t ip_address[20];
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/

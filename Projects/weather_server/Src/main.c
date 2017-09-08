@@ -145,8 +145,8 @@ int main(void)
 //	}
 
 	/* Create GUI task */
-	//osThreadDef(GUI_Thread, GUIThread, osPriorityBelowNormal, 0, configMINIMAL_STACK_SIZE * 20);	//2048
-	//osThreadCreate (osThread(GUI_Thread), NULL);
+//	osThreadDef(GUI_Thread, GUIThread, osPriorityBelowNormal, 0, configMINIMAL_STACK_SIZE * 20);	//2048
+//	osThreadCreate (osThread(GUI_Thread), NULL);
 
 	GUI_Startup();
 
@@ -241,17 +241,23 @@ static void StartThread(void const * argument)
 	User_notification(&gnetif);
 
 	/* Create GUI task */
-	//  osThreadDef(GUI_Thread, GUIThread, osPriorityAboveNormal, 0, 2048);
-	//  osThreadCreate (osThread(GUI_Thread), NULL);
+//	  osThreadDef(GUI_Thread, GUIThread, osPriorityAboveNormal, 0, 2048);
+//	  osThreadCreate (osThread(GUI_Thread), NULL);
 
 	/* Start DHCPClient */
 	osThreadDef(DHCP, DHCP_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
 	osThreadCreate (osThread(DHCP), &gnetif);
 	osDelay(2000);
 
+	//Define and start the BROADCAST thread
+	osThreadDef(BROADCAST, socket_broadcast_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+	osThreadCreate (osThread(BROADCAST), NULL);
+	osDelay(2000);
+
 	//Define and start the server thread
 	osThreadDef(SOCKET_SERVER, socket_server_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
 	osThreadCreate (osThread(SOCKET_SERVER), NULL);
+	osDelay(2000);
 
 	//Define and start the projector thread
 	osThreadDef(PROJECTOR_CLIENT, projector_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
@@ -261,9 +267,7 @@ static void StartThread(void const * argument)
 	osThreadDef(AC_CLIENT, ac_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
 	osThreadCreate (osThread(AC_CLIENT), NULL);
 
-	//Define and start the BROADCAST thread
-	osThreadDef(BROADCAST, socket_broadcast_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
-	osThreadCreate (osThread(BROADCAST), NULL);
+
 
 	while (1) {
 		/* Delete the Init Thread */

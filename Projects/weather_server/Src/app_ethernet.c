@@ -52,6 +52,7 @@
 #include "app_ethernet.h"
 #include "ethernetif.h"
 #include "lcd_log.h"
+#include <string.h>
 uint8_t ip_address[20];
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -146,8 +147,8 @@ void DHCP_thread(void const * argument)
          
           sprintf((char *)iptxt, "%s", ip4addr_ntoa((const ip4_addr_t *)&netif->ip_addr));   
           LCD_UsrLog ("DHCP client - IP address assigned by a DHCP server: %s\n", iptxt);
-          uint8_t a = sizeof(iptxt) / sizeof(iptxt[0]);
-          memcpy(ip_address, iptxt, a);
+          uint8_t b = sizeof(iptxt) / sizeof(iptxt[0]);
+          memcpy(ip_address, iptxt, b);
         }
         else
         {

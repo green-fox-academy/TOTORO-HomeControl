@@ -57,11 +57,6 @@ void socket_broadcast_thread(void const *argument)
 			osDelay(1000);
 	    }
 
-//	    if (sendto_retval < strlen(BC_UNIQUE_STR)) {
-//	        printf("Error: send_broadcast_msg - sendto()\n");
-//	        terminate_thread();
-//	    }
-
 	    // Close the broadcast socket
 	    closesocket(broadcast_socket);
 }

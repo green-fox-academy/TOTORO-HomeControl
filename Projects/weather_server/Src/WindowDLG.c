@@ -210,7 +210,6 @@ static void _cbDialog_full(WM_MESSAGE * pMsg) {
     TEXT_SetTextAlign(hItem, GUI_TA_LEFT | GUI_TA_CENTER);
     TEXT_SetFont(hItem, GUI_FONT_D48);
 
-
     // USER START (Optionally insert additional code for further widget initialization)
     // USER END
     break;
@@ -221,16 +220,12 @@ static void _cbDialog_full(WM_MESSAGE * pMsg) {
     case ID_BUTTON_0: // Notifications sent by 'UP'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
     	  proj_control = PROJECTOR_UP;
     	  //start projector client thread
     	  {osThreadDef(PROJECTOR, projector_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
     	  osThreadCreate (osThread(PROJECTOR), proj_control);}
-        // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
         break;
       // USER START (Optionally insert additional code for further notification handling)
       // USER END
@@ -239,15 +234,11 @@ static void _cbDialog_full(WM_MESSAGE * pMsg) {
     case ID_BUTTON_1: // Notifications sent by 'STOP'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
     	  proj_control = PROJECTOR_STOP;
     	  {osThreadDef(PROJECTOR, projector_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
       	  osThreadCreate (osThread(PROJECTOR), proj_control);}
-        // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
         break;
       // USER START (Optionally insert additional code for further notification handling)
       // USER END
@@ -256,15 +247,11 @@ static void _cbDialog_full(WM_MESSAGE * pMsg) {
     case ID_BUTTON_2: // Notifications sent by 'DOWN'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
     	  proj_control = PROJECTOR_DOWN;
     	  {osThreadDef(PROJECTOR, projector_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
     	  osThreadCreate (osThread(PROJECTOR), proj_control);}
-        // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
         break;
       // USER START (Optionally insert additional code for further notification handling)
       // USER END
@@ -273,7 +260,6 @@ static void _cbDialog_full(WM_MESSAGE * pMsg) {
     case ID_BUTTON_3: // Notifications sent by 'ON/OFF'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
     	  switch(ac_state) {
     	  case AC_IS_OFF:
     		  ac_state = AC_IS_ON;
@@ -290,11 +276,8 @@ static void _cbDialog_full(WM_MESSAGE * pMsg) {
     		  osThreadCreate (osThread(AC), (void*)ac_controls);}
     		  break;
     	  }
-        // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
         break;
       // USER START (Optionally insert additional code for further notification handling)
       // USER END
@@ -303,7 +286,6 @@ static void _cbDialog_full(WM_MESSAGE * pMsg) {
     case ID_BUTTON_4: // Notifications sent by 'Swing'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
     	  switch(ac_swing_state) {
     	  case 0:
     		  ac_swing_state = 1;
@@ -324,11 +306,8 @@ static void _cbDialog_full(WM_MESSAGE * pMsg) {
         	  osThreadCreate (osThread(AC), (void*)ac_controls);}
     		  break;
     	  }
-        // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
         break;
       // USER START (Optionally insert additional code for further notification handling)
       // USER END
@@ -338,7 +317,6 @@ static void _cbDialog_full(WM_MESSAGE * pMsg) {
       case ID_BUTTON_5: // Notifications sent by 'AC lever control button'
          switch(NCode) {
          case WM_NOTIFICATION_CLICKED:
-           // USER START (Optionally insert code for reacting on notification message)
         	 switch(ac_lever_state) {
         	 case 0:
         		 ac_lever_state = 1;
@@ -395,11 +373,8 @@ static void _cbDialog_full(WM_MESSAGE * pMsg) {
         		 osThreadCreate (osThread(AC), (void*)ac_controls);}
         		 break;
         	 }
-           // USER END
            break;
          case WM_NOTIFICATION_RELEASED:
-           // USER START (Optionally insert code for reacting on notification message)
-           // USER END
            break;
          // USER START (Optionally insert additional code for further notification handling)
          // USER END
@@ -408,19 +383,12 @@ static void _cbDialog_full(WM_MESSAGE * pMsg) {
     case ID_SPINBOX_0: // Notifications sent by 'Spinbox'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
         break;
       case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
         break;
       case WM_NOTIFICATION_MOVED_OUT:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
         break;
       case WM_NOTIFICATION_VALUE_CHANGED:
-        // USER START (Optionally insert code for reacting on notification message)
     	  ac_temperature = (uint8_t)SPINBOX_GetValue(AC_control);
     	  uint8_t second_int_to_send = ac_temperature / 10;
     	  uint8_t first_int_to_send = ac_temperature - second_int_to_send * 10;
@@ -430,7 +398,6 @@ static void _cbDialog_full(WM_MESSAGE * pMsg) {
  		 ac_controls[4] = AC_STATE_NOCHANGE;
  		 {osThreadDef(AC, ac_client_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
  		 osThreadCreate (osThread(AC), (void*)ac_controls);}
-        // USER END
         break;
       // USER START (Optionally insert additional code for further notification handling)
       // USER END

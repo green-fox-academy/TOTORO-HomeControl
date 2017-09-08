@@ -49,9 +49,6 @@
 #define ID_TEXT_7 (GUI_ID_USER + 0x1B)
 #define ID_TEXT_8 (GUI_ID_USER + 0x1A)
 
-
-
-
 /*********************************************************************
 *
 *       Static data

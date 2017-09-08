@@ -49,6 +49,7 @@
 									<listOptionValue builtIn="false" value="../../../../../Middlewares/Third_Party/FreeRTOS/Source/"/>
 									<listOptionValue builtIn="false" value="../../../../../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS"/>
 									<listOptionValue builtIn="false" value="../../../../../Middlewares/Third_Party/FreeRTOS/Source/include"/>
+									<listOptionValue builtIn="false" value="../../../../../Middlewares/Third_Party/FatFs/src"/>
 									<listOptionValue builtIn="false" value="../../../../../Utilities"/>
 									<listOptionValue builtIn="false" value="../../../../../Utilities/Log"/>
 									<listOptionValue builtIn="false" value="../../../../../Drivers/CMSIS/Include"/>
@@ -56,10 +57,11 @@
 								<option id="gnu.c.compiler.option.preprocessor.def.symbols.1100071681" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="USE_HAL_DRIVER"/>
 									<listOptionValue builtIn="false" value="STM32F746xx"/>
-									<listOptionValue builtIn="false" value="USE_STM32746G_DISCOVERY_graphic_chat"/>
+									<listOptionValue builtIn="false" value="USE_STM32746G_DISCOVERY"/>
 								</option>
 								<option id="fr.ac6.managedbuild.gnu.c.compiler.option.misc.other.49536233" superClass="fr.ac6.managedbuild.gnu.c.compiler.option.misc.other" useByScannerDiscovery="false" value="-fmessage-length=0" valueType="string"/>
-								<option id="fr.ac6.managedbuid.gnu.c.compiler.option.misc.other.845103515" superClass="fr.ac6.managedbuid.gnu.c.compiler.option.misc.other" useByScannerDiscovery="false" value="-fmessage-length=0 -fstack-usage" valueType="string"/>
+								<option id="fr.ac6.managedbuid.gnu.c.compiler.option.misc.other.845103515" name="Other flags" superClass="fr.ac6.managedbuid.gnu.c.compiler.option.misc.other" useByScannerDiscovery="false" value="-fmessage-length=0 -fstack-usage" valueType="string"/>
+								<option id="gnu.c.compiler.option.dialect.std.706592430" superClass="gnu.c.compiler.option.dialect.std" useByScannerDiscovery="true" value="gnu.c.compiler.dialect.default" valueType="enumerated"/>
 								<inputType id="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.c.1828642028" superClass="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.c"/>
 								<inputType id="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.s.976398822" superClass="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.s"/>
 							</tool>

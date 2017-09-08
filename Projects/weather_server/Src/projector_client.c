@@ -38,7 +38,6 @@ int8_t send_command_to_projector_screen(uint8_t comm)
 		if (connect(client_sock, (struct sockaddr *)&addr_in, sizeof(addr_in)) == 0) {
 			if (send(client_sock, &comm, sizeof(comm), 0) > 0) {
 				closesocket(client_sock);
-				//break;
 			} else {
 				closesocket(client_sock);
 			}

@@ -180,7 +180,6 @@ static void http_server_serve(struct netconn *conn)
   err_t recv_err;
   char* buf;
   u16_t buflen;
-  //struct fs_file file;
   
   /* Read the data from the port, blocking if nothing yet there. 
    We assume the request (the part we care about) is in one netbuf */
@@ -199,10 +198,9 @@ static void http_server_serve(struct netconn *conn)
 
            /* Load dynamic page */
            DynWebPage(conn);
-           //netconn_write(conn, &weather_data, sizeof(char), NETCONN_NOCOPY);
       }
-      }
-    }
+     }
+   }
 
   /* Close the connection (server closes in HTTP) */
   netconn_close(conn);
@@ -280,9 +278,9 @@ void DynWebPage(struct netconn *conn)
   memset(PAGE_BODY, 0,512);
   memcpy(buf, &weather_data, sizeof(float));
 
-  strcat((char *)PAGE_BODY, "<w_data><pre><br>Temperature (°C):		Humidity (%):		Pressure (Pa):" );
+  strcat((char *)PAGE_BODY, "<w_data><pre><br>Temperature (C)		Humidity (%)		Pressure (Pa)" );
   strcat((char *)PAGE_BODY, "<br>--------------------------------------------------------------------<br>");
-  sprintf(buf, "%.2f 	 			%.1f 			%.2f", received_weather_data[0], received_weather_data[1], received_weather_data[2]);
+  sprintf(buf, "%.2f			%.1f			%.2f", received_weather_data[0], received_weather_data[1], received_weather_data[2]);
   strcat(PAGE_BODY, buf);
   strcat((char *)PAGE_BODY, "<br>---------------------------------------------------------------------<br></w_data>");
   strcat((char *)PAGE_BODY, "<style>w_data {text-align: center; color: #D3D3D3; font-family: Arial;} </style>");

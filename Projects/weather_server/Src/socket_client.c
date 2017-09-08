@@ -1,5 +1,5 @@
 /* Includes ------------------------------------------------------------------*/
-#include "socket_client.h"
+//#include "socket_client.h"
 #include "socket_server.h"
 #include "lcd_log.h"
 #include "cmsis_os.h"

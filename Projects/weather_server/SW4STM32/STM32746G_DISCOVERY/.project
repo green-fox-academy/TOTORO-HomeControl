@@ -71,11 +71,6 @@
 			<locationURI>PARENT-2-PROJECT_LOC/Src/ethernetif.c</locationURI>
 		</link>
 		<link>
-			<name>Application/User/gui_setup.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/Src/gui_setup.c</locationURI>
-		</link>
-		<link>
 			<name>Application/User/httpserver-netconn.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Src/httpserver-netconn.c</locationURI>
@@ -94,6 +89,11 @@
 			<name>Application/User/projector_client.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Src/projector_client.c</locationURI>
+		</link>
+		<link>
+			<name>Application/User/socket_client.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/Src/socket_client.c</locationURI>
 		</link>
 		<link>
 			<name>Application/User/socket_server.c</name>
@@ -201,6 +201,11 @@
 			<locationURI>PARENT-4-PROJECT_LOC/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc_ex.c</locationURI>
 		</link>
 		<link>
+			<name>Drivers/STM32F7xx_HAL_Driver/stm32f7xx_hal_sd.c</name>
+			<type>1</type>
+			<locationURI>PARENT-4-PROJECT_LOC/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_sd.c</locationURI>
+		</link>
+		<link>
 			<name>Drivers/STM32F7xx_HAL_Driver/stm32f7xx_hal_sdram.c</name>
 			<type>1</type>
 			<locationURI>PARENT-4-PROJECT_LOC/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_sdram.c</locationURI>
@@ -224,6 +229,11 @@
 			<name>Drivers/STM32F7xx_HAL_Driver/stm32f7xx_ll_fmc.c</name>
 			<type>1</type>
 			<locationURI>PARENT-4-PROJECT_LOC/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_ll_fmc.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/STM32F7xx_HAL_Driver/stm32f7xx_ll_sdmmc.c</name>
+			<type>1</type>
+			<locationURI>PARENT-4-PROJECT_LOC/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_ll_sdmmc.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/FreeRTOS/croutine.c</name>
@@ -281,6 +291,11 @@
 			<locationURI>PARENT-4-PROJECT_LOC/Drivers/BSP/STM32746G-Discovery/stm32746g_discovery_lcd.c</locationURI>
 		</link>
 		<link>
+			<name>Drivers/BSP/STM32746G_Discovery/stm32746g_discovery_sd.c</name>
+			<type>1</type>
+			<locationURI>PARENT-4-PROJECT_LOC/Drivers/BSP/STM32746G-Discovery/stm32746g_discovery_sd.c</locationURI>
+		</link>
+		<link>
 			<name>Drivers/BSP/STM32746G_Discovery/stm32746g_discovery_sdram.c</name>
 			<type>1</type>
 			<locationURI>PARENT-4-PROJECT_LOC/Drivers/BSP/STM32746G-Discovery/stm32746g_discovery_sdram.c</locationURI>
@@ -314,6 +329,16 @@
 			<name>Middlewares/FatFs/Drivers/sd_diskio.c</name>
 			<type>1</type>
 			<locationURI>PARENT-4-PROJECT_LOC/Middlewares/Third_Party/FatFs/src/drivers/sd_diskio.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FatFs/Options/syscall.c</name>
+			<type>1</type>
+			<locationURI>PARENT-4-PROJECT_LOC/Middlewares/Third_Party/FatFs/src/option/syscall.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FatFs/Options/unicode.c</name>
+			<type>1</type>
+			<locationURI>PARENT-4-PROJECT_LOC/Middlewares/Third_Party/FatFs/src/option/unicode.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/FreeRTOS/portable/cmsis_os.c</name>
@@ -525,6 +550,10 @@
 		<variable>
 			<name>copy_PARENT</name>
 			<value>$%7BPARENT-6-PROJECT_LOC%7D/Documents/GFA/Week_14/en.stm32cubef7/STM32Cube_FW_F7_V1.7.0/Projects/STM32746G-Discovery/Applications/LwIP/LwIP_HTTP_Server_Netconn_RTOS</value>
+		</variable>
+		<variable>
+			<name>copy_PARENT1</name>
+			<value>$%7BPARENT-2-ECLIPSE_HOME%7D/Desktop/STM32Cube_FW_F7_V1.7.0</value>
 		</variable>
 	</variableList>
 </projectDescription>

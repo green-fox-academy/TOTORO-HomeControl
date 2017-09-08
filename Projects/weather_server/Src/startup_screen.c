@@ -24,6 +24,7 @@
 #include "startup_screen.h"
 #include "WindowDLG.h"
 #include "main.h"
+#include "ff.h"
 
 
 /*********************************************************************
@@ -48,8 +49,13 @@
 */
 
  WM_HWIN startup_screen;
- uint8_t user_select;
+uint8_t user_select;
 
+user_acc_t user_db[3] = {
+		{0, 1},		//User 1 access: PROJECTOR
+		{1, 1},		//User 2 access: FULL
+		{1, 1}		//User 3 access: FULL
+};
 
 /*********************************************************************
 *
@@ -61,8 +67,6 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate_start[] = {
   { BUTTON_CreateIndirect, "USER 1", ID_BUTTON_0, 70, 138, 80, 80, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "USER 2", ID_BUTTON_1, 200, 138, 80, 80, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "USER 3", ID_BUTTON_2, 330, 138, 80, 80, 0, 0x0, 0 },
-  // USER START (Optionally insert additional widgets)
-  // USER END
 };
 
 /*********************************************************************
@@ -108,51 +112,28 @@ static void _cbDialog_start(WM_MESSAGE * pMsg) {
     case ID_BUTTON_0: // Notifications sent by 'USER 1'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-    	  //check user permissions in database:
-    	  //open txt file on SD card
-    	  //search for user number
-    	  //check accesses: set user_select based on granted accesses
-    	  user_select = 1;
-
-        // USER END
+    	  user_select = check_user_access(0, user_db);
         break;
       case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
         break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
       }
       break;
     case ID_BUTTON_1: // Notifications sent by 'USER 2'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-    	  user_select = 2;
-        // USER END
+    	  user_select = check_user_access(1, user_db);
         break;
       case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
         break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
       }
       break;
     case ID_BUTTON_2: // Notifications sent by 'USER 3'
       switch(NCode) {
       case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-    	  user_select = 3;
-        // USER END
+    	  user_select = check_user_access(2, user_db);
         break;
       case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
         break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
       }
       break;
     // USER START (Optionally insert additional code for further Ids)
@@ -173,6 +154,22 @@ static void _cbDialog_start(WM_MESSAGE * pMsg) {
 *
 **********************************************************************
 */
+uint8_t check_user_access(uint8_t select, user_acc_t user_db[3])
+{
+	uint8_t user_index;
+	if (user_db[select].ac_access == 1) {
+		if (user_db[select].proj_access == 1) {
+			user_index = 1; 		//full access
+		} else {
+			user_index = 2;			//AC access
+		}
+	} else if (user_db[select].proj_access == 1) {
+		user_index = 3;				//projector access
+	}
+	  return user_index;
+}
+
+
 /*********************************************************************
 *
 *       CreateWindow

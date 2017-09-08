@@ -58,7 +58,7 @@
 #include "socket_server.h"
 #include "stm32746g_discovery_lcd.h"
 #include "httpserver-netconn.h"
-//#include "ff.h"
+#include "ff_gen_drv.h"
 #include "projector_client.h"
 #include "gui_setup.h"
 #include "WindowDLG.h"
@@ -67,6 +67,10 @@
 #include "startup_screen.h"
 #include "access_projector.h"
 #include "access_ac.h"
+#include "stm32746g_discovery_sd.h"
+#include "ff.h"
+
+
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -76,8 +80,9 @@
 struct netif gnetif; /* network interface structure */
 osTimerId lcd_timer;
 uint8_t user_select = 0;
-char SDPath[4];
+char SDPath[4]; /* SD card logical drive path */
 FATFS htmlFAT; /*File system object for SD card logical drive*/
+extern const Diskio_drvTypeDef  SD_Driver;
 
 /* Private function prototypes -----------------------------------------------*/
 static void SystemClock_Config(void);
@@ -224,13 +229,11 @@ static void StartThread(void const * argument)
 	    f_mount(&htmlFAT, (TCHAR const*)SDPath, 0);
 	}
 
+
 #ifndef LCD_USERLOG
 	/* Create GUI task */
 	osThreadDef(GUI_Thread, GUIThread,   osPriorityBelowNormal, 0, configMINIMAL_STACK_SIZE * 2);
 	osThreadCreate (osThread(GUI_Thread), NULL);
-	/* Create GUI task */
-//	osThreadDef(GUI_Thread, GUIThread,   osPriorityBelowNormal, 0, configMINIMAL_STACK_SIZE * 2);
-//	osThreadCreate (osThread(GUI_Thread), &user_select);
 #endif
 
 	//Define and start the weather server thread
@@ -289,7 +292,6 @@ static void BSP_Config(void)
 	BSP_SDRAM_Init();
 
 	/* Initialize the Touch screen */
-	//BSP_TS_Init(420, 272);
 	BSP_TS_Init(480, 272);
 
 	/* Enable CRC to Unlock GUI */
@@ -415,11 +417,11 @@ static void MPU_Config(void)
 	/* Configure the MPU attributes as Device for Ethernet Descriptors in the SRAM */
 	MPU_InitStruct.Enable = MPU_REGION_ENABLE;
 	MPU_InitStruct.BaseAddress = 0x20010000;
-	MPU_InitStruct.Size = MPU_REGION_SIZE_256KB; //was MPU_REGION_SIZE_256B //crispo: MPU_REGION_SIZE_256KB
+	MPU_InitStruct.Size = MPU_REGION_SIZE_256KB;
 	MPU_InitStruct.AccessPermission = MPU_REGION_FULL_ACCESS;
-	MPU_InitStruct.IsBufferable = MPU_ACCESS_NOT_BUFFERABLE;	//was MPU_ACCESS_BUFFERABLE	//crispo: MPU_ACCESS_NOT_BUFFERABLE
-	MPU_InitStruct.IsCacheable = MPU_ACCESS_CACHEABLE; //was MPU_ACCESS_NOT_CACHEABLE 	//crispo: MPU_ACCESS_CACHEABLE
-	MPU_InitStruct.IsShareable = MPU_ACCESS_NOT_SHAREABLE;	//was MPU_ACCESS_SHAREABLE	//crispo: MPU_ACCESS_NOT_SHAREABLE
+	MPU_InitStruct.IsBufferable = MPU_ACCESS_NOT_BUFFERABLE;
+	MPU_InitStruct.IsCacheable = MPU_ACCESS_CACHEABLE;
+	MPU_InitStruct.IsShareable = MPU_ACCESS_NOT_SHAREABLE;
 	MPU_InitStruct.Number = MPU_REGION_NUMBER0;
 	MPU_InitStruct.TypeExtField = MPU_TEX_LEVEL0;
 	MPU_InitStruct.SubRegionDisable = 0x00;

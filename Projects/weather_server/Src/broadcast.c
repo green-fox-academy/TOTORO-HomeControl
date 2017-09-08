@@ -20,7 +20,7 @@
 void socket_broadcast_thread(void const *argument)
 {
 	struct bcst {
-		char uniq_str[15];
+		char uniq_str[20];
 		uint16_t port;
 		uint8_t ip[20];
 	}broadcast_msg;
@@ -29,16 +29,16 @@ void socket_broadcast_thread(void const *argument)
 	broadcast_msg.port = WEATHER_SERVER_PORT;
 	uint8_t a = sizeof(ip_address) / sizeof(ip_address[0]);
 	memcpy(broadcast_msg.ip, ip_address, a);
-//	broadcast_msg.ip = ip_address;
+
 	// Create broadcast socket
 	    int broadcast_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 	    if (broadcast_socket < 0) {
 	        printf("Error: send_broadcast_msg - socket()\n");
 	        terminate_thread();
 	    }
-
+	    int brodadc = 1;
 	    // Set the socket as broadcasting socket
-	    int setsockopt_retval = setsockopt(broadcast_socket, SOL_SOCKET, SO_BROADCAST, "1", 1);
+	    int setsockopt_retval = setsockopt(broadcast_socket, SOL_SOCKET, SO_BROADCAST, (void *)&brodadc, sizeof(brodadc));
 	    if (setsockopt_retval < 0) {
 	        printf("Error: send_broadcast_msg - setsockopt()\n");
 	        terminate_thread();
@@ -52,9 +52,9 @@ void socket_broadcast_thread(void const *argument)
 
 	    // Send broadcast message
 	    while (1) {
-			sendto(broadcast_socket, &broadcast_msg, strlen(BC_UNIQUE_STR), 0,
+			sendto(broadcast_socket, &broadcast_msg, sizeof(broadcast_msg), 0,
 				  (struct sockaddr *)&broadcast_addr, sizeof(broadcast_addr));
-			osDelay(10000);
+			osDelay(1000);
 	    }
 
 //	    if (sendto_retval < strlen(BC_UNIQUE_STR)) {

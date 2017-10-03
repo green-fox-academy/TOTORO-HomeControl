@@ -4,7 +4,7 @@
   * @author  MCD Application Team
   * @version V1.2.0
   * @date    30-December-2016
-  * @brief   Ethernet specefic module
+  * @brief   Ethernet specific module
   ******************************************************************************
   * @attention
   *
@@ -52,7 +52,8 @@
 #include "app_ethernet.h"
 #include "ethernetif.h"
 #include "lcd_log.h"
-
+#include <string.h>
+uint8_t ip_address[20];
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
@@ -146,6 +147,9 @@ void DHCP_thread(void const * argument)
          
           sprintf((char *)iptxt, "%s", ip4addr_ntoa((const ip4_addr_t *)&netif->ip_addr));   
           LCD_UsrLog ("DHCP client - IP address assigned by a DHCP server: %s\n", iptxt);
+          //uint8_t b = sizeof(iptxt) / sizeof(iptxt[0]);
+          memcpy(ip_address, iptxt, strlen(iptxt)+1);
+//          memcpy(ip_address, "Szia", strlen("Szia")+1);
         }
         else
         {
@@ -167,7 +171,6 @@ void DHCP_thread(void const * argument)
             
             sprintf((char *)iptxt, "%s", ip4addr_ntoa((const ip4_addr_t *)&netif->ip_addr));
             LCD_UsrLog ("DHCP client - DHCP Timeout !! \n");
-
           }
         }
       }

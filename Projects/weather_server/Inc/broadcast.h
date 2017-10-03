@@ -1,18 +1,23 @@
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __SOCKET_SERVER_H
-#define __SOCKET_SERVER_H
+#ifndef __BROADCAST_H
+#define __BROADCAST_H
 
 /* Includes ------------------------------------------------------------------*/
+#include "stm32746g_discovery_ts.h"
+#include "socket_server.h"
+
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
-void socket_server_thread(void const *argument);
-void projector_server_thread(void const *argument);
-void terminate_thread();
+#define BROADCAST_UNIQUE_STR_LEN    (strlen(BROADCAST_UNIQUE_STR)+1)
+#define BROADCAST_MSG_LEN           1024
+#define TCP_MSG_LEN                 1024
+#define BROADCAST_LISTENING_PORT    12345    // Same for every device
 
-extern float received_weather_data[3];
-#endif /* __SOCKET_SERVER_H */
+void socket_broadcast_thread(void const *argument);
+
+#endif /* __BROADCAST_H */
 
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

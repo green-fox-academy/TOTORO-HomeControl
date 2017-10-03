@@ -54,7 +54,7 @@ uint8_t user_select;
 user_acc_t user_db[3] = {
 		{0, 1},		//User 1 access: PROJECTOR
 		{1, 1},		//User 2 access: FULL
-		{1, 1}		//User 3 access: FULL
+		{1, 0}		//User 3 access: AC
 };
 
 /*********************************************************************

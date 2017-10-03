@@ -69,6 +69,7 @@
 #include "access_ac.h"
 #include "stm32746g_discovery_sd.h"
 #include "ff.h"
+#include "broadcast.h"
 
 
 
@@ -82,7 +83,7 @@ osTimerId lcd_timer;
 uint8_t user_select = 0;
 char SDPath[4]; /* SD card logical drive path */
 FATFS htmlFAT; /*File system object for SD card logical drive*/
-extern const Diskio_drvTypeDef  SD_Driver;
+//extern const Diskio_drvTypeDef  SD_Driver;
 
 /* Private function prototypes -----------------------------------------------*/
 static void SystemClock_Config(void);
@@ -221,13 +222,18 @@ static void StartThread(void const * argument)
 	osThreadCreate (osThread(DHCP), &gnetif);
 	//osDelay(2000);
 
+	//Define and start the BROADCAST thread
+	osThreadDef(BROADCAST, socket_broadcast_thread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 2);
+	osThreadCreate (osThread(BROADCAST), NULL);
+	osDelay(2000);
+
 	/* Start httpserver thread */
 	http_server_netconn_init();
 
-	if(FATFS_LinkDriver(&SD_Driver, SDPath) == 0)
-	{
-	    f_mount(&htmlFAT, (TCHAR const*)SDPath, 0);
-	}
+//	if(FATFS_LinkDriver(&SD_Driver, SDPath) == 0)
+//	{
+//	    f_mount(&htmlFAT, (TCHAR const*)SDPath, 0);
+//	}
 
 
 #ifndef LCD_USERLOG

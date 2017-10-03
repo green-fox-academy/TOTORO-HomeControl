@@ -66,6 +66,11 @@
 			<locationURI>PARENT-2-PROJECT_LOC/Src/app_ethernet.c</locationURI>
 		</link>
 		<link>
+			<name>Application/User/broadcast.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/Src/broadcast.c</locationURI>
+		</link>
+		<link>
 			<name>Application/User/ethernetif.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Src/ethernetif.c</locationURI>
@@ -89,11 +94,6 @@
 			<name>Application/User/projector_client.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Src/projector_client.c</locationURI>
-		</link>
-		<link>
-			<name>Application/User/socket_client.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/Src/socket_client.c</locationURI>
 		</link>
 		<link>
 			<name>Application/User/socket_server.c</name>

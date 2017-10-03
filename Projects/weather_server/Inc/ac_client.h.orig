@@ -1,18 +1,25 @@
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __SOCKET_SERVER_H
-#define __SOCKET_SERVER_H
+#ifndef __AC_CLIENT_H
+#define __AC_CLIENT_H
 
 /* Includes ------------------------------------------------------------------*/
+
+
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
-void socket_server_thread(void const *argument);
-void projector_server_thread(void const *argument);
-void terminate_thread();
+//int8_t send_command_to_ac(uint8_t comm);
+int8_t send_command_to_ac(uint8_t *comm);
+void ac_client_thread(void const *argument);
 
-extern float received_weather_data[3];
-#endif /* __SOCKET_SERVER_H */
+<<<<<<< HEAD:Projects/weather_server/Inc/projector_server.h
+void projector_client_thread(void const *argument);
+//extern float received_weather_data[3];
+#endif /* __PROJECTOR_SERVER_H */
+=======
+#endif /* __AC_CLIENT_H */
+>>>>>>> GUI_3_sec:Projects/weather_server/Inc/ac_client.h
 
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
